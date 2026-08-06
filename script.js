@@ -356,8 +356,7 @@ function appendReferencesSection(
   }
 
   const config = getFormatConfig(format);
-  const section = document.createElement("section");
-  section.id = "references";
+  const section =document.getElementById("references");
 
   const heading = document.createElement("h2");
   heading.textContent = config.heading;
