@@ -356,7 +356,7 @@ function appendReferencesSection(
   }
 
   const config = getFormatConfig(format);
-  const section =document.getElementById("references");
+  const section =document.getElementById("reference-output");
 
   const heading = document.createElement("h2");
   heading.textContent = config.heading;
@@ -381,7 +381,6 @@ function appendReferencesSection(
   }
 
   section.appendChild(list);
-  document.body.appendChild(section);
 }
 
 function formatReference(item, format, number) {
