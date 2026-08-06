@@ -358,10 +358,6 @@ function appendReferencesSection(
   const config = getFormatConfig(format);
   const section =document.getElementById("reference-output");
 
-  const heading = document.createElement("h2");
-  heading.textContent = config.heading;
-  section.appendChild(heading);
-
   const list = document.createElement(config.listType);
   list.className = "references-list";
 
