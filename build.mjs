@@ -74,6 +74,9 @@ if (watch) {
   await ctx.watch()
   console.log('Watching for changes...')
 } else {
-  await esbuild.build(buildOptions)
-  console.log('Built → script.js')
+  await Promise.all([
+    esbuild.build(buildOptions),
+    esbuild.build({ ...buildOptions, outfile: 'script.min.js', minify: true }),
+  ])
+  console.log('Built → script.js, script.min.js')
 }
