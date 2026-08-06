@@ -1,0 +1,16 @@
+{
+  "name": "biblizer",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "dependencies": {
+    "@citation-js/plugin-csl": "^0.8.2",
+    "citation-js": "^0.8.2"
+  },
+  "devDependencies": {
+    "esbuild": "latest"
+  }
+}
