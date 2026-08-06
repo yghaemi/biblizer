@@ -1,17 +1,27 @@
 import { plugins } from '@citation-js/core';
 import '@citation-js/plugin-csl';
+import cslIeee from './csl/ieee.csl';
+import cslAma from './csl/american-medical-association.csl';
+import cslMla from './csl/modern-language-association.csl';
+import cslChicago from './csl/chicago-author-date.csl';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const API_BASE = "https://memorial-william-afford-info.trycloudflare.com/api/v1/reference";
 const CACHE_PREFIX = "libretexts-references:";
-const CSL_STYLES_CDN = "https://cdn.jsdelivr.net/gh/citation-style-language/styles@master/";
 
 const LIBRARY = extractLibrary(window.location.hostname);
 
-// Styles shipped inside @citation-js/plugin-csl — no fetch needed
-const BUILT_IN_CSL_STYLES = new Set(['apa', 'vancouver', 'harvard1']);
-const loadedCslStyles = new Set([...BUILT_IN_CSL_STYLES]);
+// CSL XML bundled at build time — keyed by the style name used in FORMAT_CONFIG
+const BUNDLED_CSL_STYLES = {
+  'ieee':                         cslIeee,
+  'american-medical-association': cslAma,
+  'modern-language-association':  cslMla,
+  'chicago-author-date':          cslChicago,
+};
+
+// Styles shipped inside @citation-js/plugin-csl — already registered
+const loadedCslStyles = new Set(['apa', 'vancouver', 'harvard1']);
 
 // ─── Format config ────────────────────────────────────────────────────────────
 // cslStyle   – name passed to citeproc engine
@@ -64,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const referenceItems = await getReferences(projectID, lastUpdatedAt);
 
     const config = getFormatConfig(format);
-    await loadCslStyle(config.cslStyle);
+    loadCslStyle(config.cslStyle);
 
     const cslData = referenceItems.map(toCslJson);
     const engine = buildCiteprocEngine(cslData, config.cslStyle);
@@ -124,14 +134,13 @@ async function getReferences(projectID, lastUpdatedAt) {
 
 // ─── CSL / Citeproc ──────────────────────────────────────────────────────────
 
-async function loadCslStyle(styleName) {
+function loadCslStyle(styleName) {
   if (loadedCslStyles.has(styleName)) return;
 
-  const response = await fetch(`${CSL_STYLES_CDN}${styleName}.csl`);
-  if (!response.ok) {
-    throw new Error(`Failed to load CSL style "${styleName}": HTTP ${response.status}`);
+  const xml = BUNDLED_CSL_STYLES[styleName];
+  if (!xml) {
+    throw new Error(`CSL style "${styleName}" is not bundled. Add it to src/csl/.`);
   }
-  const xml = await response.text();
   plugins.config.get('@csl').styles.add(styleName, xml);
   loadedCslStyles.add(styleName);
 }
