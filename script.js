@@ -22525,12 +22525,12 @@
   };
   var loadedCslStyles = /* @__PURE__ */ new Set(["apa", "vancouver", "harvard1"]);
   var FORMAT_CONFIG = {
-    IEEE: { cslStyle: "ieee", heading: "References", listType: "ol", superscript: true },
-    Vancouver: { cslStyle: "vancouver", heading: "References", listType: "ol", superscript: false },
-    AMA: { cslStyle: "american-medical-association", heading: "References", listType: "ol", superscript: true },
-    CSM: { cslStyle: "ieee", heading: "References", listType: "ol", superscript: true },
-    ASN: { cslStyle: "american-medical-association", heading: "References", listType: "ol", superscript: true },
-    ANSI: { cslStyle: "ieee", heading: "References", listType: "ol", superscript: true },
+    IEEE: { cslStyle: "ieee", heading: "References", listType: "ul", superscript: true },
+    Vancouver: { cslStyle: "vancouver", heading: "References", listType: "ul", superscript: false },
+    AMA: { cslStyle: "american-medical-association", heading: "References", listType: "ul", superscript: true },
+    CSM: { cslStyle: "ieee", heading: "References", listType: "ul", superscript: true },
+    ASN: { cslStyle: "american-medical-association", heading: "References", listType: "ul", superscript: true },
+    ANSI: { cslStyle: "ieee", heading: "References", listType: "ul", superscript: true },
     APA: { cslStyle: "apa", heading: "References", listType: "ul", superscript: false },
     MLA: { cslStyle: "modern-language-association", heading: "Works Cited", listType: "ul", superscript: false },
     Chicago: { cslStyle: "chicago-author-date", heading: "References", listType: "ul", superscript: false },
