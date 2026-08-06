@@ -1,4 +1,4 @@
-const API_BASE = "https://optics-lower-ship-dawn.trycloudflare.com/api/v1/reference";
+const API_BASE = "https://memorial-william-afford-info.trycloudflare.com/api/v1/reference";
 const CACHE_PREFIX = "libretexts-references:";
 const page_url = window.location.hostname;
 
