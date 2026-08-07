@@ -22572,7 +22572,7 @@
       if (allInstances.length === 0) return;
       const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
       replaceAllCitationMarkers(nodeMap, formattedCitations, config);
-      appendReferencesSection(engine, config, displayLocation);
+      appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID);
     } catch (err) {
       console.error("Failed to load citations:", err);
     }
@@ -22721,7 +22721,7 @@
     }
     textNode.parentNode.replaceChild(fragment, textNode);
   }
-  function appendReferencesSection(engine, config, displayLocation) {
+  function appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID) {
     const [params, bibEntries] = engine.makeBibliography();
     if (!bibEntries?.length) return;
     const entryIds = params.entry_ids ?? [];
@@ -22735,7 +22735,9 @@
       document.body.appendChild(section);
       container = section;
     }
-    if (displayLocation !== "endOfPage") {
+    if (displayLocation === "backmatter" && pageID === backmatterPageID) {
+      container.style.display = "block";
+    } else if (displayLocation !== "endOfPage") {
       container.style.display = "none";
     }
     const list6 = document.createElement(config.listType);

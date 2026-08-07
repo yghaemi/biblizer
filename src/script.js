@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
     replaceAllCitationMarkers(nodeMap, formattedCitations, config);
-    appendReferencesSection(engine, config, displayLocation);
+    appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID);
   } catch (err) {
     console.error("Failed to load citations:", err);
   }
@@ -303,7 +303,7 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config) {
   textNode.parentNode.replaceChild(fragment, textNode);
 }
 
-function appendReferencesSection(engine, config, displayLocation) {
+function appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID) {
   const [params, bibEntries] = engine.makeBibliography();
   if (!bibEntries?.length) return;
 
@@ -322,7 +322,9 @@ function appendReferencesSection(engine, config, displayLocation) {
     container = section;
   }
 
-  if (displayLocation !== 'endOfPage') {
+  if (displayLocation === 'backmatter' && pageID === backmatterPageID) {
+    container.style.display = 'block';
+  } else if (displayLocation !== 'endOfPage') {
     container.style.display = 'none';
   }
 
