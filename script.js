@@ -22565,7 +22565,7 @@
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
-      if (pageID === backmatterPageID && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
+      if (displayLocation === "backmatter" && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
         injectBackmatterMarkers(backmatterReferenceList);
       }
       const { allInstances, nodeMap } = collectAllCitationInstances(document.body);

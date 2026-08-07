@@ -79,10 +79,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cslData = referenceItems.map(toCslJson);
     const engine = buildCiteprocEngine(cslData, config.cslStyle);
 
-    // On the backmatter page, inject a hidden block of \librecite{key} markers
-    // so every item in backmatterReferenceList is collected and numbered even
-    // if it isn't explicitly cited anywhere in the visible text.
-    if (pageID === backmatterPageID && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
+    // When displayLocation is 'backmatter', inject hidden \librecite{key} markers
+    // on every page so all backmatter references are collected and numbered
+    // consistently, even if they aren't explicitly cited in the visible text.
+    if (displayLocation === 'backmatter' && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
       injectBackmatterMarkers(backmatterReferenceList);
     }
 
