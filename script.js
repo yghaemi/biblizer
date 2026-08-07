@@ -22559,12 +22559,15 @@
     }
     try {
       const pageInfo = await fetchJSON(`${API_BASE}/page/${pageID}/library/${LIBRARY}`);
-      const { projectID, lastUpdatedAt, format: format3, displayLocation, pageTitle } = pageInfo;
+      const { projectID, lastUpdatedAt, format: format3, displayLocation, pageTitle, backmatterPageID, backmatterReferenceList } = pageInfo;
       const referenceItems = await getReferences(projectID, lastUpdatedAt);
       const config = getFormatConfig(format3);
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
+      if (pageID === backmatterPageID && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
+        injectBackmatterMarkers(backmatterReferenceList);
+      }
       const { allInstances, nodeMap } = collectAllCitationInstances(document.body);
       if (allInstances.length === 0) return;
       const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
@@ -22667,6 +22670,19 @@
   }
   function parseCitationKeys(content) {
     return content.split(",").map((k) => k.trim()).filter(Boolean);
+  }
+  function injectBackmatterMarkers(referenceList) {
+    const container = document.querySelector("section.mt-content-container");
+    if (!container) return;
+    const block = document.createElement("div");
+    block.style.display = "none";
+    block.setAttribute("aria-hidden", "true");
+    for (const key of referenceList) {
+      const span = document.createElement("span");
+      span.textContent = `\\librecite{${key}}`;
+      block.appendChild(span);
+    }
+    container.insertBefore(block, container.firstChild);
   }
   function replaceAllCitationMarkers(nodeMap, formattedCitations, config) {
     for (const [textNode, instances] of nodeMap) {
