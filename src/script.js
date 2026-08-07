@@ -7,7 +7,7 @@ import cslChicago from './csl/chicago-author-date.csl';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const API_BASE = "https://memorial-william-afford-info.trycloudflare.com/api/v1/reference";
+const API_BASE = "https://items-lottery-obligations-transparency.trycloudflare.com/api/v1/reference";
 const CACHE_PREFIX = "libretexts-references:";
 
 const LIBRARY = extractLibrary(window.location.hostname);
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const pageInfo = await fetchJSON(`${API_BASE}/page/${pageID}/library/${LIBRARY}`);
-    const { projectID, lastUpdatedAt, format } = pageInfo;
+    const { projectID, lastUpdatedAt, format, displayLocation, pageTitle } = pageInfo;
     const referenceItems = await getReferences(projectID, lastUpdatedAt);
 
     const config = getFormatConfig(format);
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
     replaceAllCitationMarkers(nodeMap, formattedCitations, config);
-    appendReferencesSection(engine, config);
+    appendReferencesSection(engine, config, displayLocation);
   } catch (err) {
     console.error("Failed to load citations:", err);
   }
@@ -275,7 +275,7 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config) {
   textNode.parentNode.replaceChild(fragment, textNode);
 }
 
-function appendReferencesSection(engine, config) {
+function appendReferencesSection(engine, config, displayLocation) {
   const [params, bibEntries] = engine.makeBibliography();
   if (!bibEntries?.length) return;
 
@@ -292,6 +292,10 @@ function appendReferencesSection(engine, config) {
     section.appendChild(heading);
     document.body.appendChild(section);
     container = section;
+  }
+
+  if (displayLocation !== 'endOfPage') {
+    container.style.display = 'none';
   }
 
   const list = document.createElement(config.listType);
