@@ -4,6 +4,8 @@ import cslIeee from './csl/ieee.csl';
 import cslAma from './csl/american-medical-association.csl';
 import cslMla from './csl/modern-language-association.csl';
 import cslChicago from './csl/chicago-author-date.csl';
+import tippy from 'tippy.js';
+import tippyCss from 'tippy.js/dist/tippy.css';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -59,6 +61,32 @@ const ENTRY_TYPE_MAP = {
   unpublished:   'manuscript',
 };
 
+// Inject tippy's CSS + a small custom override for bibliography tooltips
+;(() => {
+  const style = document.createElement('style');
+  style.textContent = tippyCss + `
+.tippy-box[data-theme~="librecite"] {
+  background: #fff;
+  color: #222;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.14);
+  font-size: .875rem;
+  line-height: 1.5;
+  max-width: 420px !important;
+  text-align: left;
+}
+.tippy-box[data-theme~="librecite"] .tippy-arrow { color: #d0d0d0; }
+.tippy-box[data-theme~="librecite"] .bib-entry + .bib-entry {
+  border-top: 1px solid #eee;
+  margin-top: .4em;
+  padding-top: .4em;
+}
+.tippy-box[data-theme~="librecite"] a { color: #0645ad; }
+`;
+  document.head.appendChild(style);
+})();
+
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -90,7 +118,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (allInstances.length === 0) return;
 
     const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
-    replaceAllCitationMarkers(nodeMap, formattedCitations, config);
+    const bibHtmlByKey = buildBibHtmlMap(engine);
+    replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey);
     appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID);
   } catch (err) {
     console.error("Failed to load citations:", err);
@@ -195,6 +224,22 @@ function processCitationsWithCiteproc(engine, allInstances) {
   return citationTexts;
 }
 
+// Builds a Map from citation key → formatted bibliography HTML string.
+// Used to populate tippy tooltips on in-text citation elements.
+function buildBibHtmlMap(engine) {
+  const [params, entries] = engine.makeBibliography();
+  const map = new Map();
+  (params.entry_ids ?? []).forEach((ids, i) => {
+    const key = ids?.[0];
+    if (!key) return;
+    const temp = document.createElement('div');
+    temp.innerHTML = entries[i] ?? '';
+    const cslEntry = temp.querySelector('.csl-entry');
+    map.set(key, (cslEntry ? cslEntry.innerHTML : entries[i] ?? '').trim());
+  });
+  return map;
+}
+
 // ─── Citation Collection ─────────────────────────────────────────────────────
 
 // Returns every \librecite{...} occurrence in document order (duplicates
@@ -255,13 +300,13 @@ function injectBackmatterMarkers(referenceList) {
   container.insertBefore(block, container.firstChild);
 }
 
-function replaceAllCitationMarkers(nodeMap, formattedCitations, config) {
+function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey) {
   for (const [textNode, instances] of nodeMap) {
-    replaceNodeCitations(textNode, instances, formattedCitations, config);
+    replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey);
   }
 }
 
-function replaceNodeCitations(textNode, instances, formattedCitations, config) {
+function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey) {
   const text = textNode.textContent;
   const fragment = document.createDocumentFragment();
   let lastIndex = 0;
@@ -291,6 +336,25 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config) {
         }
       }
     });
+
+    // Build tooltip content from bibliography entries for each cited key
+    const tooltipHtml = keys
+      .map(k => bibHtmlByKey?.get(k))
+      .filter(Boolean)
+      .map(html => `<div class="bib-entry">${html}</div>`)
+      .join('');
+
+    if (tooltipHtml) {
+      tippy(elem, {
+        content: tooltipHtml,
+        allowHTML: true,
+        theme: 'librecite',
+        placement: 'top',
+        maxWidth: 420,
+        interactive: true,        // lets users click links inside the tooltip
+        appendTo: document.body,  // avoids overflow-hidden clipping
+      });
+    }
 
     fragment.appendChild(elem);
     lastIndex = matchIndex + matchLen;

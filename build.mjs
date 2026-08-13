@@ -65,7 +65,7 @@ const buildOptions = {
   platform: 'browser',
   minify: false,
   sourcemap: process.argv.includes('--dev'),
-  loader: { '.csl': 'text' },  // import *.csl files as plain strings
+  loader: { '.csl': 'text', '.css': 'text' },  // import as plain strings, injected at runtime
   plugins: [browserStubsPlugin],
 }
 

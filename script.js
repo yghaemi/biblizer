@@ -89,25 +89,25 @@
         if (typeof name !== "string") {
           name = name + "";
         }
-        let start = "";
+        let start2 = "";
         let mid = "";
-        let end = "";
+        let end2 = "";
         if (/[^.], /.test(name)) {
           const parts = name.split(", ");
-          end = parts.shift();
+          end2 = parts.shift();
           const suffixMatch = RegExp(suffixMatcher).exec(parts.join(", "));
-          start = parts.splice(suffixMatch && suffixMatch.index !== 0 ? 0 : -1, 1)[0];
+          start2 = parts.splice(suffixMatch && suffixMatch.index !== 0 ? 0 : -1, 1)[0];
           mid = parts.join(", ");
         } else {
           const parts = name.split(suffixSplitter, 2);
-          const main = parts.shift().split(endSplitter, 2);
-          start = main[0];
-          end = main[1];
+          const main2 = parts.shift().split(endSplitter, 2);
+          start2 = main2[0];
+          end2 = main2[1];
           mid = parts.pop();
         }
-        const _start$match = start.match(titleSplitter), _start$match2 = _slicedToArray(_start$match, 3), droppingParticle = _start$match2[1], given = _start$match2[2];
+        const _start$match = start2.match(titleSplitter), _start$match2 = _slicedToArray(_start$match, 3), droppingParticle = _start$match2[1], given = _start$match2[2];
         const suffix = mid;
-        const _end$split$reverse = end.split(particleSplitter, 2).reverse(), _end$split$reverse2 = _slicedToArray(_end$split$reverse, 2), family = _end$split$reverse2[0], nonDroppingParticle = _end$split$reverse2[1];
+        const _end$split$reverse = end2.split(particleSplitter, 2).reverse(), _end$split$reverse2 = _slicedToArray(_end$split$reverse, 2), family = _end$split$reverse2[0], nonDroppingParticle = _end$split$reverse2[1];
         if (!given && family) {
           return family.includes(" ") ? {
             literal: family
@@ -932,7 +932,7 @@
             }
           }
           lines = lines.join("\n").split("\n");
-          var offset = 0;
+          var offset2 = 0;
           var names = {};
           for (var i = 0, ilen = lines.length; i < ilen; i++) {
             var line = lines[i];
@@ -943,7 +943,7 @@
               if (i === 0) {
                 continue;
               } else {
-                offset = i;
+                offset2 = i;
                 break;
               }
             }
@@ -984,10 +984,10 @@
             Item[key] = names[key];
           }
           if (validFieldsForType) {
-            if (lines[offset].trim()) {
-              lines[offset] = "\n" + lines[offset];
+            if (lines[offset2].trim()) {
+              lines[offset2] = "\n" + lines[offset2];
             }
-            for (var i = offset - 1; i > -1; i--) {
+            for (var i = offset2 - 1; i > -1; i--) {
               if (!lines[i].trim()) {
                 lines = lines.slice(0, i).concat(lines.slice(i + 1));
               }
@@ -1262,12 +1262,12 @@
               }
             }
             fld.reverse();
-            var start = fld.join(" ");
-            var end = toEnd.join(" ");
-            if ("drop" === drop_or_demote || !end) {
-              fld = start;
+            var start2 = fld.join(" ");
+            var end2 = toEnd.join(" ");
+            if ("drop" === drop_or_demote || !end2) {
+              fld = start2;
             } else if ("demote" === drop_or_demote) {
-              fld = [start, end].join(", ");
+              fld = [start2, end2].join(", ");
             }
           }
           return fld;
@@ -1311,10 +1311,10 @@
                   vals[title.sub] = "";
                 } else if (shortTitle) {
                   var tail = vals[title.title].slice(shortTitle.replace(/[\?\!]+$/, "").length);
-                  var top = vals[title.title].replace(tail.replace(/^[\?\!]+/, ""), "").trim();
+                  var top2 = vals[title.title].replace(tail.replace(/^[\?\!]+/, ""), "").trim();
                   var m = CSL2.TITLE_SPLIT_REGEXP.matchfirst.exec(tail);
-                  if (m && top.toLowerCase() === shortTitle.toLowerCase()) {
-                    vals[title.main] = top;
+                  if (m && top2.toLowerCase() === shortTitle.toLowerCase()) {
+                    vals[title.main] = top2;
                     vals[title.subjoin] = m[1].replace(/[\?\!]+(\s*)$/, "$1");
                     vals[title.sub] = tail.replace(CSL2.TITLE_SPLIT_REGEXP.matchfirst, "");
                     if (this.opt.development_extensions.force_short_title_casing_alignment) {
@@ -3834,20 +3834,20 @@
           return ItemField[partname];
         }
       };
-      CSL2.Engine.getField = function(mode, hash, term, form, plural, gender) {
+      CSL2.Engine.getField = function(mode, hash3, term, form, plural, gender) {
         var ret, forms, f2, pos, len, hashterm;
         ret = "";
-        if ("undefined" === typeof hash[term]) {
+        if ("undefined" === typeof hash3[term]) {
           if (mode === CSL2.STRICT) {
             CSL2.error('Error in getField: term "' + term + '" does not exist.');
           } else {
             return void 0;
           }
         }
-        if (gender && hash[term][gender]) {
-          hashterm = hash[term][gender];
+        if (gender && hash3[term][gender]) {
+          hashterm = hash3[term][gender];
         } else {
-          hashterm = hash[term];
+          hashterm = hash3[term];
         }
         forms = [];
         if (form === "symbol") {
@@ -5070,15 +5070,15 @@
           blobs[0].params = parent.params;
           return blobs[0];
         }
-        var start = true;
+        var start2 = true;
         for (pos = 0; pos < len; pos += 1) {
           if (blobs[pos].checkNext) {
-            blobs[pos].checkNext(blobs[pos + 1], start);
-            start = false;
+            blobs[pos].checkNext(blobs[pos + 1], start2);
+            start2 = false;
           } else if (blobs[pos + 1] && blobs[pos + 1].splice_prefix) {
-            start = false;
+            start2 = false;
           } else {
-            start = true;
+            start2 = true;
           }
         }
         var doit = true;
@@ -8103,7 +8103,7 @@
       };
       CSL2.Node.date = {
         build: function(state, target) {
-          var func, date_obj, len, pos, part, dpx, parts, mypos, start, end;
+          var func, date_obj, len, pos, part, dpx, parts, mypos, start2, end2;
           if (this.tokentype === CSL2.START || this.tokentype === CSL2.SINGLETON) {
             state.dateput.string(state, state.dateput.queue);
             state.tmp.date_token = CSL2.Util.cloneToken(this);
@@ -8157,9 +8157,9 @@
                   len = dp.length;
                   for (pos = 0; pos < len; pos += 1) {
                     part = dp[pos];
-                    start = state2.tmp.date_object[part];
-                    end = state2.tmp.date_object[part + "_end"];
-                    if (start !== end) {
+                    start2 = state2.tmp.date_object[part];
+                    end2 = state2.tmp.date_object[part + "_end"];
+                    if (start2 !== end2) {
                       mypos = pos;
                       break;
                     }
@@ -10315,14 +10315,14 @@
               blobs = [blobs[0], finalJoin, blobs[1]];
             }
           } else {
-            var offset;
+            var offset2;
             if (finalJoin) {
-              offset = 1;
+              offset2 = 1;
             } else {
-              offset = 0;
+              offset2 = 0;
             }
             var blob = blobs.pop();
-            for (var i = 0, ilen = blobs.length - offset; i < ilen; i++) {
+            for (var i = 0, ilen = blobs.length - offset2; i < ilen; i++) {
               blobs[i].strings.suffix += delimiter;
             }
             blobs.push(finalJoin);
@@ -13996,9 +13996,9 @@
           var masterID = sortedItems[siblingRanges[j][0]][0].id;
           this.state.registry.registry[masterID].master = true;
           this.state.registry.registry[masterID].siblings = [];
-          var start = siblingRanges[j][0];
-          var end = siblingRanges[j][1];
-          for (var k = start; k < end; k++) {
+          var start2 = siblingRanges[j][0];
+          var end2 = siblingRanges[j][1];
+          for (var k = start2; k < end2; k++) {
             this.state.tmp.suppress_repeats[k].SIBLING = true;
             var siblingID = sortedItems[k + 1][0].id;
             sortedItems[k + 1][1].parallel = "other";
@@ -14736,8 +14736,8 @@
       CSL2.Output.DefaultFormatter.prototype.format = function(num) {
         return num.toString();
       };
-      CSL2.NumericBlob.prototype.checkNext = function(next, start) {
-        if (start) {
+      CSL2.NumericBlob.prototype.checkNext = function(next, start2) {
+        if (start2) {
           this.status = CSL2.START;
           if ("object" === typeof next) {
             if (next.num === this.num + 1) {
@@ -15149,7 +15149,7 @@
         }
         return num.toString();
       };
-      CSL2.Util.Dates.year.imperial = function(state, num, end) {
+      CSL2.Util.Dates.year.imperial = function(state, num, end2) {
         var year = "";
         if (!num) {
           if ("boolean" === typeof num) {
@@ -15158,34 +15158,34 @@
             num = 0;
           }
         }
-        end = end ? "_end" : "";
-        var month = state.tmp.date_object["month" + end];
+        end2 = end2 ? "_end" : "";
+        var month = state.tmp.date_object["month" + end2];
         month = month ? "" + month : "1";
         while (month.length < 2) {
           month = "0" + month;
         }
-        var day = state.tmp.date_object["day" + end];
+        var day = state.tmp.date_object["day" + end2];
         day = day ? "" + day : "1";
         while (day.length < 2) {
           day = "0" + day;
         }
         var date = parseInt(num + month + day, 10);
         var label;
-        var offset;
+        var offset2;
         if (date >= 18680908 && date < 19120730) {
           label = "\u660E\u6CBB";
-          offset = 1867;
+          offset2 = 1867;
         } else if (date >= 19120730 && date < 19261225) {
           label = "\u5927\u6B63";
-          offset = 1911;
+          offset2 = 1911;
         } else if (date >= 19261225 && date < 19890108) {
           label = "\u662D\u548C";
-          offset = 1925;
+          offset2 = 1925;
         } else if (date >= 19890108) {
           label = "\u5E73\u6210";
-          offset = 1988;
+          offset2 = 1988;
         }
-        if (label && offset) {
+        if (label && offset2) {
           var normalizedKey = label;
           if (state.sys.normalizeAbbrevsKey) {
             normalizedKey = state.sys.normalizeAbbrevsKey("number", label);
@@ -15196,7 +15196,7 @@
           if (state.transform.abbrevs["default"]["number"][normalizedKey]) {
             label = state.transform.abbrevs["default"]["number"][normalizedKey];
           }
-          year = label + (num - offset);
+          year = label + (num - offset2);
         }
         return year;
       };
@@ -16416,7 +16416,7 @@
       };
       CSL2.Util.PageRangeMangler = {};
       CSL2.Util.PageRangeMangler.getFunction = function(state, rangeType) {
-        var rangerex, pos, len, stringify, listify, expand, minimize, minimize_internal, chicago15, chicago16, lst, m, b, e, ret, begin, end, ret_func;
+        var rangerex, pos, len, stringify, listify, expand, minimize, minimize_internal, chicago15, chicago16, lst, m, b, e, ret, begin, end2, ret_func;
         var range_delimiter = state.getTerm(rangeType + "-range-delimiter");
         rangerex = /([0-9]*[a-zA-Z]+0*)?([0-9]+[a-z]*)\s*(?:\u2013|-)\s*([0-9]*[a-zA-Z]+0*)?([0-9]+[a-z]*)/;
         stringify = function(lst2) {
@@ -16486,12 +16486,12 @@
           }
           return stringify(lst2);
         };
-        minimize_internal = function(begin2, end2, minchars, isyear) {
+        minimize_internal = function(begin2, end3, minchars, isyear) {
           if (!minchars) {
             minchars = 0;
           }
           b = ("" + begin2).split("");
-          e = ("" + end2).split("");
+          e = ("" + end3).split("");
           ret = e.slice();
           ret.reverse();
           if (b.length === e.length) {
@@ -16517,11 +16517,11 @@
             if ("object" === typeof lst2[pos]) {
               m = lst2[pos];
               begin = parseInt(m[1], 10);
-              end = parseInt(m[3], 10);
-              if (begin > 100 && begin % 100 && parseInt(begin / 100, 10) === parseInt(end / 100, 10)) {
-                m[3] = "" + end % 100;
+              end2 = parseInt(m[3], 10);
+              if (begin > 100 && begin % 100 && parseInt(begin / 100, 10) === parseInt(end2 / 100, 10)) {
+                m[3] = "" + end2 % 100;
               } else if (begin >= 1e4) {
-                m[3] = "" + end % 1e3;
+                m[3] = "" + end2 % 1e3;
               }
             }
             if (m[2].slice(1) === m[0]) {
@@ -16536,13 +16536,13 @@
             if ("object" === typeof lst2[pos]) {
               m = lst2[pos];
               begin = parseInt(m[1], 10);
-              end = parseInt(m[3], 10);
-              e = "" + end;
+              end2 = parseInt(m[3], 10);
+              e = "" + end2;
               if (begin > 100 && begin % 100) {
                 for (var i = 2; i < e.length; i++) {
                   var divisor = Math.pow(10, i);
-                  if (Math.floor(begin / divisor) === Math.floor(end / divisor)) {
-                    m[3] = "" + end % divisor;
+                  if (Math.floor(begin / divisor) === Math.floor(end2 / divisor)) {
+                    m[3] = "" + end2 % divisor;
                     break;
                   }
                 }
@@ -16721,14 +16721,14 @@
           _nestingData[localeOpenInnerQuote].closer = localeCloseInnerQuote;
         }
         function _setOuterQuoteForm(quot) {
-          var flip = {
+          var flip2 = {
             " '": ' "',
             ' "': " '",
             '("': "('",
             "('": '("'
           };
           _nestingData[quot].outer = "true";
-          _nestingData[flip[quot]].outer = "inner";
+          _nestingData[flip2[quot]].outer = "inner";
         }
         function _getNestingOpenerParams(opener) {
           var openers = [];
@@ -18250,24 +18250,24 @@
         array.splice(this._locationOf(element, array) + 1, 0, element);
         return array;
       };
-      CSL2.Registry.prototype._locationOf = function(element, array, start, end) {
+      CSL2.Registry.prototype._locationOf = function(element, array, start2, end2) {
         if (array.length === 0) {
           return -1;
         }
-        start = start || 0;
-        end = end || array.length;
-        var pivot = start + end >> 1;
+        start2 = start2 || 0;
+        end2 = end2 || array.length;
+        var pivot = start2 + end2 >> 1;
         var c = this.sorter.compareKeys(element, array[pivot]);
-        if (end - start <= 1) {
+        if (end2 - start2 <= 1) {
           return c == -1 ? pivot - 1 : pivot;
         }
         switch (c) {
           case -1:
-            return this._locationOf(element, array, start, pivot);
+            return this._locationOf(element, array, start2, pivot);
           case 0:
             return pivot;
           case 1:
-            return this._locationOf(element, array, pivot, end);
+            return this._locationOf(element, array, pivot, end2);
         }
       };
       CSL2.Registry.prototype.sorttokens = function(nosort) {
@@ -20347,14 +20347,14 @@
   }
   function parseCsl(data2, bestGuessConversions = true) {
     return data2.map(function(entry) {
-      const clean = {};
+      const clean2 = {};
       for (const field in entry) {
         const correction = correctField(field, entry[field], bestGuessConversions);
         if (correction !== void 0) {
-          clean[field] = correction;
+          clean2[field] = correction;
         }
       }
-      return clean;
+      return clean2;
     });
   }
 
@@ -20785,11 +20785,11 @@
       if (this.tokensLeft() < length) {
         throw new SyntaxError("Not enough tokens left");
       }
-      const start = this.index;
+      const start2 = this.index;
       while (length--) {
         this.current = this.stack[++this.index];
       }
-      return this.stack.slice(start, this.index).join("");
+      return this.stack.slice(start2, this.index).join("");
     }
     consumeSequence(sequence) {
       if (this.matchesSequence(sequence)) {
@@ -20799,21 +20799,21 @@
       }
     }
     consume(pattern = /^[\s\S]$/, {
-      min = 0,
-      max = Infinity,
+      min: min2 = 0,
+      max: max2 = Infinity,
       inverse = false,
       tokenMap,
       tokenFilter
     } = {}) {
-      const start = this.index;
+      const start2 = this.index;
       const match = _TokenStack.getMatchCallback(pattern);
       while (match(this.current, this.index, this.stack) !== inverse) {
         this.current = this.stack[++this.index];
       }
-      let consumed = this.stack.slice(start, this.index);
-      if (consumed.length < min) {
+      let consumed = this.stack.slice(start2, this.index);
+      if (consumed.length < min2) {
         throw new SyntaxError(`Not enough ${_TokenStack.getPatternText(pattern)}`);
-      } else if (consumed.length > max) {
+      } else if (consumed.length > max2) {
         throw new SyntaxError(`Too many ${_TokenStack.getPatternText(pattern)}`);
       }
       if (tokenMap) {
@@ -21202,11 +21202,11 @@
         return value || -Infinity;
     }
   }
-  function compareProp(entryA, entryB, prop, flip = /^!/.test(prop)) {
+  function compareProp(entryA, entryB, prop, flip2 = /^!/.test(prop)) {
     prop = prop.replace(/^!/, "");
     const a = getComparisonValue(entryA, prop);
     const b = getComparisonValue(entryB, prop);
-    return (flip ? -1 : 1) * (a > b ? 1 : a < b ? -1 : 0);
+    return (flip2 ? -1 : 1) * (a > b ? 1 : a < b ? -1 : 0);
   }
   function getSortCallback(...props) {
     return (a, b) => {
@@ -22513,6 +22513,2747 @@
   // src/csl/chicago-author-date.csl
   var chicago_author_date_default = '<?xml version="1.0" encoding="utf-8"?>\n<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" initialize-with=". " page-range-format="chicago-16" version="1.0">\n  <!-- This file was generated by the Style Variant Builder <https://github.com/citation-style-language/style-variant-builder>. To contribute changes, modify the template and regenerate variants. -->\n  <info>\n    <title>Chicago Manual of Style 18th edition (author-date)</title>\n    <title-short>CMOS/CMS with Bluebook (author-date/AD [13.102])</title-short>\n    <id>http://www.zotero.org/styles/chicago-author-date</id>\n    <link href="http://www.zotero.org/styles/chicago-author-date" rel="self"/>\n    <link href="http://www.zotero.org/styles/chicago-notes-bibliography" rel="template"/>\n    <link href="https://www.chicagomanualofstyle.org/" rel="documentation"/>\n    <link href="https://zotero.org/groups/2205533/collections/5V67EPX3" rel="documentation"/>\n    <author>\n      <name>Andrew Dunning</name>\n      <uri>https://orcid.org/0000-0003-0464-5036</uri>\n    </author>\n    <category citation-format="author-date"/>\n    <category field="anthropology"/>\n    <category field="communications"/>\n    <category field="generic-base"/>\n    <category field="geography"/>\n    <category field="history"/>\n    <category field="humanities"/>\n    <category field="law"/>\n    <category field="linguistics"/>\n    <category field="literature"/>\n    <category field="philosophy"/>\n    <category field="political_science"/>\n    <category field="science"/>\n    <category field="social_science"/>\n    <category field="sociology"/>\n    <category field="theology"/>\n    <summary>Chicago-style source citations (with Bluebook for legal citations), author-date system</summary>\n    <updated>2025-02-09T00:00:00+00:00</updated>\n    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>\n  </info>\n  <locale xml:lang="en">\n    <terms>\n      <!-- Chicago omits \'by\' from `verb-short` forms; it abbreviates only the most common roles -->\n      <term name="advance-online-publication">ahead of print</term>\n      <term name="anonymous">unsigned</term>\n      <term form="verb-short" name="collection-editor">ed.</term>\n      <term form="short" name="collection-number">\n        <single>vol.</single>\n        <multiple>vols.</multiple>\n      </term>\n      <term form="verb-short" name="compiler">comp.</term>\n      <term form="verb-short" name="editor">ed.</term>\n      <term form="short" name="editor-translator">\n        <single>ed. and trans.</single>\n        <multiple>eds. and trans.</multiple>\n      </term>\n      <term form="short" name="editortranslator">\n        <single>ed. and trans.</single>\n        <multiple>eds. and trans.</multiple>\n      </term>\n      <term form="verb" name="editor-translator">edited and translated by</term>\n      <term form="verb" name="editortranslator">edited and translated by</term>\n      <term form="verb-short" name="editor-translator">ed. and trans.</term>\n      <term form="verb-short" name="editortranslator">ed. and trans.</term>\n      <term form="verb-short" name="illustrator">ill.</term>\n      <term form="short" name="legislation">Pub. L.</term>\n      <term name="manuscript">unpublished manuscript</term>\n      <term name="original-work-published">originally published as</term>\n      <term form="short" name="paper-conference">paper</term>\n      <!-- \'under\' replaces \'s.v.\' from CMOS17 and earlier (CMOS18 14.130) -->\n      <term name="sub-verbo">under</term>\n      <term form="short" name="sub-verbo">under</term>\n      <term name="timestamp">at</term>\n      <term form="verb-short" name="translator">trans.</term>\n    </terms>\n  </locale>\n  <locale xml:lang="en-GB">\n    <terms>\n      <!-- the Bibliography of Additional Resources recommends the New Oxford Style Manual as a British English guide, which the `en-GB` locale follows -->\n      <term form="short" name="collection-number">\n        <single>vol.</single>\n        <multiple>vols</multiple>\n      </term>\n      <term form="short" name="editor-translator">\n        <single>ed. and trans.</single>\n        <multiple>eds and trans.</multiple>\n      </term>\n      <term form="short" name="editortranslator">\n        <single>ed. and trans.</single>\n        <multiple>eds and trans.</multiple>\n      </term>\n      <term form="verb-short" name="illustrator">illus.</term>\n    </terms>\n  </locale>\n  <!-- Contents:\n\n       This file interprets Chicago using APA\'s four basic reference elements\n       (cf. CMOS18 14.2, 14.64, 14.161):\n\n        1. Author (CMOS18 13.74-86)\n        2. Date (author-date system only, CMOS18 13.102)\n        3. Title and descriptions (CMOS18 13.87-101)\n            3.1. Title\n            3.2. Description\n            3.3. Identifiers (edition, contributors, volume)\n        4. Source\n            4.1. Serial sources\n            4.2. Monographic sources\n            4.3. Series\n            4.4. Event\n            4.5. Publisher\n            4.6. Date\n            4.7. Locator (including page references)\n            4.8. Medium\n            4.9. Archival location\n            4.10. URL or persistent identifier\n\n       Freeform annotations to bibliography entries:\n\n        5. Notes\n\n       Chicago also provides parallel rules for legal references following\n       The Bluebook: A Uniform System of Citation (code shared with APA):\n\n        6. Legal references\n  -->\n  <!-- In this file, macros suffixed `-bib` and `-note` are parallel versions\n       of the same features for the bibliography and notes, and all changes\n       must be applied to both. They should only contain differences of\n       punctuation (periods in bibliography, commas in notes) and capitalization,\n       except where the comments indicate structural changes. -->\n  <!-- Categories of CSL item types:\n\n       Serial\n       : article-journal article-magazine article-newspaper periodical post-weblog review review-book\n\n       Serial or Monographic\n       : interview paper-conference\n\n         Monographic with any of `collection-editor compiler editor editorial-director`.\n         A serial `paper-conference` is unpublished if it lacks any of `issue page supplement-number volume`.\n\n       Monographic\n       : article book broadcast chapter classic collection dataset document\n         entry entry-dictionary entry-encyclopedia event figure\n         graphic manuscript map motion_picture musical_score\n         pamphlet patent performance personal_communication post report\n         software song speech standard thesis webpage\n\n       Legal\n       : bill hearing legal_case legislation regulation treaty\n  -->\n  <!-- Variable labels -->\n  <macro name="label-chapter-number">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="chapter-number" type="song">\n          <text value="track"/>\n        </if>\n        <else-if is-numeric="chapter-number">\n          <label form="short" variable="chapter-number"/>\n        </else-if>\n      </choose>\n      <text variable="chapter-number"/>\n    </group>\n  </macro>\n  <macro name="label-chapter-number-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="chapter-number" type="song">\n          <text text-case="capitalize-first" value="track"/>\n        </if>\n        <else-if is-numeric="chapter-number">\n          <label form="short" text-case="capitalize-first" variable="chapter-number"/>\n        </else-if>\n      </choose>\n      <text text-case="capitalize-first" variable="chapter-number"/>\n    </group>\n  </macro>\n  <macro name="label-collection-number">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="collection-number">\n          <label form="short" variable="collection-number"/>\n        </if>\n      </choose>\n      <text variable="collection-number"/>\n    </group>\n  </macro>\n  <macro name="label-edition">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="edition">\n          <number form="ordinal" variable="edition"/>\n          <label form="short" variable="edition"/>\n        </if>\n        <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n          <!-- serial types: full label (CMOS18 14.89) -->\n          <text variable="edition"/>\n          <label variable="edition"/>\n        </else-if>\n        <else-if match="any" variable="collection-editor compiler editor editorial-director">\n          <!-- monographic types -->\n          <text variable="edition"/>\n        </else-if>\n        <else-if match="any" type="interview paper-conference">\n          <!-- serial types -->\n          <text variable="edition"/>\n          <label variable="edition"/>\n        </else-if>\n        <else>\n          <!-- monographic types -->\n          <text variable="edition"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="label-edition-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="edition">\n          <number form="ordinal" variable="edition"/>\n          <label form="short" variable="edition"/>\n        </if>\n        <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n          <!-- serial types: full label (CMOS18 14.89) -->\n          <text text-case="title" variable="edition"/>\n          <label text-case="capitalize-first" variable="edition"/>\n        </else-if>\n        <else-if match="any" variable="collection-editor compiler editor editorial-director">\n          <!-- monographic types -->\n          <text text-case="capitalize-first" variable="edition"/>\n        </else-if>\n        <else-if match="any" type="interview paper-conference">\n          <!-- serial types -->\n          <text text-case="title" variable="edition"/>\n          <label text-case="capitalize-first" variable="edition"/>\n        </else-if>\n        <else>\n          <!-- monographic types -->\n          <text text-case="capitalize-first" variable="edition"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="label-issue">\n    <group delimiter=" ">\n      <label form="short" variable="issue"/>\n      <text variable="issue"/>\n    </group>\n  </macro>\n  <macro name="label-locator">\n    <group delimiter=" ">\n      <choose>\n        <if locator="page"/>\n        <else-if match="any" type="bill hearing legal_case legislation regulation treaty">\n          <!-- Bluebook-style labels for legal types (CMOS18 14.174) -->\n          <choose>\n            <if locator="chapter paragraph section" match="any">\n              <label form="symbol" variable="locator"/>\n            </if>\n            <else>\n              <label form="short" variable="locator"/>\n            </else>\n          </choose>\n        </else-if>\n        <else-if is-numeric="locator" locator="line">\n          <label variable="locator"/>\n        </else-if>\n        <else-if is-numeric="locator">\n          <label form="short" variable="locator"/>\n        </else-if>\n        <else-if locator="chapter line verse" match="any"/>\n        <!-- a non-numeric canonical reference is identified by its formatting and does not need a label (CMOS18 14.143-54) -->\n        <else>\n          <label form="short" variable="locator"/>\n        </else>\n      </choose>\n      <text variable="locator"/>\n    </group>\n  </macro>\n  <macro name="label-locator-all">\n    <group delimiter=" ">\n      <label form="short" variable="locator"/>\n      <text variable="locator"/>\n    </group>\n  </macro>\n  <macro name="label-number-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if type="standard"/>\n        <else-if is-numeric="number" match="any" type="legislation regulation">\n          <label form="short" text-case="capitalize-first" variable="number"/>\n        </else-if>\n      </choose>\n      <text text-case="capitalize-first" variable="number"/>\n    </group>\n  </macro>\n  <macro name="label-number-of-volumes">\n    <group delimiter=" ">\n      <text variable="number-of-volumes"/>\n      <choose>\n        <if is-numeric="number-of-volumes">\n          <label form="short" variable="number-of-volumes"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="label-page">\n    <group delimiter=" ">\n      <label form="short" variable="page"/>\n      <text variable="page"/>\n    </group>\n  </macro>\n  <macro name="label-part-number">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="part-number">\n          <!-- TODO: Replace with `part-number` label when CSL provides one -->\n          <text form="short" term="part"/>\n        </if>\n      </choose>\n      <text variable="part-number"/>\n    </group>\n  </macro>\n  <macro name="label-part-number-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="part-number">\n          <!-- TODO: Replace with `part-number` label when CSL provides one -->\n          <text form="short" term="part" text-case="capitalize-first"/>\n        </if>\n      </choose>\n      <text text-case="capitalize-first" variable="part-number"/>\n    </group>\n  </macro>\n  <macro name="label-section-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="section">\n          <label form="short" text-case="capitalize-first" variable="section"/>\n        </if>\n      </choose>\n      <text text-case="title" variable="section"/>\n    </group>\n  </macro>\n  <macro name="label-section-symbol">\n    <group delimiter=" ">\n      <label form="symbol" variable="section"/>\n      <text variable="section"/>\n    </group>\n  </macro>\n  <macro name="label-supplement-number">\n    <group delimiter=" ">\n      <choose>\n        <!-- TODO: Replace with `supplement-number` label when CSL provides one -->\n        <if variable="issue supplement-number">\n          <!-- if there is both an issue and supplement number, do not label both as \'no.\' -->\n          <text form="short" term="supplement"/>\n        </if>\n        <else-if is-numeric="supplement-number" variable="volume-title">\n          <!-- if there is a volume title, it is already described as a supplement -->\n          <text form="short" term="issue"/>\n        </else-if>\n        <else-if is-numeric="supplement-number" type="periodical" variable="title">\n          <text form="short" term="issue"/>\n        </else-if>\n        <else-if is-numeric="supplement-number">\n          <text form="short" term="supplement"/>\n        </else-if>\n      </choose>\n      <text variable="supplement-number"/>\n    </group>\n  </macro>\n  <macro name="label-version">\n    <group delimiter=" ">\n      <choose>\n        <if type="software">\n          <!-- short version label for software (CMOS18 14.169) -->\n          <label form="short" variable="version"/>\n        </if>\n        <else>\n          <label variable="version"/>\n        </else>\n      </choose>\n      <text variable="version"/>\n    </group>\n  </macro>\n  <macro name="label-version-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if type="software">\n          <!-- short version label for software (CMOS18 14.169) -->\n          <label form="short" text-case="capitalize-first" variable="version"/>\n        </if>\n        <else>\n          <label text-case="capitalize-first" variable="version"/>\n        </else>\n      </choose>\n      <text variable="version"/>\n    </group>\n  </macro>\n  <macro name="label-volume">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="volume">\n          <label form="short" variable="volume"/>\n        </if>\n      </choose>\n      <text variable="volume"/>\n    </group>\n  </macro>\n  <macro name="label-volume-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="volume">\n          <label form="short" text-case="capitalize-first" variable="volume"/>\n        </if>\n      </choose>\n      <text text-case="capitalize-first" variable="volume"/>\n    </group>\n  </macro>\n  <!-- 1. Author (CMOS18 13.74-86) -->\n  <macro name="author-bib">\n    <names variable="composer">\n      <name and="text" delimiter-precedes-last="always" initialize="false" name-as-sort-order="first"/>\n      <label form="short" prefix=", "/>\n      <substitute>\n        <names variable="author"/>\n        <!-- cf. `interview` model (CMOS18 14.110); if it is desired to prioritize `host` over `guest`, the latter could be encoded as a `contributor` -->\n        <names variable="guest"/>\n        <names variable="host"/>\n        <choose>\n          <if type="song">\n            <names variable="performer"/>\n          </if>\n        </choose>\n        <choose>\n          <if type="classic">\n            <!-- contributors fall after the title of `classic` (CMOS18 14.147) -->\n            <text macro="author-title-substitute-bib"/>\n          </if>\n          <else-if type="entry-dictionary" variable="container-title">\n            <!-- contributors fall after the title of unsigned reference entries (CMOS18 14.130) -->\n            <text macro="author-title-substitute-container"/>\n          </else-if>\n          <else-if type="entry-encyclopedia" variable="container-title">\n            <text macro="author-title-substitute-container"/>\n          </else-if>\n        </choose>\n        <names variable="illustrator"/>\n        <choose>\n          <if match="none" type="standard">\n            <names variable="editor-translator"/>\n            <names variable="editor"/>\n            <names variable="translator"/>\n            <names variable="collection-editor"/>\n          </if>\n        </choose>\n        <names variable="director"/>\n        <choose>\n          <!-- serial `broadcast` prioritizes title (CMOS18 14.165, 14.168) -->\n          <if type="broadcast" variable="container-title number title"/>\n          <else>\n            <names variable="producer"/>\n            <names variable="executive-producer"/>\n            <names variable="series-creator"/>\n            <choose>\n              <if type="broadcast">\n                <names variable="contributor"/>\n              </if>\n            </choose>\n          </else>\n        </choose>\n        <names variable="editorial-director"/>\n        <names variable="compiler"/>\n        <choose>\n          <if match="any" type="event performance speech">\n            <names variable="chair"/>\n            <names variable="organizer"/>\n          </if>\n        </choose>\n        <names variable="curator"/>\n        <choose>\n          <if match="any" type="software webpage">\n            <!-- `software` listed under the name of the publisher or developer (CMOS18 14.169); `webpage` listed under a site owner or sponsor (CMOS18 14.104) -->\n            <text variable="publisher"/>\n          </if>\n          <else-if type="standard">\n            <!-- `standard` listed in bibliography under organization, but note omits this (CMOS18 14.159) -->\n            <text variable="authority"/>\n          </else-if>\n        </choose>\n        <text macro="author-title-substitute-container"/>\n        <text macro="author-title-substitute-bib"/>\n        <choose>\n          <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place"/>\n          <else-if type="manuscript">\n            <text macro="source-archive-bib"/>\n          </else-if>\n        </choose>\n      </substitute>\n    </names>\n  </macro>\n  <macro name="author-inline">\n    <choose>\n      <if match="any" type="bill hearing legal_case legislation regulation treaty">\n        <text macro="title-and-descriptions-short"/>\n      </if>\n      <else-if match="any" type="interview personal_communication">\n        <text macro="author-inline-and-recipient"/>\n      </else-if>\n      <else>\n        <names variable="composer">\n          <name and="text" form="short" initialize="true"/>\n          <substitute>\n            <names variable="author"/>\n            <names variable="guest"/>\n            <names variable="host"/>\n            <choose>\n              <if type="song">\n                <names variable="performer"/>\n              </if>\n            </choose>\n            <choose>\n              <if match="any" type="classic performance">\n                <!-- contributors fall after the title of `classic` (CMOS18 14.147), `performance` (CMOS18 14.166) -->\n                <text macro="author-title-substitute-short"/>\n              </if>\n              <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n                <!-- contributors fall after the title of unsigned reference entries (CMOS18 14.130) -->\n                <text macro="author-title-substitute-container-short"/>\n              </else-if>\n            </choose>\n            <names variable="illustrator"/>\n            <choose>\n              <if match="none" type="standard">\n                <names variable="editor-translator"/>\n                <names variable="editor"/>\n                <names variable="translator"/>\n                <names variable="collection-editor"/>\n              </if>\n            </choose>\n            <choose>\n              <if type="broadcast" variable="container-title number title"/>\n              <else>\n                <names variable="director"/>\n                <names variable="producer"/>\n                <names variable="executive-producer"/>\n                <names variable="series-creator"/>\n                <choose>\n                  <if type="broadcast">\n                    <names variable="contributor"/>\n                  </if>\n                </choose>\n              </else>\n            </choose>\n            <names variable="editorial-director"/>\n            <names variable="compiler"/>\n            <choose>\n              <if match="any" type="event performance speech">\n                <names variable="chair"/>\n                <names variable="organizer"/>\n              </if>\n            </choose>\n            <names variable="curator"/>\n            <choose>\n              <if match="any" type="software webpage">\n                <!-- `software` listed under the name of the publisher or developer (CMOS18 14.169); `webpage` listed under a site owner or sponsor (CMOS18 14.104) -->\n                <text form="short" variable="publisher"/>\n              </if>\n              <else-if type="standard">\n                <!-- `standard` listed in bibliography under organization, but note omits this (CMOS18 14.159) -->\n                <text form="short" variable="authority"/>\n              </else-if>\n            </choose>\n            <text macro="author-title-substitute-container-short"/>\n            <text macro="author-title-substitute-short"/>\n            <choose>\n              <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place"/>\n              <else-if type="manuscript">\n                <text macro="source-archive-note"/>\n              </else-if>\n            </choose>\n          </substitute>\n        </names>\n      </else>\n    </choose>\n  </macro>\n  <macro name="author-sort">\n    <choose>\n      <if match="any" type="bill hearing legal_case legislation regulation treaty">\n        <text macro="legal-title"/>\n      </if>\n      <else>\n        <text macro="author-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Author elements -->\n  <macro name="author-inline-and-recipient">\n    <!-- identical to `author-short-and-recipient` but with initialization -->\n    <group delimiter=" ">\n      <choose>\n        <!-- inaccessible `interview` or `personal_commmunication`: in-text citation (CMOS18 14.111) -->\n        <if match="none" variable="archive archive-place container-title DOI number publisher references URL">\n          <choose>\n            <if position="first">\n              <!-- do not shorten at first reference as there is no bibliography entry -->\n              <names variable="author">\n                <name and="text" initialize="false"/>\n                <!-- never initialize -->\n                <substitute>\n                  <text macro="title-and-descriptions-short"/>\n                </substitute>\n              </names>\n            </if>\n            <else>\n              <names variable="author">\n                <name and="text" form="short" initialize="true"/>\n                <substitute>\n                  <text macro="title-and-descriptions-short"/>\n                </substitute>\n              </names>\n            </else>\n          </choose>\n          <choose>\n            <if variable="genre"/>\n            <!-- recipient appears in the description if there is a `genre`; otherwise after `author` -->\n            <else-if position="first">\n              <names variable="recipient">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </else-if>\n            <else>\n              <names variable="recipient">\n                <label form="verb" suffix=" "/>\n                <name and="text" form="short" initialize="true"/>\n              </names>\n            </else>\n          </choose>\n        </if>\n        <!-- accessible `interview` or `personal_communication`: standard citation -->\n        <else-if variable="author recipient">\n          <names variable="author">\n            <name and="text" form="short" initialize="true"/>\n          </names>\n          <choose>\n            <if match="none" variable="genre">\n              <names variable="recipient">\n                <label form="verb" suffix=" "/>\n                <name and="text" form="short" initialize="true"/>\n              </names>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <names variable="author">\n            <name and="text" form="short" initialize="true"/>\n            <substitute>\n              <text macro="title-and-descriptions-short"/>\n            </substitute>\n          </names>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="author-title-substitute-bib">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- If a review has no `reviewed-genre` or `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. -->\n        <choose>\n          <if variable="reviewed-genre title">\n            <text macro="title-bib"/>\n          </if>\n          <else-if variable="reviewed-genre reviewed-title title">\n            <text macro="title-bib"/>\n          </else-if>\n          <else>\n            <text macro="title-and-descriptions-bib"/>\n          </else>\n        </choose>\n      </if>\n      <else-if variable="title">\n        <text macro="title-bib"/>\n      </else-if>\n      <else>\n        <!-- If an item has no `title`, substitute with descriptions. -->\n        <text macro="title-and-descriptions-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="author-title-substitute-short">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- If a review has no `reviewed-genre` or `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. -->\n        <choose>\n          <if variable="reviewed-genre title">\n            <text macro="title-short"/>\n          </if>\n          <else-if variable="reviewed-genre reviewed-title title">\n            <text macro="title-short"/>\n          </else-if>\n          <else>\n            <text macro="title-and-descriptions-short"/>\n          </else>\n        </choose>\n      </if>\n      <else-if variable="title">\n        <text macro="title-short"/>\n      </else-if>\n      <else>\n        <!-- If an item has no `title`, substitute with descriptions and capitalize -->\n        <text macro="title-and-descriptions-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="author-title-substitute-container">\n    <choose>\n      <!-- no Chicago model for citing an anonymous article with an issue title in `volume-title` -->\n      <if variable="volume-title"/>\n      <else-if match="any" type="article-magazine article-newspaper">\n        <!-- Anonymous magazine and newspaper articles substitute name of publication (CMOS18 14.87, 14.97) -->\n        <text macro="source-serial-name"/>\n      </else-if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- Publication name also substituted for unsigned reviews (CMOS18 14.102) -->\n        <text macro="source-serial-name"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <!-- Anonymous entries in reference works (CMOS18 14.130) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="broadcast">\n        <!-- TV broadcasts and podcasts (CMOS18 14.165, 14.168) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="webpage">\n        <!-- list a webpage under the website title if there is no owner or sponsor (CMOS18 14.104) -->\n        <choose>\n          <if variable="container-title-short">\n            <text text-case="title" variable="container-title-short"/>\n          </if>\n          <else>\n            <text text-case="title" variable="container-title"/>\n          </else>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="author-title-substitute-container-short">\n    <choose>\n      <if match="any" type="article-magazine article-newspaper">\n        <!-- Anonymous magazine/newspaper articles substitute name of publication (CMOS18 14.87, 14.97) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- Publication name also substituted for unsigned reviews (CMOS18 14.102) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <!-- Anonymous entries in reference works (CMOS18 14.130) -->\n        <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="broadcast">\n        <!-- TV broadcasts and podcasts (CMOS18 14.165, 14.168) -->\n        <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="webpage">\n        <!-- list a webpage under the website title if there is no owner or sponsor (CMOS18 14.104) -->\n        <text form="short" text-case="title" variable="container-title"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 2. Date (CMOS18 13.102) -->\n  <macro name="date">\n    <group delimiter="-">\n      <choose>\n        <if variable="issued">\n          <group delimiter=" ">\n            <!-- reprints and earlier editions may give original year in brackets (CMOS18 14.16) -->\n            <text macro="date-original-year" prefix="(" suffix=")"/>\n            <group>\n              <text macro="date-issued-year"/>\n              <text variable="year-suffix"/>\n            </group>\n          </group>\n        </if>\n        <else-if variable="event-date">\n          <text macro="date-event-year"/>\n        </else-if>\n        <else-if variable="available-date">\n          <date date-parts="year" form="numeric" variable="available-date"/>\n        </else-if>\n        <else-if variable="status">\n          <!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) -->\n          <text text-case="capitalize-first" variable="status"/>\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if type="collection">\n          <!-- do not give n.d. for archival collections (CMOS18 14.128) -->\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if type="manuscript">\n          <!-- do not give n.d. with a bare shelfmark -->\n          <choose>\n            <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place">\n              <text form="short" term="no date"/>\n              <text variable="year-suffix"/>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <text form="short" term="no date"/>\n          <text variable="year-suffix"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="date-short">\n    <group delimiter="-">\n      <choose>\n        <if variable="issued">\n          <group delimiter=" ">\n            <choose>\n              <if is-uncertain-date="original-date">\n                <!-- Uncertain date already has square brackets -->\n                <text macro="date-original-year"/>\n              </if>\n              <else>\n                <text macro="date-original-year" prefix="[" suffix="]"/>\n              </else>\n            </choose>\n            <group>\n              <choose>\n                <if match="none" type="interview personal_communication">\n                  <text macro="date-issued-year"/>\n                </if>\n                <!-- accessible `interview` or `personal_communication` items appear in the bibliography; inaccessible items are in-text only -->\n                <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n                  <text macro="date-issued-year"/>\n                </else-if>\n                <else>\n                  <text macro="date-issued-full"/>\n                </else>\n              </choose>\n              <text variable="year-suffix"/>\n            </group>\n          </group>\n        </if>\n        <else-if variable="event-date">\n          <text macro="date-event-year"/>\n        </else-if>\n        <else-if variable="available-date">\n          <date date-parts="year" form="numeric" variable="available-date"/>\n        </else-if>\n        <else-if variable="status">\n          <!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) -->\n          <text text-case="lowercase" variable="status"/>\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if match="any" type="interview personal_communication">\n          <choose>\n            <if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n              <!-- only give n.d. for accessible personal communication (CMOS18 14.111)-->\n              <text form="short" term="no date"/>\n              <text variable="year-suffix"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if match="any" type="classic collection entry entry-dictionary entry-encyclopedia">\n          <!-- do not give n.d. for archival collections (CMOS18 14.128), `classic` (CMOS18 14.143), or reference entries (CMOS18 14.131) -->\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if type="manuscript">\n          <!-- do not give n.d. with a bare shelfmark -->\n          <choose>\n            <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place">\n              <text form="short" term="no date"/>\n              <text variable="year-suffix"/>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <text form="short" term="no date"/>\n          <text variable="year-suffix"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="date-sort-group">\n    <!-- Sort items with and without dates (CMOS18 14.44):\n\n          1. items with dates (= 0)\n          2. `no date` items (= 1)\n          3. items with `status` (forthcoming, in press, etc.) (= 2) -->\n    <choose>\n      <if variable="issued">\n        <text value="0"/>\n      </if>\n      <else-if variable="status">\n        <text value="2"/>\n      </else-if>\n      <else>\n        <!-- n.d. -->\n        <text value="1"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-sort-year">\n    <!-- while reference lists are to be sorted chronologically (CMOS18 13.112), it appears that only the year is to be taken into account (CMOS18 13.114) -->\n    <choose>\n      <if type="personal_communication" variable="event-date issued">\n        <date date-parts="year" form="numeric" variable="event-date"/>\n      </if>\n      <else>\n        <text macro="date-issued-year"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Date elements -->\n  <macro name="date-event-full">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date form="text" prefix="[" suffix="?]" variable="event-date"/>\n      </if>\n      <else>\n        <date form="text" variable="event-date"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-event-year">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date date-parts="year" form="numeric" prefix="[" suffix="?]" variable="event-date"/>\n      </if>\n      <else>\n        <date date-parts="year" form="numeric" variable="event-date"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-issued-full">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date form="text" prefix="[" suffix="?]" variable="issued"/>\n      </if>\n      <else>\n        <date form="text" variable="issued"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-issued-month">\n    <date variable="issued">\n      <date-part name="month"/>\n    </date>\n  </macro>\n  <macro name="date-issued-month-day">\n    <date variable="issued">\n      <date-part name="month"/>\n      <date-part name="day" prefix=" "/>\n    </date>\n  </macro>\n  <macro name="date-issued-year">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date date-parts="year" form="numeric" prefix="[" suffix="?]" variable="issued"/>\n      </if>\n      <else>\n        <date date-parts="year" form="numeric" variable="issued"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-original-month">\n    <date variable="original-date">\n      <date-part name="month"/>\n    </date>\n  </macro>\n  <macro name="date-original-month-day">\n    <date variable="original-date">\n      <date-part name="month"/>\n      <date-part name="day" prefix=" "/>\n    </date>\n  </macro>\n  <macro name="date-original-year">\n    <choose>\n      <if is-uncertain-date="original-date">\n        <date date-parts="year" form="numeric" prefix="[" suffix="?]" variable="original-date"/>\n      </if>\n      <else>\n        <date date-parts="year" form="numeric" variable="original-date"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 3. Title and descriptions (CMOS18 13.87-101) -->\n  <macro name="title-and-descriptions-bib">\n    <group delimiter=". ">\n      <choose>\n        <if variable="title">\n          <text macro="title-bib"/>\n          <text macro="description-bib"/>\n          <text macro="identifier-bib"/>\n        </if>\n        <else-if match="any" type="bill report">\n          <!-- Bills, resolutions, and congressional reports substitute bill number if no title -->\n          <!-- Congressional reports are indistinguishable from other reports -->\n          <text macro="identifier-number-bib"/>\n          <text macro="identifier-bib"/>\n          <text macro="description-bib"/>\n        </else-if>\n        <else>\n          <text macro="description-bib"/>\n          <text macro="identifier-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="title-and-descriptions-short">\n    <choose>\n      <if variable="title">\n        <text macro="title-short"/>\n      </if>\n      <else-if match="any" type="bill report">\n        <!-- Bills, resolutions, and congressional reports substitute bill number if no title -->\n        <text macro="legal-identifier-bill-report"/>\n      </else-if>\n      <else>\n        <text macro="description-short"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-and-source-bib">\n    <group delimiter=". ">\n      <choose>\n        <if type="broadcast" variable="container-title number title">\n          <!-- Bespoke `broadcast` format (CMOS18 14.165, 14.168) -->\n          <text macro="source-monographic-title-specific-title-first"/>\n          <group delimiter=", ">\n            <text macro="identifier-number-bib"/>\n            <text macro="title-bib"/>\n            <text macro="description-bib"/>\n            <text macro="source-monographic-identifier-contributors-bib"/>\n          </group>\n          <text macro="source-monographic-identifier-contributors-bib-container-author"/>\n          <text macro="source-series-bib"/>\n          <choose>\n            <!-- show event information here only if not collapsed with `issued` (CMOS18 14.167) -->\n            <if match="any" variable="event-date original-date original-publisher original-publisher-place publisher status">\n              <text macro="source-event-bib"/>\n            </if>\n          </choose>\n        </if>\n        <else-if type="chapter" variable="container-title genre">\n          <!-- \'introduction to\', \'online appendix to\' (CMOS18 14.12, 14.14) -->\n          <group delimiter=" ">\n            <text macro="title-and-descriptions-bib"/>\n            <text macro="source-bib"/>\n          </group>\n        </else-if>\n        <else-if type="article-journal" variable="container-title genre volume-title">\n          <!-- introduction to a special issue or supplement -->\n          <group delimiter=" ">\n            <text macro="title-and-descriptions-bib"/>\n            <text macro="source-bib"/>\n          </group>\n        </else-if>\n        <else>\n          <text macro="title-and-descriptions-bib"/>\n          <text macro="source-bib"/>\n        </else>\n      </choose>\n      <group delimiter=", ">\n        <choose>\n          <!-- show event information here only if collapsed with `issued` (CMOS18 14.167) -->\n          <if match="any" variable="event-date original-date original-publisher original-publisher-place publisher status"/>\n          <!-- omit serial types -->\n          <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"/>\n          <else-if match="any" variable="collection-editor compiler editor editorial-director">\n            <!-- monographic types -->\n            <text macro="source-event-bib"/>\n          </else-if>\n          <!-- omit serial types -->\n          <else-if match="any" type="interview paper-conference"/>\n          <else>\n            <!-- monographic types -->\n            <text macro="source-event-bib"/>\n          </else>\n        </choose>\n        <text macro="source-monographic-publication-bib"/>\n      </group>\n      <text macro="source-medium-bib"/>\n      <text macro="source-archive-bib"/>\n      <text macro="source-date-accessed-DOI-URL-bib"/>\n    </group>\n  </macro>\n  <!-- 3.1. Title -->\n  <macro name="title-bib">\n    <choose>\n      <if match="any" type="post webpage">\n        <!-- part number/title always at the analytic level -->\n        <text macro="title-and-part-filter-review-bib"/>\n      </if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="title-and-part-filter-review-bib"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="title-monographic-bib-specific-title-first"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="title-and-part-filter-review-bib"/>\n      </else-if>\n      <else>\n        <text macro="title-monographic-bib-specific-title-first"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-short">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- If a review has no `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. -->\n        <choose>\n          <if variable="reviewed-genre title">\n            <!-- Quotes, title case -->\n            <text form="short" quotes="true" text-case="title" variable="title"/>\n          </if>\n          <else-if variable="reviewed-genre reviewed-title title">\n            <!-- Quotes, title case -->\n            <text form="short" quotes="true" text-case="title" variable="title"/>\n          </else-if>\n          <else>\n            <text macro="description-short"/>\n          </else>\n        </choose>\n      </if>\n      <else>\n        <text macro="title-primary-short"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Title elements -->\n  <macro name="title-and-part-filter-review-bib">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- `title` is only the review title if there is a separate `reviewed-genre` or `reviewed-title`; otherwise, it is the title of the reviewed work, printed in the description -->\n        <choose>\n          <if match="any" variable="reviewed-genre reviewed-title">\n            <text macro="title-and-part-title-bib"/>\n          </if>\n        </choose>\n      </if>\n      <else>\n        <text macro="title-and-part-title-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-and-part-title-bib">\n    <group delimiter=". ">\n      <text macro="title-primary"/>\n      <group delimiter=", ">\n        <text macro="label-part-number-capitalized"/>\n        <text macro="title-part"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="title-monographic-bib-specific-title-first">\n    <!-- Use with author-date or notes and bibliography leading with volume title (CMOS18 14.21). -->\n    <!-- For monographic items, assume `part-number` and `part-title` refer to the book/volume. -->\n    <choose>\n      <if variable="container-title">\n        <text macro="title-primary"/>\n      </if>\n      <!-- For monographic items without `container-title`, bibliography entries list `part-title` or `volume-title` first if available -->\n      <else-if variable="part-title">\n        <text macro="title-part"/>\n      </else-if>\n      <else-if variable="volume-title">\n        <text macro="title-volume"/>\n      </else-if>\n      <else>\n        <text macro="title-primary"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-part">\n    <choose>\n      <if type="patent">\n        <!-- No italics or quotes, sentence case -->\n        <text form="short" text-case="capitalize-first" variable="part-title"/>\n      </if>\n      <else-if match="any" type="bill collection legislation regulation treaty">\n        <!-- No italics or quotes, title case -->\n        <text text-case="title" variable="part-title"/>\n      </else-if>\n      <else-if type="legal_case">\n        <!-- Italicized, sentence case -->\n        <text font-style="italic" variable="part-title"/>\n      </else-if>\n      <else-if match="any" type="book classic graphic hearing map">\n        <!-- Italicized, title case (regardless of `container-title`) -->\n        <text font-style="italic" text-case="title" variable="part-title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="author container-title">\n        <!-- Signed encyclopedia entry in quotes, title case (CMOS18 14.132) -->\n        <text quotes="true" text-case="title" variable="part-title"/>\n      </else-if>\n      <else-if type="entry-dictionary" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="part-title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="part-title"/>\n      </else-if>\n      <else-if type="post">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="part-title"/>\n      </else-if>\n      <else-if type="webpage">\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="part-title"/>\n      </else-if>\n      <!-- Other types are formatted based on presence of `container-title` -->\n      <else-if variable="container-title">\n        <choose>\n          <if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n            <!-- serial types -->\n            <!-- Quotes, title case -->\n            <text quotes="true" text-case="title" variable="part-title"/>\n          </if>\n          <else-if match="any" variable="collection-editor compiler editor editorial-director">\n            <!-- monographic types -->\n            <!-- Italics, title case -->\n            <text font-style="italic" text-case="title" variable="part-title"/>\n          </else-if>\n          <else-if match="any" type="interview paper-conference">\n            <!-- serial types -->\n            <!-- Quotes, title case -->\n            <text quotes="true" text-case="title" variable="part-title"/>\n          </else-if>\n          <else>\n            <!-- monographic types -->\n            <!-- Italics, title case -->\n            <text font-style="italic" text-case="title" variable="part-title"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if match="any" type="article dataset document interview manuscript paper-conference personal_communication speech thesis webpage">\n        <!-- Container-like but not necessarily with `container-title` -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="part-title"/>\n      </else-if>\n      <else>\n        <!-- Italicized, title case (default) -->\n        <text font-style="italic" text-case="title" variable="part-title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-primary">\n    <choose>\n      <if type="patent">\n        <!-- No italics or quotes, sentence case -->\n        <text form="short" text-case="capitalize-first" variable="title"/>\n      </if>\n      <else-if match="any" type="bill collection legislation regulation treaty">\n        <!-- No italics or quotes, title case -->\n        <text text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="legal_case">\n        <!-- Italicized, sentence case -->\n        <text font-style="italic" variable="title"/>\n      </else-if>\n      <else-if match="any" type="book classic graphic hearing map">\n        <!-- Italicized, title case (regardless of `container-title`) -->\n        <text font-style="italic" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="author container-title">\n        <!-- Signed encyclopedia entry in quotes, title case (CMOS18 14.132) -->\n        <text quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-dictionary" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="post">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="title"/>\n      </else-if>\n      <!-- Other types are formatted based on presence of `container-title` -->\n      <else-if variable="container-title">\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if match="any" type="article dataset document interview manuscript paper-conference personal_communication speech thesis webpage">\n        <!-- Container-like but not necessarily with `container-title` -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else>\n        <!-- Italicized, title case (default) -->\n        <text font-style="italic" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-primary-short">\n    <choose>\n      <if type="patent">\n        <!-- No italics or quotes, sentence case -->\n        <text form="short" text-case="capitalize-first" variable="title"/>\n      </if>\n      <else-if match="any" type="bill collection legislation regulation treaty">\n        <!-- No italics or quotes, title case -->\n        <text form="short" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="legal_case">\n        <!-- Italicized, sentence case -->\n        <text font-style="italic" form="short" variable="title"/>\n      </else-if>\n      <else-if match="any" type="book classic graphic hearing map">\n        <!-- Italicized, title case (regardless of `container-title`) -->\n        <text font-style="italic" form="short" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="author container-title">\n        <!-- Signed encyclopedia entry in quotes, title case (CMOS18 14.132) -->\n        <text form="short" quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-dictionary" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text form="short" quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text form="short" quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="post">\n        <!-- Quotes, sentence case -->\n        <text form="short" quotes="true" variable="title"/>\n      </else-if>\n      <!-- Other types are formatted based on presence of `container-title` -->\n      <else-if variable="container-title">\n        <!-- Quotes, title case -->\n        <text form="short" quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if match="any" type="article dataset document interview manuscript paper-conference personal_communication speech thesis webpage">\n        <!-- Container-like but not necessarily with `container-title` -->\n        <!-- Quotes, title case -->\n        <text form="short" quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else>\n        <!-- Italicized, title case (default) -->\n        <text font-style="italic" form="short" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-volume">\n    <choose>\n      <if type="manuscript">\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="volume-title"/>\n      </if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="volume-title"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <!-- Italics, title case -->\n        <text font-style="italic" text-case="title" variable="volume-title"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="volume-title"/>\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <!-- Italics, title case -->\n        <text font-style="italic" text-case="title" variable="volume-title"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 3.2. Description -->\n  <macro name="description-bib">\n    <choose>\n      <if match="any" type="interview" variable="interviewer">\n        <text macro="description-interview-bib"/>\n      </if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <text macro="description-review-bib"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <text macro="description-letter-bib"/>\n      </else-if>\n      <else-if type="song" variable="composer">\n        <text macro="description-song-bib"/>\n      </else-if>\n      <!-- thesis type appears with university name (CMOS18 14.113) -->\n      <else-if type="thesis"/>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="description-serial-bib"/>\n      </else-if>\n      <else-if type="paper-conference">\n        <text macro="description-paper-conference-bib"/>\n      </else-if>\n      <else-if match="none" variable="container-title">\n        <text macro="description-format-bib"/>\n      </else-if>\n      <!-- For conference presentations/performances/events, chapters in reports/standards/generic documents, software, place description within the source element -->\n      <else-if match="any" type="document report software standard"/>\n      <else-if match="any" type="event paper-conference performance speech">\n        <choose>\n          <if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume">\n            <text macro="description-format-bib"/>\n          </if>\n        </choose>\n      </else-if>\n      <else>\n        <text macro="description-format-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-short">\n    <choose>\n      <if match="any" type="interview" variable="interviewer">\n        <choose>\n          <if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n            <text macro="description-interview-short"/>\n          </if>\n          <else>\n            <!-- for an inaccessible `interview`, give a full in-text description at the first citation -->\n            <choose>\n              <if position="first">\n                <text macro="description-interview-note"/>\n              </if>\n              <else>\n                <text macro="description-interview-short"/>\n              </else>\n            </choose>\n          </else>\n        </choose>\n      </if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <text macro="description-review-short"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <text macro="description-letter-short"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="description-serial-short"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="description-format-short"/>\n      </else-if>\n      <else-if type="paper-conference">\n        <!-- serial `paper-conference` -->\n        <text macro="description-serial-short"/>\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <text macro="description-format-short"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Description elements -->\n  <macro name="description-format-bib">\n    <choose>\n      <if variable="genre number"/>\n      <else-if variable="genre">\n        <text text-case="capitalize-first" variable="genre"/>\n      </else-if>\n      <!-- generic labels if unpublished -->\n      <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL"/>\n      <else-if type="manuscript">\n        <!-- \'unpublished manuscript\' if no `genre` (CMOS18 14.114) -->\n        <text term="manuscript" text-case="capitalize-first"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <!-- \'personal communication\' if no `genre` (CMOS18 14.111) -->\n        <text term="personal-communication" text-case="capitalize-first"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="description-format-note">\n    <choose>\n      <if variable="genre number"/>\n      <else-if variable="genre">\n        <text variable="genre"/>\n      </else-if>\n      <!-- generic labels if unpublished -->\n      <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL"/>\n      <else-if type="manuscript">\n        <!-- \'unpublished manuscript\' if no `genre` (CMOS18 14.114) -->\n        <text term="manuscript"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <!-- \'personal communication\' if no `genre` (CMOS18 14.111) -->\n        <text term="personal-communication"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="description-format-short">\n    <group delimiter=" ">\n      <choose>\n        <if type="chapter" variable="container-title genre">\n          <!-- untitled introductions: cf. review model, which includes a title (CMOS18 14.101) -->\n          <text form="short" variable="genre"/>\n          <choose>\n            <if match="none" position="ibid ibid-with-locator">\n              <!-- CMOS team suggests leaving out title in repeated references -->\n              <text macro="source-monographic-preposition-note"/>\n              <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n            </if>\n          </choose>\n        </if>\n        <else-if type="article-journal" variable="container-title genre volume-title">\n          <!-- untitled introduction to a special issue or supplement -->\n          <text form="short" variable="genre"/>\n          <choose>\n            <if match="none" position="ibid ibid-with-locator">\n              <text macro="source-monographic-preposition-note"/>\n              <text form="short" quotes="true" text-case="title" variable="volume-title"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if variable="genre">\n          <text form="short" variable="genre"/>\n        </else-if>\n        <else-if variable="medium">\n          <text form="short" variable="medium"/>\n        </else-if>\n        <else-if variable="chapter-number container-title">\n          <text macro="source-monographic-preposition-note"/>\n          <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n        </else-if>\n        <else-if variable="chapter-number">\n          <text macro="label-chapter-number"/>\n        </else-if>\n        <!-- generic labels if unpublished -->\n        <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL"/>\n        <else-if type="manuscript">\n          <!-- \'unpublished manuscript\' if no `genre` (CMOS18 14.114) -->\n          <text term="manuscript"/>\n        </else-if>\n        <else-if type="personal_communication">\n          <!-- \'pers. comm.\' if no `genre` (CMOS18 14.111) -->\n          <text form="short" term="personal-communication"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="description-interview-bib">\n    <group delimiter=", ">\n      <choose>\n        <if variable="genre number">\n          <!-- `genre` printed with `number` -->\n          <names variable="interviewer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n        </if>\n        <else-if variable="genre">\n          <group delimiter=" ">\n            <text text-case="capitalize-first" variable="genre"/>\n            <group delimiter=" ">\n              <text form="verb" term="container-author"/>\n              <names variable="interviewer">\n                <name and="text" initialize="false"/>\n              </names>\n            </group>\n          </group>\n        </else-if>\n        <else-if variable="interviewer">\n          <names variable="interviewer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n        </else-if>\n        <else>\n          <text macro="description-format-bib"/>\n        </else>\n      </choose>\n      <text macro="source-event-place-first"/>\n    </group>\n  </macro>\n  <macro name="description-interview-note">\n    <group delimiter=", ">\n      <choose>\n        <if variable="genre number">\n          <!-- `genre` printed with `number` -->\n          <names variable="interviewer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n        </if>\n        <else-if variable="genre">\n          <group delimiter=" ">\n            <text variable="genre"/>\n            <group delimiter=" ">\n              <text form="verb" term="container-author"/>\n              <names variable="interviewer">\n                <name and="text" initialize="false"/>\n              </names>\n            </group>\n          </group>\n        </else-if>\n        <else-if variable="interviewer">\n          <names variable="interviewer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n        </else-if>\n        <else>\n          <text macro="description-format-note"/>\n        </else>\n      </choose>\n      <text macro="source-event-place-first"/>\n    </group>\n  </macro>\n  <macro name="description-interview-short">\n    <choose>\n      <if disambiguate="true">\n        <names variable="interviewer">\n          <label form="verb" suffix=" "/>\n          <name and="text" form="short" initialize="true"/>\n          <substitute>\n            <text macro="description-format-short"/>\n          </substitute>\n        </names>\n      </if>\n      <else-if match="any" variable="genre medium">\n        <choose>\n          <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n            <text macro="description-format-short"/>\n          </if>\n          <else>\n            <!-- capitalize if no author or title -->\n            <text macro="description-format-bib"/>\n          </else>\n        </choose>\n      </else-if>\n      <else>\n        <!-- generic description for an unpublished interview (CMOS18 14.108) -->\n        <text term="interview"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-letter-bib">\n    <choose>\n      <if variable="recipient">\n        <group delimiter=", ">\n          <choose>\n            <if variable="genre number">\n              <!-- `genre` appears with `number` -->\n              <names variable="recipient">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n            <else-if variable="genre">\n              <group delimiter=" ">\n                <text macro="description-format-bib"/>\n                <names variable="recipient">\n                  <label form="verb" suffix=" "/>\n                  <name and="text" initialize="false"/>\n                </names>\n              </group>\n            </else-if>\n            <else>\n              <names variable="recipient">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </else>\n          </choose>\n          <text variable="event-place"/>\n          <text macro="date-event-full"/>\n        </group>\n      </if>\n      <else>\n        <text macro="description-format-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-letter-short">\n    <!-- shortened notes ideally give author, recipient, place, and date (CMOS18 14.13) -->\n    <group delimiter=", ">\n      <choose>\n        <if variable="genre recipient">\n          <group delimiter=" ">\n            <text macro="description-format-short"/>\n            <names variable="recipient">\n              <label form="verb" suffix=" "/>\n              <name and="text" form="short" initialize="true"/>\n            </names>\n          </group>\n        </if>\n        <else>\n          <text macro="description-format-short"/>\n        </else>\n      </choose>\n      <text variable="event-place"/>\n      <choose>\n        <if variable="event-date">\n          <text macro="date-event-full"/>\n        </if>\n        <else>\n          <text macro="date-issued-full"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="description-paper-conference-bib">\n    <choose>\n      <if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="description-format-bib"/>\n      </if>\n      <else>\n        <!-- serial types -->\n        <group delimiter=". ">\n          <text macro="description-serial-bib"/>\n          <text macro="source-event-bib"/>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-bib">\n    <!-- Reviewed item -->\n    <group delimiter=". ">\n      <group delimiter=", ">\n        <group delimiter=" ">\n          <text macro="description-review-genre-bib"/>\n          <text macro="description-review-title"/>\n        </group>\n        <choose>\n          <if variable="reviewed-genre reviewed-title title">\n            <names variable="reviewed-author">\n              <label form="verb" suffix=" "/>\n              <name and="text" initialize="false"/>\n            </names>\n          </if>\n          <else-if variable="reviewed-genre"/>\n          <else>\n            <names variable="reviewed-author">\n              <label form="verb" suffix=" "/>\n              <name and="text" initialize="false"/>\n            </names>\n          </else>\n        </choose>\n        <text macro="source-event-place-first"/>\n      </group>\n      <text macro="label-section-capitalized"/>\n    </group>\n  </macro>\n  <macro name="description-review-genre-bib">\n    <choose>\n      <if variable="reviewed-genre">\n        <group delimiter=" ">\n          <text macro="description-review-term-unsigned-bib"/>\n          <text variable="reviewed-genre"/>\n          <choose>\n            <if match="none" variable="reviewed-title">\n              <names variable="reviewed-author">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </group>\n      </if>\n      <else-if variable="number">\n        <text macro="description-review-term-unsigned-bib"/>\n      </else-if>\n      <!-- If no `reviewed-genre`, assume that `genre` is entered as \'Review of the book\' or similar -->\n      <else-if variable="genre">\n        <text text-case="capitalize-first" variable="genre"/>\n      </else-if>\n      <else>\n        <text macro="description-review-term-unsigned-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-short">\n    <choose>\n      <if match="any" position="ibid ibid-with-locator">\n        <text term="review"/>\n      </if>\n      <else>\n        <group delimiter=" ">\n          <text term="review-of"/>\n          <text macro="description-review-title-short"/>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-term-unsigned-bib">\n    <!-- Anonymous reviews appear as \'unsigned\' (CMOS18 14.102) -->\n    <choose>\n      <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n        <text term="review-of" text-case="capitalize-first"/>\n      </if>\n      <else>\n        <group delimiter=" ">\n          <text term="anonymous" text-case="capitalize-first"/>\n          <text term="review-of"/>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-title">\n    <choose>\n      <if match="any" variable="reviewed-genre reviewed-title">\n        <!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title -->\n        <!-- Adapt for `reviewed-container-title` or similar if it becomes available -->\n        <text font-style="italic" text-case="title" variable="reviewed-title"/>\n      </if>\n      <else>\n        <!-- Assume title is title of reviewed work -->\n        <text font-style="italic" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-title-short">\n    <choose>\n      <if match="any" variable="reviewed-genre reviewed-title">\n        <!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title -->\n        <!-- Adapt for `reviewed-container-title` or similar if it becomes available -->\n        <text font-style="italic" form="short" text-case="title" variable="reviewed-title"/>\n      </if>\n      <else>\n        <!-- Assume title is title of reviewed work -->\n        <text font-style="italic" form="short" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-serial-bib">\n    <group delimiter=". ">\n      <text macro="description-format-bib"/>\n      <!-- `section` provides magazine departments (CMOS18 14.88) and newspaper column names (CMOS18 14.93) -->\n      <text macro="label-section-capitalized"/>\n    </group>\n  </macro>\n  <macro name="description-serial-short">\n    <choose>\n      <if variable="title"/>\n      <else-if variable="genre">\n        <text macro="description-format-short"/>\n      </else-if>\n      <else>\n        <text form="short" text-case="title" variable="section"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-song-bib">\n    <!-- Performer of classical music works -->\n    <!-- TODO: remove when Zotero fixes mapping of performer to `author` -->\n    <group delimiter=" ">\n      <!-- Based on `description-format` macro -->\n      <choose>\n        <if variable="genre">\n          <text text-case="capitalize-first" variable="genre"/>\n          <text form="verb" term="performer"/>\n        </if>\n        <!-- providing \'performed by\' label for recorded readings (CMOS18 14.164), but it should be omitted for classical music (CMOS18 14.163) -->\n        <else>\n          <text form="verb" term="performer" text-case="capitalize-first"/>\n        </else>\n      </choose>\n      <names variable="author">\n        <name and="text" initialize="false"/>\n        <substitute>\n          <names variable="performer"/>\n        </substitute>\n      </names>\n    </group>\n  </macro>\n  <!-- 3.3. Identifier (edition, contributors, volume) -->\n  <macro name="identifier-bib">\n    <group delimiter=". ">\n      <choose>\n        <if type="patent">\n          <text macro="identifier-patent"/>\n        </if>\n        <else-if type="report">\n          <text macro="identifier-report-bib"/>\n        </else-if>\n        <else-if match="any" type="post webpage">\n          <!-- print `container-title` on `post` or `webpage` in the same way as `publisher` (CMOS18 14.104-106) -->\n          <text macro="identifier-number-bib"/>\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-bib"/>\n        </else-if>\n        <else-if variable="container-title">\n          <choose>\n            <if match="any" type="broadcast graphic map motion_picture">\n              <!-- For audiovisual media, number information comes after `title`, not `container-title`; `song` places album catalogue `number` with `publisher` (CMOS18 14.163-164) -->\n              <text macro="identifier-number-bib"/>\n            </if>\n          </choose>\n          <text macro="identifier-contributors-bib"/>\n        </else-if>\n        <else>\n          <choose>\n            <if match="none" type="song">\n              <text macro="identifier-number-bib"/>\n            </if>\n          </choose>\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-and-volume-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Identifier elements -->\n  <macro name="identifier-contributors-bib">\n    <choose>\n      <if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <text macro="identifier-contributors-serial-bib"/>\n      </if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <text macro="identifier-contributors-monographic-bib"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <text macro="identifier-contributors-serial-bib"/>\n      </else-if>\n      <else>\n        <text macro="identifier-contributors-monographic-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-contributors-monographic-bib">\n    <group delimiter=". ">\n      <choose>\n        <if match="any" type="post webpage">\n          <names variable="container-author">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editor-translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="editor translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editorial-director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="guest">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="host">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="illustrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="narrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="compiler chair organizer curator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="series-creator executive-producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="any" type="broadcast performance">\n              <names variable="script-writer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="performer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" type="thesis">\n              <names variable="contributor">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </if>\n        <else>\n          <!-- print `container-title` on `post` or `webpage` in the same way as `publisher` (CMOS18 14.104-106) -->\n          <choose>\n            <if match="none" variable="container-title">\n              <names variable="container-author">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="editor-translator">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names delimiter=". " variable="editor translator">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="editorial-director">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="guest">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="host">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="illustrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="narrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" variable="container-title">\n              <names delimiter=". " variable="compiler chair organizer curator">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names delimiter=". " variable="series-creator executive-producer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="producer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="director">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <choose>\n                <if match="any" type="broadcast performance">\n                  <names variable="script-writer">\n                    <label form="verb" suffix=" " text-case="capitalize-first"/>\n                    <name and="text" initialize="false"/>\n                  </names>\n                </if>\n              </choose>\n              <names variable="performer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <choose>\n                <if match="none" type="song thesis">\n                  <names variable="contributor">\n                    <label form="verb" suffix=" " text-case="capitalize-first"/>\n                    <name and="text" initialize="false"/>\n                  </names>\n                </if>\n              </choose>\n            </if>\n          </choose>\n          <choose>\n            <if type="song">\n              <!-- Song contributors attached to album (CMOS18 14.163) -->\n              <names variable="contributor">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-contributors-serial-bib">\n    <group delimiter=". ">\n      <names delimiter=". " variable="translator narrator">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names delimiter=". " variable="compiler chair organizer curator">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names delimiter=". " variable="series-creator executive-producer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="producer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="director">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="script-writer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="performer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n    </group>\n  </macro>\n  <macro name="identifier-contributors-and-volume-bib">\n    <choose>\n      <if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="identifier-contributors-serial-bib"/>\n      </if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="identifier-contributors-and-volume-monographic-bib-specific-title-first"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="identifier-contributors-serial-bib"/>\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <text macro="identifier-contributors-and-volume-monographic-bib-specific-title-first"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-contributors-and-volume-monographic-bib-specific-title-first">\n    <group delimiter=". ">\n      <text macro="identifier-contributors-monographic-bib"/>\n      <group delimiter=", ">\n        <text macro="identifier-volume-bib-specific-title-first"/>\n        <choose>\n          <if match="any" variable="number-of-volumes part-number part-title volume volume-title">\n            <!-- cite multivolume `collection-editor`; otherwise it belongs with `collection-title` -->\n            <names variable="collection-editor">\n              <label form="verb" suffix=" "/>\n              <name and="text" initialize="false"/>\n            </names>\n          </if>\n        </choose>\n      </group>\n      <choose>\n        <if match="none" variable="part-number part-title volume volume-title">\n          <text macro="label-number-of-volumes"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-edition-bib">\n    <choose>\n      <!-- ensure `source-publication-history-bib` does not duplicate edition -->\n      <if variable="original-title">\n        <text macro="label-edition-capitalized"/>\n      </if>\n      <else-if variable="issued original-date"/>\n      <else>\n        <text macro="label-edition-capitalized"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-edition-note">\n    <choose>\n      <!-- ensure `source-publication-history-note` does not duplicate edition -->\n      <if variable="original-title">\n        <text macro="label-edition"/>\n      </if>\n      <else-if variable="issued original-date"/>\n      <else>\n        <text macro="label-edition"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-number-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="thesis"/>\n        <else-if is-numeric="number" type="broadcast" variable="genre">\n          <text text-case="capitalize-first" variable="genre"/>\n          <text variable="number"/>\n        </else-if>\n        <else-if is-numeric="number" type="broadcast">\n          <text text-case="capitalize-first" value="episode"/>\n          <text variable="number"/>\n        </else-if>\n        <else-if variable="number">\n          <text text-case="title" variable="genre"/>\n          <text macro="label-number-capitalized"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-patent">\n    <group delimiter=", ">\n      <group delimiter=" ">\n        <!-- `authority`: US ; `genre`: patent ; `number`: 123,445 -->\n        <text form="short" variable="authority"/>\n        <!-- \'US Patent\' capitalized in both bibliography and note forms -->\n        <choose>\n          <if variable="genre">\n            <text text-case="capitalize-first" variable="genre"/>\n          </if>\n          <else>\n            <text term="patent" text-case="capitalize-first"/>\n          </else>\n        </choose>\n        <text variable="number"/>\n      </group>\n      <group delimiter=" ">\n        <text value="filed"/>\n        <date form="text" variable="submitted"/>\n      </group>\n      <group delimiter=" ">\n        <choose>\n          <if variable="issued submitted">\n            <text term="and"/>\n          </if>\n        </choose>\n        <text value="issued"/>\n        <!-- Always give full issue date, even in author-date (CMOS18 14.158) -->\n        <text macro="date-issued-full"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="identifier-report-bib">\n    <group delimiter=". ">\n      <choose>\n        <if variable="container-title">\n          <!-- If the report is a chapter in a larger report, then most identifying information is printed in the source. -->\n          <text macro="identifier-contributors-bib"/>\n        </if>\n        <else-if variable="title">\n          <text macro="identifier-number-bib"/>\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-and-volume-bib"/>\n        </else-if>\n        <else>\n          <!-- If there is no `title`, then `genre` and `number` are already printed as the title. -->\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-and-volume-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-volume-bib-specific-title-first">\n    <!-- In author-date, bibliography must be listed under the individual volume title rather than the general title of the multivolume set; this is also allowable in notes styles (CMOS18 14.21) -->\n    <group delimiter=", ">\n      <choose>\n        <if variable="part-number part-title volume volume-title">\n          <!-- part and title with individual titles -->\n          <group delimiter=" ">\n            <text macro="label-part-number-capitalized"/>\n            <text value="of"/>\n            <text macro="title-volume"/>\n          </group>\n          <group delimiter=" ">\n            <text macro="label-volume"/>\n            <text value="of"/>\n            <text macro="title-primary"/>\n          </group>\n        </if>\n        <else-if match="any" variable="part-title volume-title">\n          <group delimiter=" ">\n            <choose>\n              <if variable="part-number volume">\n                <group delimiter=", ">\n                  <text macro="label-volume-capitalized"/>\n                  <text macro="label-part-number"/>\n                  <text value="of"/>\n                </group>\n              </if>\n              <else-if variable="part-number">\n                <text macro="label-part-number-capitalized"/>\n                <text value="of"/>\n              </else-if>\n              <else-if variable="volume">\n                <text macro="label-volume-capitalized"/>\n                <text value="of"/>\n              </else-if>\n            </choose>\n            <text macro="title-primary"/>\n          </group>\n        </else-if>\n        <else-if variable="part-number volume">\n          <text macro="label-volume-capitalized"/>\n          <text macro="label-part-number"/>\n        </else-if>\n        <else-if variable="part-number">\n          <text macro="label-part-number-capitalized"/>\n        </else-if>\n        <else-if variable="volume">\n          <text macro="label-volume-capitalized"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <!-- 4. Source -->\n  <macro name="source-bib">\n    <choose>\n      <if match="any" type="patent post webpage"/>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <text macro="source-serial-bib"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <text macro="source-monographic-bib"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <text macro="source-serial-bib"/>\n      </else-if>\n      <else>\n        <text macro="source-monographic-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.1. Serial sources -->\n  <macro name="source-serial-bib">\n    <group delimiter=". ">\n      <text macro="source-serial-title-volume-bib"/>\n      <choose>\n        <if match="any" type="article-magazine article-newspaper">\n          <!-- magazines and newspapers provide the full date in place of volume/issue numbers (CMOS18 14.87, 14.89) -->\n          <group delimiter=", ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </if>\n        <else-if variable="collection-title volume">\n          <group delimiter=", ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </else-if>\n        <else-if variable="volume">\n          <group delimiter=" ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </else-if>\n        <else>\n          <group delimiter=", ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Serial source title -->\n  <macro name="source-serial-name">\n    <group delimiter=" ">\n      <text font-style="italic" text-case="title" variable="container-title"/>\n      <choose>\n        <!-- TODO: remove conditional when Zotero stops double-mapping `event-place` and `publisher-place` -->\n        <if match="none" variable="event-date event-title">\n          <text prefix="(" suffix=")" variable="publisher-place"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-title-bib">\n    <group delimiter=", ">\n      <choose>\n        <!-- Journal special issues (CMOS18 14.77) and supplements (CMOS18 14.78) -->\n        <if match="none" variable="container-title"/>\n        <else-if match="none" type="periodical" variable="supplement-number volume-title"/>\n        <!-- TODO: use `container-genre` here once available to allow a custom description of the journal volume -->\n        <else-if variable="supplement-number volume-title">\n          <text term="supplement" text-case="capitalize-first"/>\n        </else-if>\n        <else-if type="periodical" variable="supplement-number title">\n          <text term="supplement" text-case="capitalize-first"/>\n        </else-if>\n        <else-if variable="volume-title">\n          <text term="special-issue" text-case="capitalize-first"/>\n        </else-if>\n        <else-if type="periodical" variable="title">\n          <text term="special-issue" text-case="capitalize-first"/>\n        </else-if>\n      </choose>\n      <text macro="source-serial-name"/>\n      <choose>\n        <!-- \'ahead of print\' is placed akin to a series (CMOS18 14.75) -->\n        <if match="any" variable="collection-title issue number page supplement-number volume volume-title"/>\n        <else-if match="any" variable="available-date status"/>\n        <else-if type="article-journal" variable="DOI issued">\n          <text term="advance-online-publication"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-title-volume-bib">\n    <choose>\n      <if variable="volume-title">\n        <!-- Journal special issues (CMOS18 14.77) and supplements (CMOS18 14.78) -->\n        <group delimiter=", ">\n          <group delimiter=" ">\n            <text macro="source-monographic-preposition-bib"/>\n            <text macro="title-volume"/>\n          </group>\n          <text macro="source-monographic-identifier-contributors-bib"/>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <!-- Serial source identifier -->\n  <macro name="source-serial-identifier-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" type="article-magazine article-newspaper">\n          <group delimiter=". ">\n            <text macro="source-serial-identifier-volume-author-date"/>\n            <!-- newspaper edition always capitalized (CMOS18 14.89) -->\n            <text macro="label-edition-capitalized"/>\n          </group>\n          <text macro="source-serial-locator"/>\n        </if>\n        <else-if match="any" variable="issue supplement-number volume">\n          <group delimiter=": ">\n            <text macro="source-serial-identifier-volume-author-date"/>\n            <text macro="source-serial-locator"/>\n          </group>\n        </else-if>\n        <else>\n          <text macro="source-serial-identifier-volume-author-date"/>\n          <text macro="source-serial-locator"/>\n        </else>\n        <!-- TODO: If CSL adds `date-part` detection, add two further conditions to address CMOS18 14.74: delimiting with ":" if there is a `volume` and no month or `issue` or `supplement number`; delimiting with ", " or there is an `issue` or `supplement number` and no month -->\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-identifier-volume-author-date">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" type="article-magazine article-newspaper">\n          <!-- magazines and newspapers provide the full date in place of volume/issue numbers (CMOS18 14.87, 14.89) -->\n          <text variable="collection-title"/>\n          <text macro="source-serial-volume-status-bib"/>\n        </if>\n        <else-if match="any" variable="issue supplement-number volume">\n          <choose>\n            <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator"/>\n            <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n              <!-- date appears first if the review `container-title` has been substituted for a missing author (CMOS18 14.87, 14.102) -->\n              <choose>\n                <!-- extra date details only appear with a lone volume or issue -->\n                <if variable="issue volume"/>\n                <else-if variable="supplement-number"/>\n                <else-if match="any" variable="issue volume">\n                  <text macro="source-date-specific-title-first"/>\n                </else-if>\n              </choose>\n            </else-if>\n          </choose>\n          <!-- `collection-title` is for any serial with multiple series (e.g. \'4th ser.\') -->\n          <text variable="collection-title"/>\n          <group delimiter=" ">\n            <choose>\n              <if variable="volume">\n                <choose>\n                  <if variable="collection-title">\n                    <text macro="label-volume"/>\n                  </if>\n                  <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n                    <!-- provide label if a review `container-title` has been substituted for a missing author (CMOS18 14.87, 14.102) -->\n                    <choose>\n                      <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n                        <text variable="volume"/>\n                      </if>\n                      <!-- TODO: when CSL provides date part detection, volume should be lowercase if there is a month, but otherwise capitalized -->\n                      <else>\n                        <text macro="label-volume-capitalized"/>\n                      </else>\n                    </choose>\n                  </else-if>\n                  <else>\n                    <text variable="volume"/>\n                  </else>\n                </choose>\n                <group delimiter=", " prefix="(" suffix=")">\n                  <choose>\n                    <if match="any" variable="issue supplement-number">\n                      <text variable="issue"/>\n                      <text macro="label-supplement-number"/>\n                    </if>\n                    <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n                      <!-- date for unsigned reviews only appears here if it did not earlier (CMOS18 14.102) -->\n                      <choose>\n                        <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n                          <text macro="source-date-specific-title-first"/>\n                        </if>\n                      </choose>\n                    </else-if>\n                    <else>\n                      <text macro="source-date-specific-title-first"/>\n                    </else>\n                  </choose>\n                </group>\n              </if>\n              <else-if match="any" variable="issue supplement-number">\n                <group delimiter=" ">\n                  <group delimiter=", ">\n                    <text macro="label-issue"/>\n                    <text macro="label-supplement-number"/>\n                  </group>\n                  <choose>\n                    <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n                      <text macro="source-date-specific-title-first" prefix="(" suffix=")"/>\n                    </if>\n                  </choose>\n                </group>\n              </else-if>\n            </choose>\n          </group>\n        </else-if>\n        <else>\n          <text variable="collection-title"/>\n          <choose>\n            <if match="any" type="interview post-weblog">\n              <!-- publisher possible with broadcast `interview` (CMOS18 14.110) or `post-weblog` (CMOS18 14.105) -->\n              <text variable="publisher"/>\n            </if>\n          </choose>\n          <text macro="source-serial-volume-status-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-volume-status-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" variable="collection-title issue number page supplement-number volume volume-title"/>\n        <else-if variable="issued"/>\n        <else-if variable="available-date">\n          <group delimiter=" ">\n            <!-- article accepted for publication and available on publisher website (CMOS18 14.75) -->\n            <!-- TODO: use CSL term for `available-date` when available -->\n            <text value="accepted"/>\n            <date form="text" variable="available-date"/>\n          </group>\n        </else-if>\n      </choose>\n      <group delimiter=" ">\n        <text macro="source-date-status-bib"/>\n        <text macro="source-date-specific-title-first"/>\n      </group>\n    </group>\n  </macro>\n  <!-- Serial source locator -->\n  <macro name="source-serial-locator">\n    <choose>\n      <if match="any" variable="locator number">\n        <group delimiter=", ">\n          <text macro="label-locator"/>\n          <!-- an article ID appears alongside locators in notes (CMOS18 14.71) -->\n          <choose>\n            <!-- if there is an `archive` with no other reference, `number` appears in `source-archive-database-number` -->\n            <if match="any" variable="archive_collection archive_location archive-place">\n              <text variable="number"/>\n            </if>\n            <else-if variable="archive"/>\n            <else>\n              <text variable="number"/>\n            </else>\n          </choose>\n        </group>\n      </if>\n      <!-- do not give pages for magazines or newspapers (CMOS18 14.87, 14.89) -->\n      <else-if match="any" type="article-magazine article-newspaper"/>\n      <else>\n        <text variable="page"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.2. Monographic sources -->\n  <macro name="source-monographic-bib">\n    <group delimiter=". ">\n      <!-- Monographic sources repeat main reference elements -->\n      <choose>\n        <if variable="container-title">\n          <group delimiter=", ">\n            <group delimiter=" ">\n              <text macro="source-monographic-preposition-bib"/>\n              <text macro="source-monographic-title-specific-title-first"/>\n            </group>\n            <text macro="source-monographic-description"/>\n            <text macro="source-monographic-identifier-bib"/>\n            <text macro="source-monographic-locator"/>\n          </group>\n        </if>\n      </choose>\n      <text macro="source-monographic-identifier-contributors-bib-container-author"/>\n      <text macro="source-series-bib"/>\n      <choose>\n        <!-- show event information here only if not collapsed with `issued` (CMOS18 14.167) -->\n        <if match="any" variable="event-date original-date original-publisher original-publisher-place publisher status">\n          <text macro="source-event-bib"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <!-- Monographic source title -->\n  <macro name="source-monographic-preposition-bib">\n    <choose>\n      <if match="any" type="broadcast motion_picture"/>\n      <else-if type="chapter" variable="container-title genre">\n        <text value="to"/>\n      </else-if>\n      <else-if type="article-journal" variable="container-title genre volume-title">\n        <text value="to"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="author composer">\n            <!-- Give preposition only for signed entries; otherwise, title is substituted -->\n            <text term="in" text-case="capitalize-first"/>\n          </if>\n        </choose>\n      </else-if>\n      <!-- if printing chapter page numbers (CMOS17/classic):\n      <else-if variable="chapter-number page title"><text term="in" text-case="capitalize-first"/></else-if>\n      -->\n      <else-if variable="chapter-number">\n        <group delimiter=" ">\n          <text macro="label-chapter-number-capitalized"/>\n          <choose>\n            <if type="song">\n              <text term="on"/>\n            </if>\n            <else>\n              <text term="in"/>\n            </else>\n          </choose>\n        </group>\n      </else-if>\n      <else>\n        <text term="in" text-case="capitalize-first"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-monographic-preposition-note">\n    <choose>\n      <if match="any" type="broadcast motion_picture"/>\n      <else-if type="chapter" variable="container-title genre">\n        <text value="to"/>\n      </else-if>\n      <else-if type="article-journal" variable="container-title genre volume-title">\n        <text value="to"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="author composer">\n            <!-- Give preposition only for signed entries; otherwise, title is substituted -->\n            <text term="in"/>\n          </if>\n        </choose>\n      </else-if>\n      <!-- if printing chapter page numbers (CMOS17/classic):\n      <else-if variable="chapter-number page title"><text term="in"/></else-if>\n      -->\n      <else-if variable="chapter-number">\n        <group delimiter=" ">\n          <text macro="label-chapter-number"/>\n          <choose>\n            <if type="song">\n              <text term="on"/>\n            </if>\n            <else>\n              <text term="in"/>\n            </else>\n          </choose>\n        </group>\n      </else-if>\n      <else>\n        <text term="in"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-monographic-title-specific-title-first">\n    <choose>\n      <if variable="part-title">\n        <text macro="title-part"/>\n      </if>\n      <else-if variable="volume-title">\n        <text macro="title-volume"/>\n      </else-if>\n      <else>\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Monographic source description -->\n  <macro name="source-monographic-description">\n    <choose>\n      <if match="any" type="document report software standard">\n        <!-- place description after `container-title` -->\n        <text macro="description-format-note"/>\n      </if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"/>\n      <else-if match="any" type="event paper-conference performance speech">\n        <!-- unpublished conference presentations should describe the session -->\n        <text macro="description-format-note"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- Monographic source identifier -->\n  <macro name="source-monographic-identifier-bib">\n    <!-- Based on `identifier-bib` -->\n    <choose>\n      <if variable="container-title">\n        <group delimiter=", ">\n          <choose>\n            <if match="none" type="broadcast graphic map motion_picture song">\n              <!-- For audiovisual media, number information comes after `title`, not `container-title`; `song` places album catalogue `number` with `publisher` (CMOS18 14.163-164) -->\n              <text macro="identifier-number-bib"/>\n            </if>\n          </choose>\n          <text macro="label-version"/>\n          <!-- use note form as `edition` is not capitalized here -->\n          <text macro="identifier-edition-note"/>\n          <text macro="source-monographic-identifier-contributors-and-volume-bib-specific-title-first"/>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-monographic-identifier-contributors-bib">\n    <choose>\n      <if variable="container-author container-title">\n        <!-- set off `container-author` from other contributors in the bibliography (CMOS18 14.12; for page location, CMOS17 14.110) -->\n        <names variable="container-author">\n          <label form="verb" suffix=" "/>\n          <name and="text" initialize="false"/>\n        </names>\n        <!-- other contributors shift to `source-monographic-identifier-contributors-bib-container-author` -->\n      </if>\n      <else>\n        <group delimiter=", ">\n          <names variable="editor-translator">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="editor translator">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="guest">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="host">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="chair organizer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="illustrator narrator compiler curator">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="series-creator executive-producer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="producer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editorial-director">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="any" type="broadcast performance">\n              <names variable="script-writer">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="director">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="performer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" type="song thesis">\n              <!-- Song contributors attached to album (CMOS18 14.163) -->\n              <names variable="contributor">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-monographic-identifier-contributors-bib-container-author">\n    <!-- set off `container-author` from other contributors in the bibliography (CMOS18 14.12; for page location, CMOS17 14.110) -->\n    <choose>\n      <if variable="container-author container-title">\n        <group delimiter=". ">\n          <names variable="editor-translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="editor translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="guest">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="host">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="chair organizer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="illustrator narrator compiler curator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="series-creator executive-producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editorial-director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="any" type="broadcast performance">\n              <names variable="script-writer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="performer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" type="song thesis">\n              <!-- Song contributors attached to album (CMOS18 14.163) -->\n              <names variable="contributor">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-monographic-identifier-contributors-and-volume-bib-specific-title-first">\n    <group delimiter=", ">\n      <text macro="source-monographic-identifier-contributors-bib"/>\n      <text macro="source-monographic-identifier-volume-bib-specific-title-first"/>\n      <choose>\n        <if match="any" variable="number-of-volumes part-number part-title volume volume-title">\n          <!-- cite multivolume `collection-editor`; otherwise it belongs with `collection-title` -->\n          <names variable="collection-editor">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n        </if>\n      </choose>\n      <choose>\n        <if match="any" variable="part-number part-title volume volume-title"/>\n        <else-if variable="page"/>\n        <else>\n          <text macro="label-number-of-volumes"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-monographic-identifier-volume-bib-specific-title-first">\n    <!-- based on `identifier-volume-bib-specific-title-first` without capitalization; giving `container-title` rather than `title-primary`; and ensuring volume number -->\n    <group delimiter=", ">\n      <choose>\n        <if variable="part-number part-title volume volume-title">\n          <!-- part and title with individual titles -->\n          <group delimiter=" ">\n            <text macro="label-part-number"/>\n            <text value="of"/>\n            <text macro="title-volume"/>\n          </group>\n          <group delimiter=" ">\n            <text macro="label-volume"/>\n            <text value="of"/>\n            <text font-style="italic" text-case="title" variable="container-title"/>\n          </group>\n        </if>\n        <else-if match="any" variable="part-title volume-title">\n          <group delimiter=" ">\n            <choose>\n              <if variable="part-number volume">\n                <group delimiter=", ">\n                  <text macro="label-volume"/>\n                  <text macro="label-part-number"/>\n                  <text value="of"/>\n                </group>\n              </if>\n              <else-if variable="part-number">\n                <text macro="label-part-number"/>\n                <text value="of"/>\n              </else-if>\n              <else-if variable="volume">\n                <text macro="label-volume"/>\n                <text value="of"/>\n              </else-if>\n            </choose>\n            <text font-style="italic" text-case="title" variable="container-title"/>\n          </group>\n        </else-if>\n        <else-if variable="part-number">\n          <text macro="label-volume"/>\n          <text macro="label-part-number"/>\n        </else-if>\n        <else-if is-numeric="volume" match="none">\n          <text macro="label-volume"/>\n        </else-if>\n        <else-if variable="container-title">\n          <!-- remove condition in styles that print chapter page numbers (CMOS17/classic) -->\n          <text macro="label-volume"/>\n        </else-if>\n        <else-if is-numeric="volume" variable="page">\n          <choose>\n            <!-- check for variables that might come between the volume and page number -->\n            <if variable="collection-editor">\n              <text macro="label-volume"/>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <text macro="label-volume"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Monographic source locator -->\n  <macro name="source-monographic-locator">\n    <choose>\n      <!-- archival locators appear after the shelfmark (CMOS18 14.127) -->\n      <if locator="column" variable="archive archive_location"/>\n      <else-if locator="folio" variable="archive archive_location"/>\n      <else-if locator="page" variable="archive archive_location"/>\n      <else-if is-numeric="volume" locator="page">\n        <!-- separate a volume and page number with a colon (CMOS18 14.18) -->\n        <group delimiter=":">\n          <choose>\n            <if match="any" variable="part-number part-title volume-title"/>\n            <else-if variable="collection-editor"/>\n            <else>\n              <text variable="volume"/>\n            </else>\n          </choose>\n          <text variable="locator"/>\n        </group>\n      </else-if>\n      <else-if variable="locator">\n        <text macro="label-locator"/>\n      </else-if>\n      <!-- remove `container-title` condition in styles that print chapter page numbers (CMOS17/classic) -->\n      <else-if variable="container-title"/>\n      <else-if is-numeric="volume" variable="page">\n        <!-- collapse the volume and page number if adjacent (CMOS18 14.18) -->\n        <group delimiter=":">\n          <choose>\n            <!-- check for variables that might come between the volume and page number -->\n            <if match="any" variable="part-number part-title volume-title"/>\n            <else-if variable="collection-editor"/>\n            <else>\n              <text variable="volume"/>\n            </else>\n          </choose>\n          <text variable="page"/>\n        </group>\n      </else-if>\n      <!-- archival locators appear after the shelfmark (CMOS18 14.127) -->\n      <else-if variable="archive archive_location page"/>\n      <else>\n        <text variable="page"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.3. Series -->\n  <macro name="source-series-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" variable="number-of-volumes part-number part-title volume volume-title">\n          <text macro="source-series-title"/>\n        </if>\n        <else-if variable="collection-editor collection-title">\n          <!-- `collection-editor` belongs with `collection-title` if the item is not multivolume -->\n          <text text-case="title" variable="collection-title"/>\n          <names variable="collection-editor">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <text macro="label-collection-number"/>\n          <text macro="label-issue"/>\n        </else-if>\n        <else>\n          <text macro="source-series-title"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-series-title">\n    <group delimiter=", ">\n      <choose>\n        <if variable="issue">\n          <text text-case="title" variable="collection-title"/>\n          <text macro="label-collection-number"/>\n          <text macro="label-issue"/>\n        </if>\n        <else-if is-numeric="collection-number" variable="collection-title">\n          <group delimiter=" ">\n            <text text-case="title" variable="collection-title"/>\n            <text variable="collection-number"/>\n          </group>\n        </else-if>\n        <else-if variable="collection-title">\n          <text text-case="title" variable="collection-title"/>\n          <text variable="collection-number"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <!-- 4.4. Event -->\n  <macro name="source-event-bib">\n    <group delimiter=" ">\n      <choose>\n        <!-- omit types that provide event information in description  -->\n        <if match="any" type="interview" variable="interviewer"/>\n        <else-if type="personal_communication" variable="recipient"/>\n        <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"/>\n        <else-if match="any" variable="event event-date event-title">\n          <!-- TODO: To prevent Zotero from printing `event-place`, due to its double-mapping of `publisher-place` and `event-place`. Remove this when that is changed. -->\n          <choose>\n            <if type="paper-conference">\n              <choose>\n                <if match="none" variable="collection-editor compiler editor editorial-director issue page supplement-number volume">\n                  <!-- Don\'t print event info for conference papers published in proceedings -->\n                  <text macro="source-event-status-bib"/>\n                  <text macro="source-event-description-bib"/>\n                </if>\n              </choose>\n            </if>\n            <else>\n              <!-- For other item types, print event info even if published (e.g. collection catalogs, performance programs). -->\n              <text macro="source-event-status-bib"/>\n              <text macro="source-event-description-bib"/>\n            </else>\n          </choose>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-event-place-first">\n    <!-- for descriptive elements for interviews, reviews, letters -->\n    <choose>\n      <if match="any" variable="event event-date event-title">\n        <group delimiter=", ">\n          <text variable="event-title"/>\n          <text variable="event-place"/>\n          <text macro="date-event-full"/>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-event-status-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="broadcast" variable="status">\n          <!-- \'aired\', \'performed\', etc. (CMOS18 14.165) -->\n          <text text-case="capitalize-first" variable="status"/>\n        </if>\n        <else-if type="paper-conference">\n          <choose>\n            <if variable="genre">\n              <text text-case="capitalize-first" value="presented"/>\n            </if>\n            <else>\n              <text form="short" term="paper-conference" text-case="capitalize-first"/>\n              <text value="presented"/>\n            </else>\n          </choose>\n          <choose>\n            <if variable="event-title">\n              <text term="at"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if type="song">\n          <text text-case="capitalize-first" value="recorded"/>\n          <choose>\n            <if variable="event-title">\n              <text term="at"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if variable="event-date issued"/>\n        <else-if variable="issued"/>\n        <else>\n          <text text-case="capitalize-first" variable="status"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-event-title">\n    <choose>\n      <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated yet. This macro ensures that either `event` or `event-title` can be accepted. Remove if processor logic and application adoption can handle this. -->\n      <if variable="event-title">\n        <text variable="event-title"/>\n      </if>\n      <else>\n        <text variable="event"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-event-title-capitalized">\n    <choose>\n      <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated yet. This macro ensures that either `event` or `event-title` can be accepted. Remove if processor logic and application adoption can handle this. -->\n      <if variable="event-title">\n        <text text-case="capitalize-first" variable="event-title"/>\n      </if>\n      <else>\n        <text text-case="capitalize-first" variable="event"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-event-description-bib">\n    <group delimiter=", ">\n      <choose>\n        <if type="song">\n          <text macro="source-event-title"/>\n        </if>\n        <else-if type="paper-conference" variable="genre">\n          <text macro="source-event-title-capitalized"/>\n        </else-if>\n        <else-if type="paper-conference">\n          <text macro="source-event-title"/>\n        </else-if>\n        <else>\n          <text macro="source-event-title-capitalized"/>\n        </else>\n      </choose>\n      <text macro="date-event-full"/>\n      <text variable="event-place"/>\n    </group>\n  </macro>\n  <!-- 4.5. Facts of publication -->\n  <macro name="source-monographic-publication-bib">\n    <group delimiter=". ">\n      <choose>\n        <!-- `patent` date in identification (CMOS18 14.158) -->\n        <if type="patent"/>\n        <!-- omit serial types -->\n        <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"/>\n        <else-if match="any" variable="collection-editor compiler editor editorial-director">\n          <!-- monographic types -->\n          <text macro="source-publication-and-date-bib"/>\n        </else-if>\n        <!-- omit serial types -->\n        <else-if match="any" type="interview paper-conference"/>\n        <else>\n          <!-- monographic types -->\n          <text macro="source-publication-and-date-bib"/>\n        </else>\n      </choose>\n      <text macro="source-publication-original-title-bib"/>\n    </group>\n  </macro>\n  <macro name="source-publication-and-date-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" type="post webpage">\n          <!-- print `container-title` on `post` or `webpage` in the same way as `publisher` (CMOS18 14.104-106) -->\n          <!-- avoid possible repetition of `container-title` with author-date: -->\n          <choose>\n            <if variable="publisher">\n              <text text-case="title" variable="container-title"/>\n            </if>\n            <else-if type="webpage" variable="container-title container-title-short"/>\n            <else>\n              <text text-case="title" variable="container-title"/>\n            </else>\n          </choose>\n        </if>\n      </choose>\n      <choose>\n        <if type="broadcast" variable="DOI">\n          <!-- a podcast publisher appears before the date, whereas the network of an aired show appears after (CMOS18 14.165); unfortunately CSL stores both in `publisher` -->\n          <!-- TODO: `DOI` or `URL` detection is the only way to distinguish radio/TV from podcasts, but it is obviously imprecise; modify if CSL provides a `podcast` type -->\n          <text macro="source-publication-history-bib"/>\n        </if>\n        <else-if type="broadcast" variable="URL">\n          <text macro="source-publication-history-bib"/>\n        </else-if>\n        <else-if type="broadcast"/>\n        <else>\n          <text macro="source-publication-history-bib"/>\n        </else>\n      </choose>\n      <group delimiter=" ">\n        <text macro="source-date-status-bib"/>\n        <text macro="source-date-specific-title-first"/>\n      </group>\n      <choose>\n        <if type="broadcast" variable="URL"/>\n        <else-if type="broadcast">\n          <group delimiter=" ">\n            <text term="on"/>\n            <text macro="source-publication-history-bib"/>\n          </group>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <!-- Facts of publication elements -->\n  <macro name="source-publication-description-bib">\n    <choose>\n      <if type="article" variable="genre"/>\n      <else-if type="article">\n        <!-- `preprint` term attached to repository name, but specific working paper descriptors appear in description (CMOS18 14.76, 14.116) -->\n        <text term="preprint" text-case="capitalize-first"/>\n      </else-if>\n      <else-if type="thesis">\n        <!-- thesis type appears with university name (CMOS18 14.113) -->\n        <text text-case="capitalize-first" variable="genre"/>\n      </else-if>\n      <else-if match="any" variable="original-publisher original-publisher-place">\n        <choose>\n          <!-- `edition` provides an alternative label to `reprint` (CMOS18 14.16) -->\n          <if match="any" variable="edition original-title"/>\n          <else-if match="none" type="book chapter classic entry entry-dictionary entry-encyclopedia interview musical_score pamphlet paper-conference report thesis"/>\n          <else-if variable="issued original-date">\n            <text text-case="capitalize-first" value="reprint"/>\n          </else-if>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-publication-history-bib">\n    <choose>\n      <if variable="original-title">\n        <!-- `original-title` is covered in `source-publication-original-title-bib` -->\n        <group delimiter=", ">\n          <text macro="source-publication-description-bib"/>\n          <text macro="source-publication-publisher-bib"/>\n        </group>\n      </if>\n      <else-if match="any" variable="edition original-publisher original-publisher-place">\n        <group delimiter=". ">\n          <!-- full stop to separate original date if `original-publisher` (CMOS18 14.16) -->\n          <group delimiter=", ">\n            <text macro="source-publication-publisher-original-bib"/>\n            <text macro="source-date-original"/>\n          </group>\n          <group delimiter=". ">\n            <choose>\n              <if variable="issued original-date">\n                <text macro="label-edition-capitalized"/>\n              </if>\n            </choose>\n            <group delimiter=", ">\n              <text macro="source-publication-description-bib"/>\n              <text macro="source-publication-publisher-bib"/>\n            </group>\n          </group>\n        </group>\n      </else-if>\n      <else>\n        <group delimiter="; ">\n          <!-- semicolon to separate original date if no publisher (CMOS18 14.165) -->\n          <text macro="source-date-original"/>\n          <group delimiter=", ">\n            <text macro="source-publication-description-bib"/>\n            <text macro="source-publication-publisher-bib"/>\n          </group>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-publication-original-title-bib">\n    <!-- Work originally published under a different title (CMOS18 13.101) -->\n    <choose>\n      <if variable="original-title">\n        <group delimiter=" ">\n          <text term="original-work-published" text-case="capitalize-first"/>\n          <group delimiter=", ">\n            <names variable="original-author">\n              <name and="text" initialize="false"/>\n            </names>\n            <text font-style="italic" text-case="title" variable="original-title"/>\n          </group>\n          <group delimiter=", " prefix="(" suffix=")">\n            <text macro="source-publication-publisher-original-bib"/>\n            <text macro="source-date-original"/>\n          </group>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-publication-publisher-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="thesis" variable="publisher">\n          <text text-case="capitalize-first" variable="publisher"/>\n        </if>\n        <else-if variable="publisher">\n          <group delimiter=": ">\n            <!-- <text text-case="capitalize-first" variable="publisher-place"/> -->\n            <text text-case="capitalize-first" variable="publisher"/>\n          </group>\n        </else-if>\n        <!-- TODO: remove conditional when Zotero fixes double-mapping of `event-place` -->\n        <else-if match="any" variable="event-date event-title"/>\n        <else>\n          <text text-case="capitalize-first" variable="publisher-place"/>\n        </else>\n      </choose>\n      <choose>\n        <if type="song">\n          <!-- Album catalogue number follows label name (CMOS18 14.163-164) -->\n          <text variable="number"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-publication-publisher-original-bib">\n    <choose>\n      <if variable="original-publisher">\n        <group delimiter=": ">\n          <!-- <text text-case="capitalize-first" variable="original-publisher-place"/> -->\n          <text text-case="capitalize-first" variable="original-publisher"/>\n        </group>\n      </if>\n      <else>\n        <text text-case="capitalize-first" variable="original-publisher-place"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.6. Date -->\n  <macro name="source-date-specific-title-first">\n    <!-- date for the last-mentioned title, for author-date or notes and bibliography leading with volume title (CMOS18 14.21) -->\n    <choose>\n      <if variable="available-date volume-title">\n        <!-- TODO: Is there a better CSL variable for a date of a multivolume work (CMOS18 14.21)? -->\n        <date date-parts="year" form="numeric" variable="available-date"/>\n      </if>\n      <else-if variable="available-date part-title">\n        <date date-parts="year" form="numeric" variable="available-date"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for CMOS17 author-date: -->\n        <!-- <text macro="source-date-issued-full-serial"/> -->\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for CMOS17 author-date: -->\n        <!-- <text macro="source-date-issued-full-serial"/> -->\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else>\n    </choose>\n  </macro>\n  <!-- Date elements -->\n  <macro name="source-date-issued-month-day">\n    <!-- Use with author-date -->\n    <!-- Give full date for more ephemeral types -->\n    <!-- NB: any changes must also be applied to `source-date-original-month-day` -->\n    <choose>\n      <if type="personal_communication" variable="event-date issued">\n        <!-- Provide issue date for letters listed under event-date -->\n        <text macro="date-issued-year"/>\n      </if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="DOI URL">\n            <!-- Online reference works use full dates (CMOS18 14.131) -->\n            <text macro="date-issued-month-day"/>\n          </if>\n        </choose>\n      </else-if>\n      <else-if match="any" type="article broadcast collection dataset document event graphic manuscript map patent performance personal_communication post software song speech standard webpage">\n        <text macro="date-issued-month-day"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <text macro="source-date-issued-month-day-serial"/>\n      </else-if>\n      <!-- omit monographic types -->\n      <else-if match="any" variable="collection-editor compiler editor editorial-director"/>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="source-date-issued-month-day-serial"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-date-issued-month-day-serial">\n    <choose>\n      <if match="any" type="article-magazine article-newspaper">\n        <!-- magazines and newspapers provide the full date in place of volume/issue numbers (CMOS18 14.87, 14.89) -->\n        <text macro="date-issued-month-day"/>\n      </if>\n      <else-if match="any" variable="issue supplement-number volume">\n        <text macro="date-issued-month"/>\n      </else-if>\n      <else>\n        <text macro="date-issued-month-day"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-date-original">\n    <text macro="source-date-original-month-day"/>\n  </macro>\n  <macro name="source-date-original-month-day">\n    <!-- Give full date for more ephemeral types -->\n    <!-- Macro derived from `source-date-issued-month-day` -->\n    <choose>\n      <if type="personal_communication" variable="event-date original-date">\n        <!-- Provide original date for letters listed under event-date -->\n        <text macro="date-original-year"/>\n      </if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="DOI URL">\n            <!-- Online reference works use full dates (CMOS18 14.131) -->\n            <text macro="date-original-month-day"/>\n          </if>\n        </choose>\n      </else-if>\n      <else-if match="any" type="article broadcast collection dataset document event graphic manuscript map patent performance personal_communication post software song speech standard webpage">\n        <text macro="date-original-month-day"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <choose>\n          <if match="any" variable="issue supplement-number volume">\n            <text macro="date-original-month"/>\n          </if>\n          <else>\n            <text macro="date-original-month-day"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <choose>\n          <if match="any" variable="collection-editor compiler editor editorial-director"/>\n          <else-if match="any" variable="issue supplement-number volume">\n            <text macro="date-original-month"/>\n          </else-if>\n          <else>\n            <text macro="date-original-month-day"/>\n          </else>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-date-status-bib">\n    <choose>\n      <if type="broadcast" variable="event-title issued status"/>\n      <!-- on a `broadcast`, if there is an `event-title`, `status` appears with `event-date` as part of `source-event` (CMOS18 14.165) -->\n      <else-if variable="issued status">\n        <!-- `status` specifies date type, e.g. \'effective\', \'last modified\', \'approved\' (CMOS18 14.104 for `webpage`; CMOS18 14.159 for `standard`) -->\n        <choose>\n          <if type="webpage" variable="container-title">\n            <text variable="status"/>\n          </if>\n          <else-if type="webpage" variable="author publisher">\n            <text variable="status"/>\n          </else-if>\n          <else-if type="webpage" variable="translator publisher">\n            <text variable="status"/>\n          </else-if>\n          <else-if type="webpage">\n            <!-- capitalize `status` if there is nothing else after the `title` (either no website title or substituted publisher) -->\n            <text text-case="capitalize-first" variable="status"/>\n          </else-if>\n          <else-if match="any" variable="original-date original-publisher original-publisher-place original-title publisher">\n            <text variable="status"/>\n          </else-if>\n          <else>\n            <text text-case="capitalize-first" variable="status"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if type="broadcast" variable="issued URL"/>\n      <else-if type="broadcast" variable="issued">\n        <!-- `status` of a radio or TV broadcast is \'aired\' if unspecified (CMOS18 14.165) -->\n        <text text-case="capitalize-first" value="aired"/>\n      </else-if>\n      <else-if type="software" variable="issued publisher">\n        <!-- `status` of software is \'released\' if unspecified (CMOS18 14.169) -->\n        <choose>\n          <if match="any" variable="author chair collection-editor compiler composer contributor curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n            <!-- lowercase if `publisher` is adjacent -->\n            <text value="released"/>\n          </if>\n          <else>\n            <text text-case="capitalize-first" value="released"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if type="software" variable="original-date">\n        <!-- lowercase if `original-date` is adjacent -->\n        <text value="released"/>\n      </else-if>\n      <else-if type="software" variable="issued">\n        <!-- capitalize if `publisher` is not present -->\n        <text text-case="capitalize-first" value="released"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 4.7. Locator (including page references) -->\n  <macro name="source-locator-author-date">\n    <choose>\n      <if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="author locator">\n            <text macro="label-locator"/>\n          </if>\n          <else-if variable="container-title title">\n            <!-- unsigned reference entry title appears in the locator (CMOS18 13.130) -->\n            <group delimiter=" ">\n              <choose>\n                <if match="none" variable="DOI URL">\n                  <!-- Only print reference entries use `sub-verbo` (CMOS18 14.131) -->\n                  <text form="short" term="sub-verbo"/>\n                </if>\n              </choose>\n              <text form="short" quotes="true" variable="title"/>\n            </group>\n          </else-if>\n        </choose>\n      </if>\n      <else>\n        <text macro="label-locator"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.8. Medium -->\n  <macro name="source-medium-bib">\n    <group delimiter=", ">\n      <text text-case="capitalize-first" variable="medium"/>\n      <text variable="scale"/>\n      <text variable="dimensions"/>\n    </group>\n  </macro>\n  <macro name="source-medium-note">\n    <group delimiter=", ">\n      <text variable="medium"/>\n      <text variable="scale"/>\n      <text variable="dimensions"/>\n    </group>\n  </macro>\n  <!-- 4.9. Archival location -->\n  <macro name="source-archive-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="graphic">\n          <text macro="source-archive-reference-institution-first"/>\n        </if>\n        <else>\n          <text macro="source-archive-reference-location-first-bib"/>\n        </else>\n      </choose>\n      <text macro="source-archive-database-number" prefix="(" suffix=")"/>\n    </group>\n  </macro>\n  <macro name="source-archive-note">\n    <group delimiter=" ">\n      <choose>\n        <if type="graphic">\n          <text macro="source-archive-reference-institution-first"/>\n        </if>\n        <else>\n          <text macro="source-archive-reference-location-first-note"/>\n        </else>\n      </choose>\n      <text macro="source-archive-database-number" prefix="(" suffix=")"/>\n    </group>\n  </macro>\n  <!-- Archival elements -->\n  <macro name="source-archive-database-number">\n    <!-- database identifier, if not included elsewhere (CMOS18 14.113) -->\n    <choose>\n      <if match="any" variable="archive_collection archive_location archive-place"/>\n      <!-- `number` never shown elsewhere with a thesis -->\n      <else-if type="thesis">\n        <text variable="number"/>\n      </else-if>\n      <!-- `number` shown with `genre` -->\n      <else-if match="any" type="dataset entry song" variable="genre"/>\n      <else-if variable="archive">\n        <text variable="number"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-archive-locator">\n    <choose>\n      <!-- physical locators with archival references appear after the shelfmark (CMOS18 14.127) -->\n      <if locator="column" variable="archive archive_location">\n        <!-- archival locators must always be labelled to avoid confusion with `archive_location` (CMOS18 14.123) -->\n        <text macro="label-locator-all"/>\n      </if>\n      <else-if locator="folio" variable="archive archive_location">\n        <text macro="label-locator-all"/>\n      </else-if>\n      <else-if locator="page" variable="archive archive_location">\n        <text macro="label-locator-all"/>\n      </else-if>\n      <else-if variable="archive archive_location page">\n        <choose>\n          <if is-numeric="page">\n            <!-- TODO: remove this conditional when `page` parsing is fixed for different locator types -->\n            <text macro="label-page"/>\n          </if>\n          <else>\n            <text variable="page"/>\n          </else>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-archive-reference-institution-first">\n    <!-- Archive (gallery) name first for art (CMOS18 14.133) -->\n    <group delimiter=", ">\n      <text variable="archive"/>\n      <text variable="archive-place"/>\n      <text variable="archive_collection"/>\n      <text variable="archive_location"/>\n      <text macro="source-archive-locator"/>\n    </group>\n  </macro>\n  <macro name="source-archive-reference-location-first-bib">\n    <!-- Order of elements begins with the most specific (CMOS18 14.128) -->\n    <group delimiter=". ">\n      <group delimiter=", ">\n        <text text-case="capitalize-first" variable="archive_location"/>\n        <text macro="source-archive-locator"/>\n      </group>\n      <text variable="archive_collection"/>\n      <group delimiter=", ">\n        <text variable="archive"/>\n        <text variable="archive-place"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="source-archive-reference-location-first-note">\n    <!-- Order of elements begins with the most specific (CMOS18 14.127) -->\n    <group delimiter=", ">\n      <text variable="archive_location"/>\n      <text macro="source-archive-locator"/>\n      <text variable="archive_collection"/>\n      <text variable="archive"/>\n      <text variable="archive-place"/>\n    </group>\n  </macro>\n  <!-- 4.10. URL or persistent identifier -->\n  <macro name="source-date-accessed-DOI-URL-bib">\n    <group delimiter=". ">\n      <choose>\n        <if variable="DOI"/>\n        <else-if match="any" variable="available-date event-date issued status"/>\n        <else-if variable="accessed URL">\n          <group delimiter=" ">\n            <text term="accessed" text-case="capitalize-first"/>\n            <date form="text" variable="accessed"/>\n          </group>\n        </else-if>\n      </choose>\n      <text macro="source-DOI-URL"/>\n    </group>\n  </macro>\n  <macro name="source-DOI-URL">\n    <choose>\n      <if variable="DOI">\n        <text prefix="https://doi.org/" variable="DOI"/>\n      </if>\n      <else-if variable="URL">\n        <text variable="URL"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 5. Notes -->\n  <!-- TODO: add variables for distributor and exhibitions if available in CSL -->\n  <!-- 6. Legal references: Bluebook style (shared with APA) -->\n  <!-- Where APA or Chicago diverge from Bluebook, the official manual is followed -->\n  <macro name="legal-reference">\n    <!-- Type usage:\n\n         `bill`\n         : bills, resolutions, federal reports\n\n         `legal_case`\n         : all legal and court cases\n\n         `hearing`\n         : hearings and testimony\n\n         `legislation`\n         : statutes, constitutional items, and charters\n\n         `regulation`\n         : codified regulations, uncodified regulations, executive orders\n\n         `treaty`\n         : treaties\n    -->\n    <group delimiter=", ">\n      <choose>\n        <if type="treaty">\n          <text macro="legal-title"/>\n          <names variable="author">\n            <!-- Treaty parties should be included at least for bilateral treaties (Bluebook 21.4.2) -->\n            <name delimiter="-" et-al-min="100" et-al-use-first="99" form="short" initialize="false"/>\n          </names>\n          <text macro="legal-date"/>\n          <!-- treaty source/report in addition to URL (Bluebook 21.4.5) -->\n          <text macro="legal-source"/>\n        </if>\n        <else>\n          <group delimiter=" ">\n            <group delimiter=", ">\n              <text macro="legal-title"/>\n              <text macro="legal-source"/>\n            </group>\n            <text macro="legal-date"/>\n            <text macro="legal-identifier"/>\n          </group>\n        </else>\n      </choose>\n      <group delimiter=" ">\n        <!-- locator for use in notes -->\n        <choose>\n          <if locator="page" variable="page">\n            <text term="at"/>\n          </if>\n        </choose>\n        <text macro="label-locator"/>\n      </group>\n    </group>\n  </macro>\n  <!-- 6.1. Legal date -->\n  <macro name="legal-date">\n    <choose>\n      <if type="treaty">\n        <text macro="date-issued-full"/>\n      </if>\n      <else-if type="legal_case">\n        <text macro="legal-date-case"/>\n      </else-if>\n      <else-if match="any" type="bill hearing legislation regulation">\n        <group delimiter=" " prefix="(" suffix=")">\n          <group delimiter=" ">\n            <text macro="date-original-year"/>\n            <text form="symbol" term="and"/>\n          </group>\n          <choose>\n            <if variable="issued">\n              <text macro="date-issued-year"/>\n            </if>\n            <else>\n              <!-- Show proposal date for uncodified regulations. Assume date is entered literally ala "proposed May 23, 2016". -->\n              <!-- TODO: Add `proposed` date here if that becomes available -->\n              <date form="text" variable="submitted"/>\n            </else>\n          </choose>\n        </group>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="legal-date-case">\n    <group delimiter=" " prefix="(" suffix=")">\n      <text variable="authority"/>\n      <choose>\n        <if variable="container-title">\n          <!-- Print only year for cases published in reporters-->\n          <text macro="date-issued-year"/>\n        </if>\n        <else>\n          <text macro="date-issued-full"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- 6.2.1. Legal title -->\n  <macro name="legal-title">\n    <choose>\n      <if match="any" type="bill legal_case legislation regulation treaty">\n        <text text-case="title" variable="title"/>\n      </if>\n      <else-if type="hearing">\n        <!-- use standard format (Bluebook 13.3) -->\n        <group delimiter=": " font-style="italic">\n          <text text-case="capitalize-first" variable="title"/>\n          <group delimiter=" ">\n            <text term="hearing" text-case="capitalize-first"/>\n            <group delimiter=" ">\n              <text term="on"/>\n              <text variable="number"/>\n            </group>\n            <group delimiter=" ">\n              <text value="before the"/>\n              <text variable="section"/>\n            </group>\n          </group>\n        </group>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 6.2.2. Legal identifier -->\n  <macro name="legal-identifier">\n    <group delimiter=" " prefix="(" suffix=")">\n      <choose>\n        <if type="hearing">\n          <!-- Use the \'verb\' form of the hearing term to hold \'testimony of\' -->\n          <text form="verb" term="hearing"/>\n          <names variable="author">\n            <name and="symbol" initialize="false"/>\n          </names>\n        </if>\n        <else-if match="any" type="bill legislation regulation">\n          <!-- For uncodified regulations, assume future code section is in `status`. -->\n          <text variable="status"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="legal-identifier-bill-report">\n    <group delimiter=" ">\n      <text variable="genre"/>\n      <choose>\n        <if match="any" variable="authority chapter-number container-title">\n          <text variable="number"/>\n        </if>\n        <else>\n          <!-- If there is no legislative body, session number, or code/record title, assume the item is a congressional report and include \'No.\' label. -->\n          <text macro="label-number-capitalized"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- 6.3. Legal source -->\n  <macro name="legal-source">\n    <!-- Expect legal item `container-title` to be stored in short form -->\n    <choose>\n      <if type="bill">\n        <text macro="legal-source-bill"/>\n      </if>\n      <else-if type="hearing">\n        <text macro="legal-source-hearing"/>\n      </else-if>\n      <else-if type="legal_case">\n        <text macro="legal-source-case"/>\n      </else-if>\n      <else-if type="legislation">\n        <text macro="legal-source-legislation"/>\n      </else-if>\n      <else-if type="regulation">\n        <text macro="legal-source-regulation"/>\n      </else-if>\n      <else-if type="treaty">\n        <text macro="legal-source-treaty"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- Legal source types -->\n  <macro name="legal-source-bill">\n    <group delimiter=", ">\n      <text macro="legal-identifier-bill-report"/>\n      <group delimiter=" ">\n        <text variable="authority"/>\n        <!-- `chapter-number` is a session number -->\n        <text variable="chapter-number"/>\n      </group>\n      <group delimiter=" ">\n        <text variable="volume"/>\n        <text variable="container-title"/>\n        <text variable="page-first"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="legal-source-case">\n    <group delimiter=" ">\n      <choose>\n        <if variable="container-title">\n          <text variable="volume"/>\n          <text variable="container-title"/>\n          <text macro="label-section-symbol"/>\n          <choose>\n            <if match="any" variable="page page-first">\n              <text variable="page-first"/>\n            </if>\n            <else>\n              <text value="___"/>\n            </else>\n          </choose>\n        </if>\n        <else>\n          <text macro="label-number-capitalized"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="legal-source-hearing">\n    <group delimiter=" ">\n      <text variable="authority"/>\n      <!-- `chapter-number` is a session number -->\n      <text variable="chapter-number"/>\n    </group>\n  </macro>\n  <macro name="legal-source-legislation">\n    <choose>\n      <if variable="number">\n        <!-- `number` is a public law number -->\n        <group delimiter=", ">\n          <group delimiter=" ">\n            <choose>\n              <if variable="genre">\n                <text text-case="capitalize-first" variable="genre"/>\n              </if>\n              <else>\n                <text form="short" term="legislation" text-case="capitalize-first"/>\n              </else>\n            </choose>\n            <text macro="label-number-capitalized"/>\n          </group>\n          <group delimiter=" ">\n            <text variable="volume"/>\n            <text variable="container-title"/>\n            <text variable="page-first"/>\n          </group>\n        </group>\n      </if>\n      <else>\n        <group delimiter=" ">\n          <text variable="volume"/>\n          <text variable="container-title"/>\n          <choose>\n            <if variable="section">\n              <text macro="label-section-symbol"/>\n            </if>\n            <else>\n              <text variable="page-first"/>\n            </else>\n          </choose>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="legal-source-regulation">\n    <group delimiter=", ">\n      <group delimiter=" ">\n        <text variable="genre"/>\n        <text macro="label-number-capitalized"/>\n      </group>\n      <group delimiter=" ">\n        <text variable="volume"/>\n        <text variable="container-title"/>\n        <choose>\n          <if variable="section">\n            <text macro="label-section-symbol"/>\n          </if>\n          <else>\n            <text variable="page-first"/>\n          </else>\n        </choose>\n      </group>\n    </group>\n  </macro>\n  <macro name="legal-source-treaty">\n    <group delimiter=" ">\n      <number variable="volume"/>\n      <text variable="container-title"/>\n      <choose>\n        <if match="any" variable="page page-first">\n          <text variable="page-first"/>\n        </if>\n        <else>\n          <text macro="label-number-capitalized"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Citation -->\n  <macro name="citation-author-date-item">\n    <group delimiter=", ">\n      <choose>\n        <if type="classic">\n          <text macro="author-inline"/>\n          <choose>\n            <if variable="author">\n              <text macro="title-and-descriptions-short"/>\n            </if>\n          </choose>\n        </if>\n        <else-if match="any" type="interview personal_communication">\n          <choose>\n            <if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n              <!-- accessible `interview` or `personal_communication` uses standard format -->\n              <choose>\n                <if match="any" variable="event-date issued">\n                  <group delimiter=" ">\n                    <text macro="author-inline"/>\n                    <text macro="date-short"/>\n                  </group>\n                </if>\n                <else>\n                  <text macro="author-inline"/>\n                  <text macro="date-short"/>\n                </else>\n              </choose>\n            </if>\n            <else>\n              <!-- inaccessible `interview` or `personal_communication` uses in-text format (CMOS18 14.111) -->\n              <text macro="author-inline"/>\n              <text macro="title-and-descriptions-short"/>\n              <choose>\n                <if position="first">\n                  <choose>\n                    <if type="interview">\n                      <text macro="date-short"/>\n                    </if>\n                  </choose>\n                  <text macro="source-medium-note"/>\n                </if>\n              </choose>\n            </else>\n          </choose>\n        </else-if>\n        <else-if match="any" variable="event-date issued">\n          <group delimiter=" ">\n            <text macro="author-inline"/>\n            <text macro="date-short"/>\n          </group>\n        </else-if>\n        <else>\n          <!--- comma with forthcoming or n.d. -->\n          <text macro="author-inline"/>\n          <text macro="date-short"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <citation collapse="year" disambiguate-add-givenname="true" disambiguate-add-names="true" disambiguate-add-year-suffix="true" et-al-min="3" et-al-use-first="1" givenname-disambiguation-rule="primary-name">\n    <layout delimiter="; " prefix="(" suffix=")">\n      <group delimiter=", ">\n        <choose>\n          <if match="none" type="classic">\n            <text macro="citation-author-date-item"/>\n            <text macro="source-locator-author-date"/>\n          </if>\n          <!-- with `classic`, a non-numeric canonical reference or identifying number is separated by a space rather than a comma (CMOS18 14.145) -->\n          <else-if is-numeric="locator">\n            <text macro="citation-author-date-item"/>\n            <text macro="source-locator-author-date"/>\n          </else-if>\n          <else-if locator="chapter line verse" match="any">\n            <group delimiter=" ">\n              <text macro="citation-author-date-item"/>\n              <text macro="source-locator-author-date"/>\n            </group>\n          </else-if>\n          <else>\n            <text macro="citation-author-date-item"/>\n            <text macro="source-locator-author-date"/>\n          </else>\n        </choose>\n      </group>\n    </layout>\n  </citation>\n  <!-- Bibliography -->\n  <macro name="bibliography-author-date">\n    <group delimiter=". ">\n      <choose>\n        <if match="any" type="bill hearing legal_case legislation regulation treaty">\n          <!-- Legal items have different orders and delimiters -->\n          <text macro="legal-reference"/>\n          <text macro="source-date-accessed-DOI-URL-bib"/>\n          <text variable="references"/>\n        </if>\n        <else>\n          <group delimiter=" ">\n            <text macro="author-bib"/>\n            <choose>\n              <!-- give key to abbreviations (CMOS18 13.127, 14.104) -->\n              <!-- TODO: add `authority` and `publisher` if it becomes possible to test for short forms -->\n              <if type="webpage" variable="publisher"/>\n              <else-if type="webpage" variable="container-title container-title-short">\n                <text prefix="(" suffix=")" text-case="title" variable="container-title"/>\n              </else-if>\n            </choose>\n          </group>\n          <text macro="date"/>\n          <text macro="title-and-source-bib"/>\n          <text variable="references"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <bibliography et-al-min="7" et-al-use-first="3" hanging-indent="true">\n    <sort>\n      <key macro="author-sort"/>\n      <key macro="date-sort-group"/>\n      <key macro="date-sort-year"/>\n      <key macro="date"/>\n      <key macro="title-and-descriptions-bib"/>\n      <key macro="source-bib"/>\n      <key variable="volume"/>\n      <key variable="part-number"/>\n      <key variable="event-date"/>\n      <key variable="issued"/>\n      <key macro="source-archive-bib"/>\n    </sort>\n    <layout suffix=".">\n      <choose>\n        <if type="classic">\n          <choose>\n            <if match="any" variable="archive editor translator publisher">\n              <text macro="bibliography-author-date"/>\n            </if>\n          </choose>\n        </if>\n        <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n          <choose>\n            <if variable="author">\n              <!-- Signed reference entries appear in the bibliography (CMOS18 14.132) -->\n              <text macro="bibliography-author-date"/>\n            </if>\n            <else-if match="any" variable="DOI URL">\n              <!-- Provide a bibliography if necessary identifying information is not in text -->\n              <text macro="bibliography-author-date"/>\n            </else-if>\n          </choose>\n        </else-if>\n        <!-- Personal communications only appear in the bibliography if the reader can retrieve them (CMOS18 14.13, 14.111) -->\n        <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n          <text macro="bibliography-author-date"/>\n        </else-if>\n        <else-if match="any" type="interview personal_communication"/>\n        <else>\n          <text macro="bibliography-author-date"/>\n        </else>\n      </choose>\n    </layout>\n  </bibliography>\n</style>\n';
 
+  // node_modules/@popperjs/core/lib/enums.js
+  var top = "top";
+  var bottom = "bottom";
+  var right = "right";
+  var left = "left";
+  var auto = "auto";
+  var basePlacements = [top, bottom, right, left];
+  var start = "start";
+  var end = "end";
+  var clippingParents = "clippingParents";
+  var viewport = "viewport";
+  var popper = "popper";
+  var reference = "reference";
+  var variationPlacements = /* @__PURE__ */ basePlacements.reduce(function(acc, placement) {
+    return acc.concat([placement + "-" + start, placement + "-" + end]);
+  }, []);
+  var placements = /* @__PURE__ */ [].concat(basePlacements, [auto]).reduce(function(acc, placement) {
+    return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
+  }, []);
+  var beforeRead = "beforeRead";
+  var read = "read";
+  var afterRead = "afterRead";
+  var beforeMain = "beforeMain";
+  var main = "main";
+  var afterMain = "afterMain";
+  var beforeWrite = "beforeWrite";
+  var write = "write";
+  var afterWrite = "afterWrite";
+  var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
+
+  // node_modules/@popperjs/core/lib/dom-utils/getNodeName.js
+  function getNodeName(element) {
+    return element ? (element.nodeName || "").toLowerCase() : null;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getWindow.js
+  function getWindow(node) {
+    if (node == null) {
+      return window;
+    }
+    if (node.toString() !== "[object Window]") {
+      var ownerDocument = node.ownerDocument;
+      return ownerDocument ? ownerDocument.defaultView || window : window;
+    }
+    return node;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
+  function isElement(node) {
+    var OwnElement = getWindow(node).Element;
+    return node instanceof OwnElement || node instanceof Element;
+  }
+  function isHTMLElement(node) {
+    var OwnElement = getWindow(node).HTMLElement;
+    return node instanceof OwnElement || node instanceof HTMLElement;
+  }
+  function isShadowRoot(node) {
+    if (typeof ShadowRoot === "undefined") {
+      return false;
+    }
+    var OwnElement = getWindow(node).ShadowRoot;
+    return node instanceof OwnElement || node instanceof ShadowRoot;
+  }
+
+  // node_modules/@popperjs/core/lib/modifiers/applyStyles.js
+  function applyStyles(_ref) {
+    var state = _ref.state;
+    Object.keys(state.elements).forEach(function(name) {
+      var style = state.styles[name] || {};
+      var attributes = state.attributes[name] || {};
+      var element = state.elements[name];
+      if (!isHTMLElement(element) || !getNodeName(element)) {
+        return;
+      }
+      Object.assign(element.style, style);
+      Object.keys(attributes).forEach(function(name2) {
+        var value = attributes[name2];
+        if (value === false) {
+          element.removeAttribute(name2);
+        } else {
+          element.setAttribute(name2, value === true ? "" : value);
+        }
+      });
+    });
+  }
+  function effect(_ref2) {
+    var state = _ref2.state;
+    var initialStyles = {
+      popper: {
+        position: state.options.strategy,
+        left: "0",
+        top: "0",
+        margin: "0"
+      },
+      arrow: {
+        position: "absolute"
+      },
+      reference: {}
+    };
+    Object.assign(state.elements.popper.style, initialStyles.popper);
+    state.styles = initialStyles;
+    if (state.elements.arrow) {
+      Object.assign(state.elements.arrow.style, initialStyles.arrow);
+    }
+    return function() {
+      Object.keys(state.elements).forEach(function(name) {
+        var element = state.elements[name];
+        var attributes = state.attributes[name] || {};
+        var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]);
+        var style = styleProperties.reduce(function(style2, property) {
+          style2[property] = "";
+          return style2;
+        }, {});
+        if (!isHTMLElement(element) || !getNodeName(element)) {
+          return;
+        }
+        Object.assign(element.style, style);
+        Object.keys(attributes).forEach(function(attribute) {
+          element.removeAttribute(attribute);
+        });
+      });
+    };
+  }
+  var applyStyles_default = {
+    name: "applyStyles",
+    enabled: true,
+    phase: "write",
+    fn: applyStyles,
+    effect,
+    requires: ["computeStyles"]
+  };
+
+  // node_modules/@popperjs/core/lib/utils/getBasePlacement.js
+  function getBasePlacement(placement) {
+    return placement.split("-")[0];
+  }
+
+  // node_modules/@popperjs/core/lib/utils/math.js
+  var max = Math.max;
+  var min = Math.min;
+  var round = Math.round;
+
+  // node_modules/@popperjs/core/lib/utils/userAgent.js
+  function getUAString() {
+    var uaData = navigator.userAgentData;
+    if (uaData != null && uaData.brands && Array.isArray(uaData.brands)) {
+      return uaData.brands.map(function(item) {
+        return item.brand + "/" + item.version;
+      }).join(" ");
+    }
+    return navigator.userAgent;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
+  function isLayoutViewport() {
+    return !/^((?!chrome|android).)*safari/i.test(getUAString());
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
+  function getBoundingClientRect(element, includeScale, isFixedStrategy) {
+    if (includeScale === void 0) {
+      includeScale = false;
+    }
+    if (isFixedStrategy === void 0) {
+      isFixedStrategy = false;
+    }
+    var clientRect = element.getBoundingClientRect();
+    var scaleX = 1;
+    var scaleY = 1;
+    if (includeScale && isHTMLElement(element)) {
+      scaleX = element.offsetWidth > 0 ? round(clientRect.width) / element.offsetWidth || 1 : 1;
+      scaleY = element.offsetHeight > 0 ? round(clientRect.height) / element.offsetHeight || 1 : 1;
+    }
+    var _ref = isElement(element) ? getWindow(element) : window, visualViewport = _ref.visualViewport;
+    var addVisualOffsets = !isLayoutViewport() && isFixedStrategy;
+    var x = (clientRect.left + (addVisualOffsets && visualViewport ? visualViewport.offsetLeft : 0)) / scaleX;
+    var y = (clientRect.top + (addVisualOffsets && visualViewport ? visualViewport.offsetTop : 0)) / scaleY;
+    var width = clientRect.width / scaleX;
+    var height = clientRect.height / scaleY;
+    return {
+      width,
+      height,
+      top: y,
+      right: x + width,
+      bottom: y + height,
+      left: x,
+      x,
+      y
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js
+  function getLayoutRect(element) {
+    var clientRect = getBoundingClientRect(element);
+    var width = element.offsetWidth;
+    var height = element.offsetHeight;
+    if (Math.abs(clientRect.width - width) <= 1) {
+      width = clientRect.width;
+    }
+    if (Math.abs(clientRect.height - height) <= 1) {
+      height = clientRect.height;
+    }
+    return {
+      x: element.offsetLeft,
+      y: element.offsetTop,
+      width,
+      height
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/contains.js
+  function contains(parent, child) {
+    var rootNode = child.getRootNode && child.getRootNode();
+    if (parent.contains(child)) {
+      return true;
+    } else if (rootNode && isShadowRoot(rootNode)) {
+      var next = child;
+      do {
+        if (next && parent.isSameNode(next)) {
+          return true;
+        }
+        next = next.parentNode || next.host;
+      } while (next);
+    }
+    return false;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js
+  function getComputedStyle(element) {
+    return getWindow(element).getComputedStyle(element);
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/isTableElement.js
+  function isTableElement(element) {
+    return ["table", "td", "th"].indexOf(getNodeName(element)) >= 0;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js
+  function getDocumentElement(element) {
+    return ((isElement(element) ? element.ownerDocument : (
+      // $FlowFixMe[prop-missing]
+      element.document
+    )) || window.document).documentElement;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getParentNode.js
+  function getParentNode(element) {
+    if (getNodeName(element) === "html") {
+      return element;
+    }
+    return (
+      // this is a quicker (but less type safe) way to save quite some bytes from the bundle
+      // $FlowFixMe[incompatible-return]
+      // $FlowFixMe[prop-missing]
+      element.assignedSlot || // step into the shadow DOM of the parent of a slotted node
+      element.parentNode || // DOM Element detected
+      (isShadowRoot(element) ? element.host : null) || // ShadowRoot detected
+      // $FlowFixMe[incompatible-call]: HTMLElement is a Node
+      getDocumentElement(element)
+    );
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js
+  function getTrueOffsetParent(element) {
+    if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
+    getComputedStyle(element).position === "fixed") {
+      return null;
+    }
+    return element.offsetParent;
+  }
+  function getContainingBlock(element) {
+    var isFirefox = /firefox/i.test(getUAString());
+    var isIE = /Trident/i.test(getUAString());
+    if (isIE && isHTMLElement(element)) {
+      var elementCss = getComputedStyle(element);
+      if (elementCss.position === "fixed") {
+        return null;
+      }
+    }
+    var currentNode = getParentNode(element);
+    if (isShadowRoot(currentNode)) {
+      currentNode = currentNode.host;
+    }
+    while (isHTMLElement(currentNode) && ["html", "body"].indexOf(getNodeName(currentNode)) < 0) {
+      var css = getComputedStyle(currentNode);
+      if (css.transform !== "none" || css.perspective !== "none" || css.contain === "paint" || ["transform", "perspective"].indexOf(css.willChange) !== -1 || isFirefox && css.willChange === "filter" || isFirefox && css.filter && css.filter !== "none") {
+        return currentNode;
+      } else {
+        currentNode = currentNode.parentNode;
+      }
+    }
+    return null;
+  }
+  function getOffsetParent(element) {
+    var window2 = getWindow(element);
+    var offsetParent = getTrueOffsetParent(element);
+    while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === "static") {
+      offsetParent = getTrueOffsetParent(offsetParent);
+    }
+    if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle(offsetParent).position === "static")) {
+      return window2;
+    }
+    return offsetParent || getContainingBlock(element) || window2;
+  }
+
+  // node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js
+  function getMainAxisFromPlacement(placement) {
+    return ["top", "bottom"].indexOf(placement) >= 0 ? "x" : "y";
+  }
+
+  // node_modules/@popperjs/core/lib/utils/within.js
+  function within(min2, value, max2) {
+    return max(min2, min(value, max2));
+  }
+  function withinMaxClamp(min2, value, max2) {
+    var v = within(min2, value, max2);
+    return v > max2 ? max2 : v;
+  }
+
+  // node_modules/@popperjs/core/lib/utils/getFreshSideObject.js
+  function getFreshSideObject() {
+    return {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/utils/mergePaddingObject.js
+  function mergePaddingObject(paddingObject) {
+    return Object.assign({}, getFreshSideObject(), paddingObject);
+  }
+
+  // node_modules/@popperjs/core/lib/utils/expandToHashMap.js
+  function expandToHashMap(value, keys) {
+    return keys.reduce(function(hashMap, key) {
+      hashMap[key] = value;
+      return hashMap;
+    }, {});
+  }
+
+  // node_modules/@popperjs/core/lib/modifiers/arrow.js
+  var toPaddingObject = function toPaddingObject2(padding, state) {
+    padding = typeof padding === "function" ? padding(Object.assign({}, state.rects, {
+      placement: state.placement
+    })) : padding;
+    return mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
+  };
+  function arrow(_ref) {
+    var _state$modifiersData$;
+    var state = _ref.state, name = _ref.name, options2 = _ref.options;
+    var arrowElement = state.elements.arrow;
+    var popperOffsets2 = state.modifiersData.popperOffsets;
+    var basePlacement = getBasePlacement(state.placement);
+    var axis = getMainAxisFromPlacement(basePlacement);
+    var isVertical = [left, right].indexOf(basePlacement) >= 0;
+    var len = isVertical ? "height" : "width";
+    if (!arrowElement || !popperOffsets2) {
+      return;
+    }
+    var paddingObject = toPaddingObject(options2.padding, state);
+    var arrowRect = getLayoutRect(arrowElement);
+    var minProp = axis === "y" ? top : left;
+    var maxProp = axis === "y" ? bottom : right;
+    var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets2[axis] - state.rects.popper[len];
+    var startDiff = popperOffsets2[axis] - state.rects.reference[axis];
+    var arrowOffsetParent = getOffsetParent(arrowElement);
+    var clientSize = arrowOffsetParent ? axis === "y" ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
+    var centerToReference = endDiff / 2 - startDiff / 2;
+    var min2 = paddingObject[minProp];
+    var max2 = clientSize - arrowRect[len] - paddingObject[maxProp];
+    var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
+    var offset2 = within(min2, center, max2);
+    var axisProp = axis;
+    state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
+  }
+  function effect2(_ref2) {
+    var state = _ref2.state, options2 = _ref2.options;
+    var _options$element = options2.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
+    if (arrowElement == null) {
+      return;
+    }
+    if (typeof arrowElement === "string") {
+      arrowElement = state.elements.popper.querySelector(arrowElement);
+      if (!arrowElement) {
+        return;
+      }
+    }
+    if (!contains(state.elements.popper, arrowElement)) {
+      return;
+    }
+    state.elements.arrow = arrowElement;
+  }
+  var arrow_default = {
+    name: "arrow",
+    enabled: true,
+    phase: "main",
+    fn: arrow,
+    effect: effect2,
+    requires: ["popperOffsets"],
+    requiresIfExists: ["preventOverflow"]
+  };
+
+  // node_modules/@popperjs/core/lib/utils/getVariation.js
+  function getVariation(placement) {
+    return placement.split("-")[1];
+  }
+
+  // node_modules/@popperjs/core/lib/modifiers/computeStyles.js
+  var unsetSides = {
+    top: "auto",
+    right: "auto",
+    bottom: "auto",
+    left: "auto"
+  };
+  function roundOffsetsByDPR(_ref, win) {
+    var x = _ref.x, y = _ref.y;
+    var dpr = win.devicePixelRatio || 1;
+    return {
+      x: round(x * dpr) / dpr || 0,
+      y: round(y * dpr) / dpr || 0
+    };
+  }
+  function mapToStyles(_ref2) {
+    var _Object$assign2;
+    var popper2 = _ref2.popper, popperRect = _ref2.popperRect, placement = _ref2.placement, variation = _ref2.variation, offsets = _ref2.offsets, position = _ref2.position, gpuAcceleration = _ref2.gpuAcceleration, adaptive = _ref2.adaptive, roundOffsets = _ref2.roundOffsets, isFixed = _ref2.isFixed;
+    var _offsets$x = offsets.x, x = _offsets$x === void 0 ? 0 : _offsets$x, _offsets$y = offsets.y, y = _offsets$y === void 0 ? 0 : _offsets$y;
+    var _ref3 = typeof roundOffsets === "function" ? roundOffsets({
+      x,
+      y
+    }) : {
+      x,
+      y
+    };
+    x = _ref3.x;
+    y = _ref3.y;
+    var hasX = offsets.hasOwnProperty("x");
+    var hasY = offsets.hasOwnProperty("y");
+    var sideX = left;
+    var sideY = top;
+    var win = window;
+    if (adaptive) {
+      var offsetParent = getOffsetParent(popper2);
+      var heightProp = "clientHeight";
+      var widthProp = "clientWidth";
+      if (offsetParent === getWindow(popper2)) {
+        offsetParent = getDocumentElement(popper2);
+        if (getComputedStyle(offsetParent).position !== "static" && position === "absolute") {
+          heightProp = "scrollHeight";
+          widthProp = "scrollWidth";
+        }
+      }
+      offsetParent = offsetParent;
+      if (placement === top || (placement === left || placement === right) && variation === end) {
+        sideY = bottom;
+        var offsetY = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.height : (
+          // $FlowFixMe[prop-missing]
+          offsetParent[heightProp]
+        );
+        y -= offsetY - popperRect.height;
+        y *= gpuAcceleration ? 1 : -1;
+      }
+      if (placement === left || (placement === top || placement === bottom) && variation === end) {
+        sideX = right;
+        var offsetX = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.width : (
+          // $FlowFixMe[prop-missing]
+          offsetParent[widthProp]
+        );
+        x -= offsetX - popperRect.width;
+        x *= gpuAcceleration ? 1 : -1;
+      }
+    }
+    var commonStyles = Object.assign({
+      position
+    }, adaptive && unsetSides);
+    var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
+      x,
+      y
+    }, getWindow(popper2)) : {
+      x,
+      y
+    };
+    x = _ref4.x;
+    y = _ref4.y;
+    if (gpuAcceleration) {
+      var _Object$assign;
+      return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? "0" : "", _Object$assign[sideX] = hasX ? "0" : "", _Object$assign.transform = (win.devicePixelRatio || 1) <= 1 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+    }
+    return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : "", _Object$assign2[sideX] = hasX ? x + "px" : "", _Object$assign2.transform = "", _Object$assign2));
+  }
+  function computeStyles(_ref5) {
+    var state = _ref5.state, options2 = _ref5.options;
+    var _options$gpuAccelerat = options2.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options2.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options2.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
+    var commonStyles = {
+      placement: getBasePlacement(state.placement),
+      variation: getVariation(state.placement),
+      popper: state.elements.popper,
+      popperRect: state.rects.popper,
+      gpuAcceleration,
+      isFixed: state.options.strategy === "fixed"
+    };
+    if (state.modifiersData.popperOffsets != null) {
+      state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
+        offsets: state.modifiersData.popperOffsets,
+        position: state.options.strategy,
+        adaptive,
+        roundOffsets
+      })));
+    }
+    if (state.modifiersData.arrow != null) {
+      state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
+        offsets: state.modifiersData.arrow,
+        position: "absolute",
+        adaptive: false,
+        roundOffsets
+      })));
+    }
+    state.attributes.popper = Object.assign({}, state.attributes.popper, {
+      "data-popper-placement": state.placement
+    });
+  }
+  var computeStyles_default = {
+    name: "computeStyles",
+    enabled: true,
+    phase: "beforeWrite",
+    fn: computeStyles,
+    data: {}
+  };
+
+  // node_modules/@popperjs/core/lib/modifiers/eventListeners.js
+  var passive = {
+    passive: true
+  };
+  function effect3(_ref) {
+    var state = _ref.state, instance = _ref.instance, options2 = _ref.options;
+    var _options$scroll = options2.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options2.resize, resize = _options$resize === void 0 ? true : _options$resize;
+    var window2 = getWindow(state.elements.popper);
+    var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+    if (scroll) {
+      scrollParents.forEach(function(scrollParent) {
+        scrollParent.addEventListener("scroll", instance.update, passive);
+      });
+    }
+    if (resize) {
+      window2.addEventListener("resize", instance.update, passive);
+    }
+    return function() {
+      if (scroll) {
+        scrollParents.forEach(function(scrollParent) {
+          scrollParent.removeEventListener("scroll", instance.update, passive);
+        });
+      }
+      if (resize) {
+        window2.removeEventListener("resize", instance.update, passive);
+      }
+    };
+  }
+  var eventListeners_default = {
+    name: "eventListeners",
+    enabled: true,
+    phase: "write",
+    fn: function fn() {
+    },
+    effect: effect3,
+    data: {}
+  };
+
+  // node_modules/@popperjs/core/lib/utils/getOppositePlacement.js
+  var hash = {
+    left: "right",
+    right: "left",
+    bottom: "top",
+    top: "bottom"
+  };
+  function getOppositePlacement(placement) {
+    return placement.replace(/left|right|bottom|top/g, function(matched) {
+      return hash[matched];
+    });
+  }
+
+  // node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js
+  var hash2 = {
+    start: "end",
+    end: "start"
+  };
+  function getOppositeVariationPlacement(placement) {
+    return placement.replace(/start|end/g, function(matched) {
+      return hash2[matched];
+    });
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
+  function getWindowScroll(node) {
+    var win = getWindow(node);
+    var scrollLeft = win.pageXOffset;
+    var scrollTop = win.pageYOffset;
+    return {
+      scrollLeft,
+      scrollTop
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js
+  function getWindowScrollBarX(element) {
+    return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js
+  function getViewportRect(element, strategy) {
+    var win = getWindow(element);
+    var html = getDocumentElement(element);
+    var visualViewport = win.visualViewport;
+    var width = html.clientWidth;
+    var height = html.clientHeight;
+    var x = 0;
+    var y = 0;
+    if (visualViewport) {
+      width = visualViewport.width;
+      height = visualViewport.height;
+      var layoutViewport = isLayoutViewport();
+      if (layoutViewport || !layoutViewport && strategy === "fixed") {
+        x = visualViewport.offsetLeft;
+        y = visualViewport.offsetTop;
+      }
+    }
+    return {
+      width,
+      height,
+      x: x + getWindowScrollBarX(element),
+      y
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js
+  function getDocumentRect(element) {
+    var _element$ownerDocumen;
+    var html = getDocumentElement(element);
+    var winScroll = getWindowScroll(element);
+    var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+    var width = max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
+    var height = max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+    var x = -winScroll.scrollLeft + getWindowScrollBarX(element);
+    var y = -winScroll.scrollTop;
+    if (getComputedStyle(body || html).direction === "rtl") {
+      x += max(html.clientWidth, body ? body.clientWidth : 0) - width;
+    }
+    return {
+      width,
+      height,
+      x,
+      y
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js
+  function isScrollParent(element) {
+    var _getComputedStyle = getComputedStyle(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
+    return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js
+  function getScrollParent(node) {
+    if (["html", "body", "#document"].indexOf(getNodeName(node)) >= 0) {
+      return node.ownerDocument.body;
+    }
+    if (isHTMLElement(node) && isScrollParent(node)) {
+      return node;
+    }
+    return getScrollParent(getParentNode(node));
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
+  function listScrollParents(element, list6) {
+    var _element$ownerDocumen;
+    if (list6 === void 0) {
+      list6 = [];
+    }
+    var scrollParent = getScrollParent(element);
+    var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
+    var win = getWindow(scrollParent);
+    var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
+    var updatedList = list6.concat(target);
+    return isBody ? updatedList : (
+      // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
+      updatedList.concat(listScrollParents(getParentNode(target)))
+    );
+  }
+
+  // node_modules/@popperjs/core/lib/utils/rectToClientRect.js
+  function rectToClientRect(rect) {
+    return Object.assign({}, rect, {
+      left: rect.x,
+      top: rect.y,
+      right: rect.x + rect.width,
+      bottom: rect.y + rect.height
+    });
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js
+  function getInnerBoundingClientRect(element, strategy) {
+    var rect = getBoundingClientRect(element, false, strategy === "fixed");
+    rect.top = rect.top + element.clientTop;
+    rect.left = rect.left + element.clientLeft;
+    rect.bottom = rect.top + element.clientHeight;
+    rect.right = rect.left + element.clientWidth;
+    rect.width = element.clientWidth;
+    rect.height = element.clientHeight;
+    rect.x = rect.left;
+    rect.y = rect.top;
+    return rect;
+  }
+  function getClientRectFromMixedType(element, clippingParent, strategy) {
+    return clippingParent === viewport ? rectToClientRect(getViewportRect(element, strategy)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent, strategy) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+  }
+  function getClippingParents(element) {
+    var clippingParents2 = listScrollParents(getParentNode(element));
+    var canEscapeClipping = ["absolute", "fixed"].indexOf(getComputedStyle(element).position) >= 0;
+    var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
+    if (!isElement(clipperElement)) {
+      return [];
+    }
+    return clippingParents2.filter(function(clippingParent) {
+      return isElement(clippingParent) && contains(clippingParent, clipperElement) && getNodeName(clippingParent) !== "body";
+    });
+  }
+  function getClippingRect(element, boundary, rootBoundary, strategy) {
+    var mainClippingParents = boundary === "clippingParents" ? getClippingParents(element) : [].concat(boundary);
+    var clippingParents2 = [].concat(mainClippingParents, [rootBoundary]);
+    var firstClippingParent = clippingParents2[0];
+    var clippingRect = clippingParents2.reduce(function(accRect, clippingParent) {
+      var rect = getClientRectFromMixedType(element, clippingParent, strategy);
+      accRect.top = max(rect.top, accRect.top);
+      accRect.right = min(rect.right, accRect.right);
+      accRect.bottom = min(rect.bottom, accRect.bottom);
+      accRect.left = max(rect.left, accRect.left);
+      return accRect;
+    }, getClientRectFromMixedType(element, firstClippingParent, strategy));
+    clippingRect.width = clippingRect.right - clippingRect.left;
+    clippingRect.height = clippingRect.bottom - clippingRect.top;
+    clippingRect.x = clippingRect.left;
+    clippingRect.y = clippingRect.top;
+    return clippingRect;
+  }
+
+  // node_modules/@popperjs/core/lib/utils/computeOffsets.js
+  function computeOffsets(_ref) {
+    var reference2 = _ref.reference, element = _ref.element, placement = _ref.placement;
+    var basePlacement = placement ? getBasePlacement(placement) : null;
+    var variation = placement ? getVariation(placement) : null;
+    var commonX = reference2.x + reference2.width / 2 - element.width / 2;
+    var commonY = reference2.y + reference2.height / 2 - element.height / 2;
+    var offsets;
+    switch (basePlacement) {
+      case top:
+        offsets = {
+          x: commonX,
+          y: reference2.y - element.height
+        };
+        break;
+      case bottom:
+        offsets = {
+          x: commonX,
+          y: reference2.y + reference2.height
+        };
+        break;
+      case right:
+        offsets = {
+          x: reference2.x + reference2.width,
+          y: commonY
+        };
+        break;
+      case left:
+        offsets = {
+          x: reference2.x - element.width,
+          y: commonY
+        };
+        break;
+      default:
+        offsets = {
+          x: reference2.x,
+          y: reference2.y
+        };
+    }
+    var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
+    if (mainAxis != null) {
+      var len = mainAxis === "y" ? "height" : "width";
+      switch (variation) {
+        case start:
+          offsets[mainAxis] = offsets[mainAxis] - (reference2[len] / 2 - element[len] / 2);
+          break;
+        case end:
+          offsets[mainAxis] = offsets[mainAxis] + (reference2[len] / 2 - element[len] / 2);
+          break;
+        default:
+      }
+    }
+    return offsets;
+  }
+
+  // node_modules/@popperjs/core/lib/utils/detectOverflow.js
+  function detectOverflow(state, options2) {
+    if (options2 === void 0) {
+      options2 = {};
+    }
+    var _options = options2, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
+    var paddingObject = mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
+    var altContext = elementContext === popper ? reference : popper;
+    var popperRect = state.rects.popper;
+    var element = state.elements[altBoundary ? altContext : elementContext];
+    var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary, strategy);
+    var referenceClientRect = getBoundingClientRect(state.elements.reference);
+    var popperOffsets2 = computeOffsets({
+      reference: referenceClientRect,
+      element: popperRect,
+      strategy: "absolute",
+      placement
+    });
+    var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets2));
+    var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect;
+    var overflowOffsets = {
+      top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
+      bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
+      left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
+      right: elementClientRect.right - clippingClientRect.right + paddingObject.right
+    };
+    var offsetData = state.modifiersData.offset;
+    if (elementContext === popper && offsetData) {
+      var offset2 = offsetData[placement];
+      Object.keys(overflowOffsets).forEach(function(key) {
+        var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
+        var axis = [top, bottom].indexOf(key) >= 0 ? "y" : "x";
+        overflowOffsets[key] += offset2[axis] * multiply;
+      });
+    }
+    return overflowOffsets;
+  }
+
+  // node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
+  function computeAutoPlacement(state, options2) {
+    if (options2 === void 0) {
+      options2 = {};
+    }
+    var _options = options2, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
+    var variation = getVariation(placement);
+    var placements2 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function(placement2) {
+      return getVariation(placement2) === variation;
+    }) : basePlacements;
+    var allowedPlacements = placements2.filter(function(placement2) {
+      return allowedAutoPlacements.indexOf(placement2) >= 0;
+    });
+    if (allowedPlacements.length === 0) {
+      allowedPlacements = placements2;
+    }
+    var overflows = allowedPlacements.reduce(function(acc, placement2) {
+      acc[placement2] = detectOverflow(state, {
+        placement: placement2,
+        boundary,
+        rootBoundary,
+        padding
+      })[getBasePlacement(placement2)];
+      return acc;
+    }, {});
+    return Object.keys(overflows).sort(function(a, b) {
+      return overflows[a] - overflows[b];
+    });
+  }
+
+  // node_modules/@popperjs/core/lib/modifiers/flip.js
+  function getExpandedFallbackPlacements(placement) {
+    if (getBasePlacement(placement) === auto) {
+      return [];
+    }
+    var oppositePlacement = getOppositePlacement(placement);
+    return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
+  }
+  function flip(_ref) {
+    var state = _ref.state, options2 = _ref.options, name = _ref.name;
+    if (state.modifiersData[name]._skip) {
+      return;
+    }
+    var _options$mainAxis = options2.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options2.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options2.fallbackPlacements, padding = options2.padding, boundary = options2.boundary, rootBoundary = options2.rootBoundary, altBoundary = options2.altBoundary, _options$flipVariatio = options2.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options2.allowedAutoPlacements;
+    var preferredPlacement = state.options.placement;
+    var basePlacement = getBasePlacement(preferredPlacement);
+    var isBasePlacement = basePlacement === preferredPlacement;
+    var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
+    var placements2 = [preferredPlacement].concat(fallbackPlacements).reduce(function(acc, placement2) {
+      return acc.concat(getBasePlacement(placement2) === auto ? computeAutoPlacement(state, {
+        placement: placement2,
+        boundary,
+        rootBoundary,
+        padding,
+        flipVariations,
+        allowedAutoPlacements
+      }) : placement2);
+    }, []);
+    var referenceRect = state.rects.reference;
+    var popperRect = state.rects.popper;
+    var checksMap = /* @__PURE__ */ new Map();
+    var makeFallbackChecks = true;
+    var firstFittingPlacement = placements2[0];
+    for (var i = 0; i < placements2.length; i++) {
+      var placement = placements2[i];
+      var _basePlacement = getBasePlacement(placement);
+      var isStartVariation = getVariation(placement) === start;
+      var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
+      var len = isVertical ? "width" : "height";
+      var overflow = detectOverflow(state, {
+        placement,
+        boundary,
+        rootBoundary,
+        altBoundary,
+        padding
+      });
+      var mainVariationSide = isVertical ? isStartVariation ? right : left : isStartVariation ? bottom : top;
+      if (referenceRect[len] > popperRect[len]) {
+        mainVariationSide = getOppositePlacement(mainVariationSide);
+      }
+      var altVariationSide = getOppositePlacement(mainVariationSide);
+      var checks = [];
+      if (checkMainAxis) {
+        checks.push(overflow[_basePlacement] <= 0);
+      }
+      if (checkAltAxis) {
+        checks.push(overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0);
+      }
+      if (checks.every(function(check) {
+        return check;
+      })) {
+        firstFittingPlacement = placement;
+        makeFallbackChecks = false;
+        break;
+      }
+      checksMap.set(placement, checks);
+    }
+    if (makeFallbackChecks) {
+      var numberOfChecks = flipVariations ? 3 : 1;
+      var _loop = function _loop2(_i2) {
+        var fittingPlacement = placements2.find(function(placement2) {
+          var checks2 = checksMap.get(placement2);
+          if (checks2) {
+            return checks2.slice(0, _i2).every(function(check) {
+              return check;
+            });
+          }
+        });
+        if (fittingPlacement) {
+          firstFittingPlacement = fittingPlacement;
+          return "break";
+        }
+      };
+      for (var _i = numberOfChecks; _i > 0; _i--) {
+        var _ret = _loop(_i);
+        if (_ret === "break") break;
+      }
+    }
+    if (state.placement !== firstFittingPlacement) {
+      state.modifiersData[name]._skip = true;
+      state.placement = firstFittingPlacement;
+      state.reset = true;
+    }
+  }
+  var flip_default = {
+    name: "flip",
+    enabled: true,
+    phase: "main",
+    fn: flip,
+    requiresIfExists: ["offset"],
+    data: {
+      _skip: false
+    }
+  };
+
+  // node_modules/@popperjs/core/lib/modifiers/hide.js
+  function getSideOffsets(overflow, rect, preventedOffsets) {
+    if (preventedOffsets === void 0) {
+      preventedOffsets = {
+        x: 0,
+        y: 0
+      };
+    }
+    return {
+      top: overflow.top - rect.height - preventedOffsets.y,
+      right: overflow.right - rect.width + preventedOffsets.x,
+      bottom: overflow.bottom - rect.height + preventedOffsets.y,
+      left: overflow.left - rect.width - preventedOffsets.x
+    };
+  }
+  function isAnySideFullyClipped(overflow) {
+    return [top, right, bottom, left].some(function(side) {
+      return overflow[side] >= 0;
+    });
+  }
+  function hide(_ref) {
+    var state = _ref.state, name = _ref.name;
+    var referenceRect = state.rects.reference;
+    var popperRect = state.rects.popper;
+    var preventedOffsets = state.modifiersData.preventOverflow;
+    var referenceOverflow = detectOverflow(state, {
+      elementContext: "reference"
+    });
+    var popperAltOverflow = detectOverflow(state, {
+      altBoundary: true
+    });
+    var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
+    var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
+    var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
+    var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
+    state.modifiersData[name] = {
+      referenceClippingOffsets,
+      popperEscapeOffsets,
+      isReferenceHidden,
+      hasPopperEscaped
+    };
+    state.attributes.popper = Object.assign({}, state.attributes.popper, {
+      "data-popper-reference-hidden": isReferenceHidden,
+      "data-popper-escaped": hasPopperEscaped
+    });
+  }
+  var hide_default = {
+    name: "hide",
+    enabled: true,
+    phase: "main",
+    requiresIfExists: ["preventOverflow"],
+    fn: hide
+  };
+
+  // node_modules/@popperjs/core/lib/modifiers/offset.js
+  function distanceAndSkiddingToXY(placement, rects, offset2) {
+    var basePlacement = getBasePlacement(placement);
+    var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
+    var _ref = typeof offset2 === "function" ? offset2(Object.assign({}, rects, {
+      placement
+    })) : offset2, skidding = _ref[0], distance = _ref[1];
+    skidding = skidding || 0;
+    distance = (distance || 0) * invertDistance;
+    return [left, right].indexOf(basePlacement) >= 0 ? {
+      x: distance,
+      y: skidding
+    } : {
+      x: skidding,
+      y: distance
+    };
+  }
+  function offset(_ref2) {
+    var state = _ref2.state, options2 = _ref2.options, name = _ref2.name;
+    var _options$offset = options2.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
+    var data2 = placements.reduce(function(acc, placement) {
+      acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
+      return acc;
+    }, {});
+    var _data$state$placement = data2[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
+    if (state.modifiersData.popperOffsets != null) {
+      state.modifiersData.popperOffsets.x += x;
+      state.modifiersData.popperOffsets.y += y;
+    }
+    state.modifiersData[name] = data2;
+  }
+  var offset_default = {
+    name: "offset",
+    enabled: true,
+    phase: "main",
+    requires: ["popperOffsets"],
+    fn: offset
+  };
+
+  // node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
+  function popperOffsets(_ref) {
+    var state = _ref.state, name = _ref.name;
+    state.modifiersData[name] = computeOffsets({
+      reference: state.rects.reference,
+      element: state.rects.popper,
+      strategy: "absolute",
+      placement: state.placement
+    });
+  }
+  var popperOffsets_default = {
+    name: "popperOffsets",
+    enabled: true,
+    phase: "read",
+    fn: popperOffsets,
+    data: {}
+  };
+
+  // node_modules/@popperjs/core/lib/utils/getAltAxis.js
+  function getAltAxis(axis) {
+    return axis === "x" ? "y" : "x";
+  }
+
+  // node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
+  function preventOverflow(_ref) {
+    var state = _ref.state, options2 = _ref.options, name = _ref.name;
+    var _options$mainAxis = options2.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options2.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options2.boundary, rootBoundary = options2.rootBoundary, altBoundary = options2.altBoundary, padding = options2.padding, _options$tether = options2.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options2.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+    var overflow = detectOverflow(state, {
+      boundary,
+      rootBoundary,
+      padding,
+      altBoundary
+    });
+    var basePlacement = getBasePlacement(state.placement);
+    var variation = getVariation(state.placement);
+    var isBasePlacement = !variation;
+    var mainAxis = getMainAxisFromPlacement(basePlacement);
+    var altAxis = getAltAxis(mainAxis);
+    var popperOffsets2 = state.modifiersData.popperOffsets;
+    var referenceRect = state.rects.reference;
+    var popperRect = state.rects.popper;
+    var tetherOffsetValue = typeof tetherOffset === "function" ? tetherOffset(Object.assign({}, state.rects, {
+      placement: state.placement
+    })) : tetherOffset;
+    var normalizedTetherOffsetValue = typeof tetherOffsetValue === "number" ? {
+      mainAxis: tetherOffsetValue,
+      altAxis: tetherOffsetValue
+    } : Object.assign({
+      mainAxis: 0,
+      altAxis: 0
+    }, tetherOffsetValue);
+    var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
+    var data2 = {
+      x: 0,
+      y: 0
+    };
+    if (!popperOffsets2) {
+      return;
+    }
+    if (checkMainAxis) {
+      var _offsetModifierState$;
+      var mainSide = mainAxis === "y" ? top : left;
+      var altSide = mainAxis === "y" ? bottom : right;
+      var len = mainAxis === "y" ? "height" : "width";
+      var offset2 = popperOffsets2[mainAxis];
+      var min2 = offset2 + overflow[mainSide];
+      var max2 = offset2 - overflow[altSide];
+      var additive = tether ? -popperRect[len] / 2 : 0;
+      var minLen = variation === start ? referenceRect[len] : popperRect[len];
+      var maxLen = variation === start ? -popperRect[len] : -referenceRect[len];
+      var arrowElement = state.elements.arrow;
+      var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
+        width: 0,
+        height: 0
+      };
+      var arrowPaddingObject = state.modifiersData["arrow#persistent"] ? state.modifiersData["arrow#persistent"].padding : getFreshSideObject();
+      var arrowPaddingMin = arrowPaddingObject[mainSide];
+      var arrowPaddingMax = arrowPaddingObject[altSide];
+      var arrowLen = within(0, referenceRect[len], arrowRect[len]);
+      var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
+      var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
+      var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
+      var clientOffset = arrowOffsetParent ? mainAxis === "y" ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
+      var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
+      var tetherMin = offset2 + minOffset - offsetModifierValue - clientOffset;
+      var tetherMax = offset2 + maxOffset - offsetModifierValue;
+      var preventedOffset = within(tether ? min(min2, tetherMin) : min2, offset2, tether ? max(max2, tetherMax) : max2);
+      popperOffsets2[mainAxis] = preventedOffset;
+      data2[mainAxis] = preventedOffset - offset2;
+    }
+    if (checkAltAxis) {
+      var _offsetModifierState$2;
+      var _mainSide = mainAxis === "x" ? top : left;
+      var _altSide = mainAxis === "x" ? bottom : right;
+      var _offset = popperOffsets2[altAxis];
+      var _len = altAxis === "y" ? "height" : "width";
+      var _min = _offset + overflow[_mainSide];
+      var _max = _offset - overflow[_altSide];
+      var isOriginSide = [top, left].indexOf(basePlacement) !== -1;
+      var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
+      var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
+      var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
+      var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
+      popperOffsets2[altAxis] = _preventedOffset;
+      data2[altAxis] = _preventedOffset - _offset;
+    }
+    state.modifiersData[name] = data2;
+  }
+  var preventOverflow_default = {
+    name: "preventOverflow",
+    enabled: true,
+    phase: "main",
+    fn: preventOverflow,
+    requiresIfExists: ["offset"]
+  };
+
+  // node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
+  function getHTMLElementScroll(element) {
+    return {
+      scrollLeft: element.scrollLeft,
+      scrollTop: element.scrollTop
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js
+  function getNodeScroll(node) {
+    if (node === getWindow(node) || !isHTMLElement(node)) {
+      return getWindowScroll(node);
+    } else {
+      return getHTMLElementScroll(node);
+    }
+  }
+
+  // node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js
+  function isElementScaled(element) {
+    var rect = element.getBoundingClientRect();
+    var scaleX = round(rect.width) / element.offsetWidth || 1;
+    var scaleY = round(rect.height) / element.offsetHeight || 1;
+    return scaleX !== 1 || scaleY !== 1;
+  }
+  function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
+    if (isFixed === void 0) {
+      isFixed = false;
+    }
+    var isOffsetParentAnElement = isHTMLElement(offsetParent);
+    var offsetParentIsScaled = isHTMLElement(offsetParent) && isElementScaled(offsetParent);
+    var documentElement = getDocumentElement(offsetParent);
+    var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled, isFixed);
+    var scroll = {
+      scrollLeft: 0,
+      scrollTop: 0
+    };
+    var offsets = {
+      x: 0,
+      y: 0
+    };
+    if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+      if (getNodeName(offsetParent) !== "body" || // https://github.com/popperjs/popper-core/issues/1078
+      isScrollParent(documentElement)) {
+        scroll = getNodeScroll(offsetParent);
+      }
+      if (isHTMLElement(offsetParent)) {
+        offsets = getBoundingClientRect(offsetParent, true);
+        offsets.x += offsetParent.clientLeft;
+        offsets.y += offsetParent.clientTop;
+      } else if (documentElement) {
+        offsets.x = getWindowScrollBarX(documentElement);
+      }
+    }
+    return {
+      x: rect.left + scroll.scrollLeft - offsets.x,
+      y: rect.top + scroll.scrollTop - offsets.y,
+      width: rect.width,
+      height: rect.height
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/utils/orderModifiers.js
+  function order(modifiers) {
+    var map = /* @__PURE__ */ new Map();
+    var visited = /* @__PURE__ */ new Set();
+    var result = [];
+    modifiers.forEach(function(modifier) {
+      map.set(modifier.name, modifier);
+    });
+    function sort2(modifier) {
+      visited.add(modifier.name);
+      var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
+      requires.forEach(function(dep) {
+        if (!visited.has(dep)) {
+          var depModifier = map.get(dep);
+          if (depModifier) {
+            sort2(depModifier);
+          }
+        }
+      });
+      result.push(modifier);
+    }
+    modifiers.forEach(function(modifier) {
+      if (!visited.has(modifier.name)) {
+        sort2(modifier);
+      }
+    });
+    return result;
+  }
+  function orderModifiers(modifiers) {
+    var orderedModifiers = order(modifiers);
+    return modifierPhases.reduce(function(acc, phase) {
+      return acc.concat(orderedModifiers.filter(function(modifier) {
+        return modifier.phase === phase;
+      }));
+    }, []);
+  }
+
+  // node_modules/@popperjs/core/lib/utils/debounce.js
+  function debounce(fn2) {
+    var pending;
+    return function() {
+      if (!pending) {
+        pending = new Promise(function(resolve) {
+          Promise.resolve().then(function() {
+            pending = void 0;
+            resolve(fn2());
+          });
+        });
+      }
+      return pending;
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/utils/mergeByName.js
+  function mergeByName(modifiers) {
+    var merged = modifiers.reduce(function(merged2, current) {
+      var existing = merged2[current.name];
+      merged2[current.name] = existing ? Object.assign({}, existing, current, {
+        options: Object.assign({}, existing.options, current.options),
+        data: Object.assign({}, existing.data, current.data)
+      }) : current;
+      return merged2;
+    }, {});
+    return Object.keys(merged).map(function(key) {
+      return merged[key];
+    });
+  }
+
+  // node_modules/@popperjs/core/lib/createPopper.js
+  var DEFAULT_OPTIONS = {
+    placement: "bottom",
+    modifiers: [],
+    strategy: "absolute"
+  };
+  function areValidElements() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    return !args.some(function(element) {
+      return !(element && typeof element.getBoundingClientRect === "function");
+    });
+  }
+  function popperGenerator(generatorOptions) {
+    if (generatorOptions === void 0) {
+      generatorOptions = {};
+    }
+    var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions2 = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+    return function createPopper2(reference2, popper2, options2) {
+      if (options2 === void 0) {
+        options2 = defaultOptions2;
+      }
+      var state = {
+        placement: "bottom",
+        orderedModifiers: [],
+        options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions2),
+        modifiersData: {},
+        elements: {
+          reference: reference2,
+          popper: popper2
+        },
+        attributes: {},
+        styles: {}
+      };
+      var effectCleanupFns = [];
+      var isDestroyed = false;
+      var instance = {
+        state,
+        setOptions: function setOptions(setOptionsAction) {
+          var options3 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
+          cleanupModifierEffects();
+          state.options = Object.assign({}, defaultOptions2, state.options, options3);
+          state.scrollParents = {
+            reference: isElement(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
+            popper: listScrollParents(popper2)
+          };
+          var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers2, state.options.modifiers)));
+          state.orderedModifiers = orderedModifiers.filter(function(m) {
+            return m.enabled;
+          });
+          runModifierEffects();
+          return instance.update();
+        },
+        // Sync update – it will always be executed, even if not necessary. This
+        // is useful for low frequency updates where sync behavior simplifies the
+        // logic.
+        // For high frequency updates (e.g. `resize` and `scroll` events), always
+        // prefer the async Popper#update method
+        forceUpdate: function forceUpdate() {
+          if (isDestroyed) {
+            return;
+          }
+          var _state$elements = state.elements, reference3 = _state$elements.reference, popper3 = _state$elements.popper;
+          if (!areValidElements(reference3, popper3)) {
+            return;
+          }
+          state.rects = {
+            reference: getCompositeRect(reference3, getOffsetParent(popper3), state.options.strategy === "fixed"),
+            popper: getLayoutRect(popper3)
+          };
+          state.reset = false;
+          state.placement = state.options.placement;
+          state.orderedModifiers.forEach(function(modifier) {
+            return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
+          });
+          for (var index = 0; index < state.orderedModifiers.length; index++) {
+            if (state.reset === true) {
+              state.reset = false;
+              index = -1;
+              continue;
+            }
+            var _state$orderedModifie = state.orderedModifiers[index], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
+            if (typeof fn2 === "function") {
+              state = fn2({
+                state,
+                options: _options,
+                name,
+                instance
+              }) || state;
+            }
+          }
+        },
+        // Async and optimistically optimized update – it will not be executed if
+        // not necessary (debounced to run at most once-per-tick)
+        update: debounce(function() {
+          return new Promise(function(resolve) {
+            instance.forceUpdate();
+            resolve(state);
+          });
+        }),
+        destroy: function destroy() {
+          cleanupModifierEffects();
+          isDestroyed = true;
+        }
+      };
+      if (!areValidElements(reference2, popper2)) {
+        return instance;
+      }
+      instance.setOptions(options2).then(function(state2) {
+        if (!isDestroyed && options2.onFirstUpdate) {
+          options2.onFirstUpdate(state2);
+        }
+      });
+      function runModifierEffects() {
+        state.orderedModifiers.forEach(function(_ref) {
+          var name = _ref.name, _ref$options = _ref.options, options3 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
+          if (typeof effect5 === "function") {
+            var cleanupFn = effect5({
+              state,
+              name,
+              instance,
+              options: options3
+            });
+            var noopFn = function noopFn2() {
+            };
+            effectCleanupFns.push(cleanupFn || noopFn);
+          }
+        });
+      }
+      function cleanupModifierEffects() {
+        effectCleanupFns.forEach(function(fn2) {
+          return fn2();
+        });
+        effectCleanupFns = [];
+      }
+      return instance;
+    };
+  }
+
+  // node_modules/@popperjs/core/lib/popper.js
+  var defaultModifiers = [eventListeners_default, popperOffsets_default, computeStyles_default, applyStyles_default, offset_default, flip_default, preventOverflow_default, arrow_default, hide_default];
+  var createPopper = /* @__PURE__ */ popperGenerator({
+    defaultModifiers
+  });
+
+  // node_modules/tippy.js/dist/tippy.esm.js
+  var BOX_CLASS = "tippy-box";
+  var CONTENT_CLASS = "tippy-content";
+  var BACKDROP_CLASS = "tippy-backdrop";
+  var ARROW_CLASS = "tippy-arrow";
+  var SVG_ARROW_CLASS = "tippy-svg-arrow";
+  var TOUCH_OPTIONS = {
+    passive: true,
+    capture: true
+  };
+  var TIPPY_DEFAULT_APPEND_TO = function TIPPY_DEFAULT_APPEND_TO2() {
+    return document.body;
+  };
+  function hasOwnProperty(obj, key) {
+    return {}.hasOwnProperty.call(obj, key);
+  }
+  function getValueAtIndexOrReturn(value, index, defaultValue) {
+    if (Array.isArray(value)) {
+      var v = value[index];
+      return v == null ? Array.isArray(defaultValue) ? defaultValue[index] : defaultValue : v;
+    }
+    return value;
+  }
+  function isType(value, type2) {
+    var str = {}.toString.call(value);
+    return str.indexOf("[object") === 0 && str.indexOf(type2 + "]") > -1;
+  }
+  function invokeWithArgsOrReturn(value, args) {
+    return typeof value === "function" ? value.apply(void 0, args) : value;
+  }
+  function debounce2(fn2, ms) {
+    if (ms === 0) {
+      return fn2;
+    }
+    var timeout;
+    return function(arg) {
+      clearTimeout(timeout);
+      timeout = setTimeout(function() {
+        fn2(arg);
+      }, ms);
+    };
+  }
+  function removeProperties(obj, keys) {
+    var clone = Object.assign({}, obj);
+    keys.forEach(function(key) {
+      delete clone[key];
+    });
+    return clone;
+  }
+  function splitBySpaces(value) {
+    return value.split(/\s+/).filter(Boolean);
+  }
+  function normalizeToArray(value) {
+    return [].concat(value);
+  }
+  function pushIfUnique(arr, value) {
+    if (arr.indexOf(value) === -1) {
+      arr.push(value);
+    }
+  }
+  function unique(arr) {
+    return arr.filter(function(item, index) {
+      return arr.indexOf(item) === index;
+    });
+  }
+  function getBasePlacement2(placement) {
+    return placement.split("-")[0];
+  }
+  function arrayFrom(value) {
+    return [].slice.call(value);
+  }
+  function removeUndefinedProps(obj) {
+    return Object.keys(obj).reduce(function(acc, key) {
+      if (obj[key] !== void 0) {
+        acc[key] = obj[key];
+      }
+      return acc;
+    }, {});
+  }
+  function div() {
+    return document.createElement("div");
+  }
+  function isElement2(value) {
+    return ["Element", "Fragment"].some(function(type2) {
+      return isType(value, type2);
+    });
+  }
+  function isNodeList(value) {
+    return isType(value, "NodeList");
+  }
+  function isMouseEvent(value) {
+    return isType(value, "MouseEvent");
+  }
+  function isReferenceElement(value) {
+    return !!(value && value._tippy && value._tippy.reference === value);
+  }
+  function getArrayOfElements(value) {
+    if (isElement2(value)) {
+      return [value];
+    }
+    if (isNodeList(value)) {
+      return arrayFrom(value);
+    }
+    if (Array.isArray(value)) {
+      return value;
+    }
+    return arrayFrom(document.querySelectorAll(value));
+  }
+  function setTransitionDuration(els, value) {
+    els.forEach(function(el) {
+      if (el) {
+        el.style.transitionDuration = value + "ms";
+      }
+    });
+  }
+  function setVisibilityState(els, state) {
+    els.forEach(function(el) {
+      if (el) {
+        el.setAttribute("data-state", state);
+      }
+    });
+  }
+  function getOwnerDocument(elementOrElements) {
+    var _element$ownerDocumen;
+    var _normalizeToArray = normalizeToArray(elementOrElements), element = _normalizeToArray[0];
+    return element != null && (_element$ownerDocumen = element.ownerDocument) != null && _element$ownerDocumen.body ? element.ownerDocument : document;
+  }
+  function isCursorOutsideInteractiveBorder(popperTreeData, event) {
+    var clientX = event.clientX, clientY = event.clientY;
+    return popperTreeData.every(function(_ref) {
+      var popperRect = _ref.popperRect, popperState = _ref.popperState, props = _ref.props;
+      var interactiveBorder = props.interactiveBorder;
+      var basePlacement = getBasePlacement2(popperState.placement);
+      var offsetData = popperState.modifiersData.offset;
+      if (!offsetData) {
+        return true;
+      }
+      var topDistance = basePlacement === "bottom" ? offsetData.top.y : 0;
+      var bottomDistance = basePlacement === "top" ? offsetData.bottom.y : 0;
+      var leftDistance = basePlacement === "right" ? offsetData.left.x : 0;
+      var rightDistance = basePlacement === "left" ? offsetData.right.x : 0;
+      var exceedsTop = popperRect.top - clientY + topDistance > interactiveBorder;
+      var exceedsBottom = clientY - popperRect.bottom - bottomDistance > interactiveBorder;
+      var exceedsLeft = popperRect.left - clientX + leftDistance > interactiveBorder;
+      var exceedsRight = clientX - popperRect.right - rightDistance > interactiveBorder;
+      return exceedsTop || exceedsBottom || exceedsLeft || exceedsRight;
+    });
+  }
+  function updateTransitionEndListener(box, action, listener) {
+    var method = action + "EventListener";
+    ["transitionend", "webkitTransitionEnd"].forEach(function(event) {
+      box[method](event, listener);
+    });
+  }
+  function actualContains(parent, child) {
+    var target = child;
+    while (target) {
+      var _target$getRootNode;
+      if (parent.contains(target)) {
+        return true;
+      }
+      target = target.getRootNode == null ? void 0 : (_target$getRootNode = target.getRootNode()) == null ? void 0 : _target$getRootNode.host;
+    }
+    return false;
+  }
+  var currentInput = {
+    isTouch: false
+  };
+  var lastMouseMoveTime = 0;
+  function onDocumentTouchStart() {
+    if (currentInput.isTouch) {
+      return;
+    }
+    currentInput.isTouch = true;
+    if (window.performance) {
+      document.addEventListener("mousemove", onDocumentMouseMove);
+    }
+  }
+  function onDocumentMouseMove() {
+    var now = performance.now();
+    if (now - lastMouseMoveTime < 20) {
+      currentInput.isTouch = false;
+      document.removeEventListener("mousemove", onDocumentMouseMove);
+    }
+    lastMouseMoveTime = now;
+  }
+  function onWindowBlur() {
+    var activeElement = document.activeElement;
+    if (isReferenceElement(activeElement)) {
+      var instance = activeElement._tippy;
+      if (activeElement.blur && !instance.state.isVisible) {
+        activeElement.blur();
+      }
+    }
+  }
+  function bindGlobalEventListeners() {
+    document.addEventListener("touchstart", onDocumentTouchStart, TOUCH_OPTIONS);
+    window.addEventListener("blur", onWindowBlur);
+  }
+  var isBrowser2 = typeof window !== "undefined" && typeof document !== "undefined";
+  var isIE11 = isBrowser2 ? (
+    // @ts-ignore
+    !!window.msCrypto
+  ) : false;
+  function createMemoryLeakWarning(method) {
+    var txt = method === "destroy" ? "n already-" : " ";
+    return [method + "() was called on a" + txt + "destroyed instance. This is a no-op but", "indicates a potential memory leak."].join(" ");
+  }
+  function clean(value) {
+    var spacesAndTabs = /[ \t]{2,}/g;
+    var lineStartWithSpaces = /^[ \t]*/gm;
+    return value.replace(spacesAndTabs, " ").replace(lineStartWithSpaces, "").trim();
+  }
+  function getDevMessage(message) {
+    return clean("\n  %ctippy.js\n\n  %c" + clean(message) + "\n\n  %c\u{1F477}\u200D This is a development-only message. It will be removed in production.\n  ");
+  }
+  function getFormattedMessage(message) {
+    return [
+      getDevMessage(message),
+      // title
+      "color: #00C584; font-size: 1.3em; font-weight: bold;",
+      // message
+      "line-height: 1.5",
+      // footer
+      "color: #a6a095;"
+    ];
+  }
+  var visitedMessages;
+  if (true) {
+    resetVisitedMessages();
+  }
+  function resetVisitedMessages() {
+    visitedMessages = /* @__PURE__ */ new Set();
+  }
+  function warnWhen(condition, message) {
+    if (condition && !visitedMessages.has(message)) {
+      var _console;
+      visitedMessages.add(message);
+      (_console = console).warn.apply(_console, getFormattedMessage(message));
+    }
+  }
+  function errorWhen(condition, message) {
+    if (condition && !visitedMessages.has(message)) {
+      var _console2;
+      visitedMessages.add(message);
+      (_console2 = console).error.apply(_console2, getFormattedMessage(message));
+    }
+  }
+  function validateTargets(targets) {
+    var didPassFalsyValue = !targets;
+    var didPassPlainObject = Object.prototype.toString.call(targets) === "[object Object]" && !targets.addEventListener;
+    errorWhen(didPassFalsyValue, ["tippy() was passed", "`" + String(targets) + "`", "as its targets (first) argument. Valid types are: String, Element,", "Element[], or NodeList."].join(" "));
+    errorWhen(didPassPlainObject, ["tippy() was passed a plain object which is not supported as an argument", "for virtual positioning. Use props.getReferenceClientRect instead."].join(" "));
+  }
+  var pluginProps = {
+    animateFill: false,
+    followCursor: false,
+    inlinePositioning: false,
+    sticky: false
+  };
+  var renderProps = {
+    allowHTML: false,
+    animation: "fade",
+    arrow: true,
+    content: "",
+    inertia: false,
+    maxWidth: 350,
+    role: "tooltip",
+    theme: "",
+    zIndex: 9999
+  };
+  var defaultProps = Object.assign({
+    appendTo: TIPPY_DEFAULT_APPEND_TO,
+    aria: {
+      content: "auto",
+      expanded: "auto"
+    },
+    delay: 0,
+    duration: [300, 250],
+    getReferenceClientRect: null,
+    hideOnClick: true,
+    ignoreAttributes: false,
+    interactive: false,
+    interactiveBorder: 2,
+    interactiveDebounce: 0,
+    moveTransition: "",
+    offset: [0, 10],
+    onAfterUpdate: function onAfterUpdate() {
+    },
+    onBeforeUpdate: function onBeforeUpdate() {
+    },
+    onCreate: function onCreate() {
+    },
+    onDestroy: function onDestroy() {
+    },
+    onHidden: function onHidden() {
+    },
+    onHide: function onHide() {
+    },
+    onMount: function onMount() {
+    },
+    onShow: function onShow() {
+    },
+    onShown: function onShown() {
+    },
+    onTrigger: function onTrigger() {
+    },
+    onUntrigger: function onUntrigger() {
+    },
+    onClickOutside: function onClickOutside() {
+    },
+    placement: "top",
+    plugins: [],
+    popperOptions: {},
+    render: null,
+    showOnCreate: false,
+    touch: true,
+    trigger: "mouseenter focus",
+    triggerTarget: null
+  }, pluginProps, renderProps);
+  var defaultKeys = Object.keys(defaultProps);
+  var setDefaultProps = function setDefaultProps2(partialProps) {
+    if (true) {
+      validateProps(partialProps, []);
+    }
+    var keys = Object.keys(partialProps);
+    keys.forEach(function(key) {
+      defaultProps[key] = partialProps[key];
+    });
+  };
+  function getExtendedPassedProps(passedProps) {
+    var plugins = passedProps.plugins || [];
+    var pluginProps2 = plugins.reduce(function(acc, plugin) {
+      var name = plugin.name, defaultValue = plugin.defaultValue;
+      if (name) {
+        var _name;
+        acc[name] = passedProps[name] !== void 0 ? passedProps[name] : (_name = defaultProps[name]) != null ? _name : defaultValue;
+      }
+      return acc;
+    }, {});
+    return Object.assign({}, passedProps, pluginProps2);
+  }
+  function getDataAttributeProps(reference2, plugins) {
+    var propKeys = plugins ? Object.keys(getExtendedPassedProps(Object.assign({}, defaultProps, {
+      plugins
+    }))) : defaultKeys;
+    var props = propKeys.reduce(function(acc, key) {
+      var valueAsString = (reference2.getAttribute("data-tippy-" + key) || "").trim();
+      if (!valueAsString) {
+        return acc;
+      }
+      if (key === "content") {
+        acc[key] = valueAsString;
+      } else {
+        try {
+          acc[key] = JSON.parse(valueAsString);
+        } catch (e) {
+          acc[key] = valueAsString;
+        }
+      }
+      return acc;
+    }, {});
+    return props;
+  }
+  function evaluateProps(reference2, props) {
+    var out = Object.assign({}, props, {
+      content: invokeWithArgsOrReturn(props.content, [reference2])
+    }, props.ignoreAttributes ? {} : getDataAttributeProps(reference2, props.plugins));
+    out.aria = Object.assign({}, defaultProps.aria, out.aria);
+    out.aria = {
+      expanded: out.aria.expanded === "auto" ? props.interactive : out.aria.expanded,
+      content: out.aria.content === "auto" ? props.interactive ? null : "describedby" : out.aria.content
+    };
+    return out;
+  }
+  function validateProps(partialProps, plugins) {
+    if (partialProps === void 0) {
+      partialProps = {};
+    }
+    if (plugins === void 0) {
+      plugins = [];
+    }
+    var keys = Object.keys(partialProps);
+    keys.forEach(function(prop) {
+      var nonPluginProps = removeProperties(defaultProps, Object.keys(pluginProps));
+      var didPassUnknownProp = !hasOwnProperty(nonPluginProps, prop);
+      if (didPassUnknownProp) {
+        didPassUnknownProp = plugins.filter(function(plugin) {
+          return plugin.name === prop;
+        }).length === 0;
+      }
+      warnWhen(didPassUnknownProp, ["`" + prop + "`", "is not a valid prop. You may have spelled it incorrectly, or if it's", "a plugin, forgot to pass it in an array as props.plugins.", "\n\n", "All props: https://atomiks.github.io/tippyjs/v6/all-props/\n", "Plugins: https://atomiks.github.io/tippyjs/v6/plugins/"].join(" "));
+    });
+  }
+  var innerHTML = function innerHTML2() {
+    return "innerHTML";
+  };
+  function dangerouslySetInnerHTML(element, html) {
+    element[innerHTML()] = html;
+  }
+  function createArrowElement(value) {
+    var arrow2 = div();
+    if (value === true) {
+      arrow2.className = ARROW_CLASS;
+    } else {
+      arrow2.className = SVG_ARROW_CLASS;
+      if (isElement2(value)) {
+        arrow2.appendChild(value);
+      } else {
+        dangerouslySetInnerHTML(arrow2, value);
+      }
+    }
+    return arrow2;
+  }
+  function setContent(content, props) {
+    if (isElement2(props.content)) {
+      dangerouslySetInnerHTML(content, "");
+      content.appendChild(props.content);
+    } else if (typeof props.content !== "function") {
+      if (props.allowHTML) {
+        dangerouslySetInnerHTML(content, props.content);
+      } else {
+        content.textContent = props.content;
+      }
+    }
+  }
+  function getChildren(popper2) {
+    var box = popper2.firstElementChild;
+    var boxChildren = arrayFrom(box.children);
+    return {
+      box,
+      content: boxChildren.find(function(node) {
+        return node.classList.contains(CONTENT_CLASS);
+      }),
+      arrow: boxChildren.find(function(node) {
+        return node.classList.contains(ARROW_CLASS) || node.classList.contains(SVG_ARROW_CLASS);
+      }),
+      backdrop: boxChildren.find(function(node) {
+        return node.classList.contains(BACKDROP_CLASS);
+      })
+    };
+  }
+  function render(instance) {
+    var popper2 = div();
+    var box = div();
+    box.className = BOX_CLASS;
+    box.setAttribute("data-state", "hidden");
+    box.setAttribute("tabindex", "-1");
+    var content = div();
+    content.className = CONTENT_CLASS;
+    content.setAttribute("data-state", "hidden");
+    setContent(content, instance.props);
+    popper2.appendChild(box);
+    box.appendChild(content);
+    onUpdate(instance.props, instance.props);
+    function onUpdate(prevProps, nextProps) {
+      var _getChildren = getChildren(popper2), box2 = _getChildren.box, content2 = _getChildren.content, arrow2 = _getChildren.arrow;
+      if (nextProps.theme) {
+        box2.setAttribute("data-theme", nextProps.theme);
+      } else {
+        box2.removeAttribute("data-theme");
+      }
+      if (typeof nextProps.animation === "string") {
+        box2.setAttribute("data-animation", nextProps.animation);
+      } else {
+        box2.removeAttribute("data-animation");
+      }
+      if (nextProps.inertia) {
+        box2.setAttribute("data-inertia", "");
+      } else {
+        box2.removeAttribute("data-inertia");
+      }
+      box2.style.maxWidth = typeof nextProps.maxWidth === "number" ? nextProps.maxWidth + "px" : nextProps.maxWidth;
+      if (nextProps.role) {
+        box2.setAttribute("role", nextProps.role);
+      } else {
+        box2.removeAttribute("role");
+      }
+      if (prevProps.content !== nextProps.content || prevProps.allowHTML !== nextProps.allowHTML) {
+        setContent(content2, instance.props);
+      }
+      if (nextProps.arrow) {
+        if (!arrow2) {
+          box2.appendChild(createArrowElement(nextProps.arrow));
+        } else if (prevProps.arrow !== nextProps.arrow) {
+          box2.removeChild(arrow2);
+          box2.appendChild(createArrowElement(nextProps.arrow));
+        }
+      } else if (arrow2) {
+        box2.removeChild(arrow2);
+      }
+    }
+    return {
+      popper: popper2,
+      onUpdate
+    };
+  }
+  render.$$tippy = true;
+  var idCounter = 1;
+  var mouseMoveListeners = [];
+  var mountedInstances = [];
+  function createTippy(reference2, passedProps) {
+    var props = evaluateProps(reference2, Object.assign({}, defaultProps, getExtendedPassedProps(removeUndefinedProps(passedProps))));
+    var showTimeout;
+    var hideTimeout;
+    var scheduleHideAnimationFrame;
+    var isVisibleFromClick = false;
+    var didHideDueToDocumentMouseDown = false;
+    var didTouchMove = false;
+    var ignoreOnFirstUpdate = false;
+    var lastTriggerEvent;
+    var currentTransitionEndListener;
+    var onFirstUpdate;
+    var listeners = [];
+    var debouncedOnMouseMove = debounce2(onMouseMove, props.interactiveDebounce);
+    var currentTarget;
+    var id = idCounter++;
+    var popperInstance = null;
+    var plugins = unique(props.plugins);
+    var state = {
+      // Is the instance currently enabled?
+      isEnabled: true,
+      // Is the tippy currently showing and not transitioning out?
+      isVisible: false,
+      // Has the instance been destroyed?
+      isDestroyed: false,
+      // Is the tippy currently mounted to the DOM?
+      isMounted: false,
+      // Has the tippy finished transitioning in?
+      isShown: false
+    };
+    var instance = {
+      // properties
+      id,
+      reference: reference2,
+      popper: div(),
+      popperInstance,
+      props,
+      state,
+      plugins,
+      // methods
+      clearDelayTimeouts,
+      setProps,
+      setContent: setContent2,
+      show,
+      hide: hide2,
+      hideWithInteractivity,
+      enable,
+      disable,
+      unmount,
+      destroy
+    };
+    if (!props.render) {
+      if (true) {
+        errorWhen(true, "render() function has not been supplied.");
+      }
+      return instance;
+    }
+    var _props$render = props.render(instance), popper2 = _props$render.popper, onUpdate = _props$render.onUpdate;
+    popper2.setAttribute("data-tippy-root", "");
+    popper2.id = "tippy-" + instance.id;
+    instance.popper = popper2;
+    reference2._tippy = instance;
+    popper2._tippy = instance;
+    var pluginsHooks = plugins.map(function(plugin) {
+      return plugin.fn(instance);
+    });
+    var hasAriaExpanded = reference2.hasAttribute("aria-expanded");
+    addListeners();
+    handleAriaExpandedAttribute();
+    handleStyles();
+    invokeHook("onCreate", [instance]);
+    if (props.showOnCreate) {
+      scheduleShow();
+    }
+    popper2.addEventListener("mouseenter", function() {
+      if (instance.props.interactive && instance.state.isVisible) {
+        instance.clearDelayTimeouts();
+      }
+    });
+    popper2.addEventListener("mouseleave", function() {
+      if (instance.props.interactive && instance.props.trigger.indexOf("mouseenter") >= 0) {
+        getDocument().addEventListener("mousemove", debouncedOnMouseMove);
+      }
+    });
+    return instance;
+    function getNormalizedTouchSettings() {
+      var touch = instance.props.touch;
+      return Array.isArray(touch) ? touch : [touch, 0];
+    }
+    function getIsCustomTouchBehavior() {
+      return getNormalizedTouchSettings()[0] === "hold";
+    }
+    function getIsDefaultRenderFn() {
+      var _instance$props$rende;
+      return !!((_instance$props$rende = instance.props.render) != null && _instance$props$rende.$$tippy);
+    }
+    function getCurrentTarget() {
+      return currentTarget || reference2;
+    }
+    function getDocument() {
+      var parent = getCurrentTarget().parentNode;
+      return parent ? getOwnerDocument(parent) : document;
+    }
+    function getDefaultTemplateChildren() {
+      return getChildren(popper2);
+    }
+    function getDelay(isShow) {
+      if (instance.state.isMounted && !instance.state.isVisible || currentInput.isTouch || lastTriggerEvent && lastTriggerEvent.type === "focus") {
+        return 0;
+      }
+      return getValueAtIndexOrReturn(instance.props.delay, isShow ? 0 : 1, defaultProps.delay);
+    }
+    function handleStyles(fromHide) {
+      if (fromHide === void 0) {
+        fromHide = false;
+      }
+      popper2.style.pointerEvents = instance.props.interactive && !fromHide ? "" : "none";
+      popper2.style.zIndex = "" + instance.props.zIndex;
+    }
+    function invokeHook(hook, args, shouldInvokePropsHook) {
+      if (shouldInvokePropsHook === void 0) {
+        shouldInvokePropsHook = true;
+      }
+      pluginsHooks.forEach(function(pluginHooks) {
+        if (pluginHooks[hook]) {
+          pluginHooks[hook].apply(pluginHooks, args);
+        }
+      });
+      if (shouldInvokePropsHook) {
+        var _instance$props;
+        (_instance$props = instance.props)[hook].apply(_instance$props, args);
+      }
+    }
+    function handleAriaContentAttribute() {
+      var aria = instance.props.aria;
+      if (!aria.content) {
+        return;
+      }
+      var attr = "aria-" + aria.content;
+      var id2 = popper2.id;
+      var nodes = normalizeToArray(instance.props.triggerTarget || reference2);
+      nodes.forEach(function(node) {
+        var currentValue = node.getAttribute(attr);
+        if (instance.state.isVisible) {
+          node.setAttribute(attr, currentValue ? currentValue + " " + id2 : id2);
+        } else {
+          var nextValue = currentValue && currentValue.replace(id2, "").trim();
+          if (nextValue) {
+            node.setAttribute(attr, nextValue);
+          } else {
+            node.removeAttribute(attr);
+          }
+        }
+      });
+    }
+    function handleAriaExpandedAttribute() {
+      if (hasAriaExpanded || !instance.props.aria.expanded) {
+        return;
+      }
+      var nodes = normalizeToArray(instance.props.triggerTarget || reference2);
+      nodes.forEach(function(node) {
+        if (instance.props.interactive) {
+          node.setAttribute("aria-expanded", instance.state.isVisible && node === getCurrentTarget() ? "true" : "false");
+        } else {
+          node.removeAttribute("aria-expanded");
+        }
+      });
+    }
+    function cleanupInteractiveMouseListeners() {
+      getDocument().removeEventListener("mousemove", debouncedOnMouseMove);
+      mouseMoveListeners = mouseMoveListeners.filter(function(listener) {
+        return listener !== debouncedOnMouseMove;
+      });
+    }
+    function onDocumentPress(event) {
+      if (currentInput.isTouch) {
+        if (didTouchMove || event.type === "mousedown") {
+          return;
+        }
+      }
+      var actualTarget = event.composedPath && event.composedPath()[0] || event.target;
+      if (instance.props.interactive && actualContains(popper2, actualTarget)) {
+        return;
+      }
+      if (normalizeToArray(instance.props.triggerTarget || reference2).some(function(el) {
+        return actualContains(el, actualTarget);
+      })) {
+        if (currentInput.isTouch) {
+          return;
+        }
+        if (instance.state.isVisible && instance.props.trigger.indexOf("click") >= 0) {
+          return;
+        }
+      } else {
+        invokeHook("onClickOutside", [instance, event]);
+      }
+      if (instance.props.hideOnClick === true) {
+        instance.clearDelayTimeouts();
+        instance.hide();
+        didHideDueToDocumentMouseDown = true;
+        setTimeout(function() {
+          didHideDueToDocumentMouseDown = false;
+        });
+        if (!instance.state.isMounted) {
+          removeDocumentPress();
+        }
+      }
+    }
+    function onTouchMove() {
+      didTouchMove = true;
+    }
+    function onTouchStart() {
+      didTouchMove = false;
+    }
+    function addDocumentPress() {
+      var doc = getDocument();
+      doc.addEventListener("mousedown", onDocumentPress, true);
+      doc.addEventListener("touchend", onDocumentPress, TOUCH_OPTIONS);
+      doc.addEventListener("touchstart", onTouchStart, TOUCH_OPTIONS);
+      doc.addEventListener("touchmove", onTouchMove, TOUCH_OPTIONS);
+    }
+    function removeDocumentPress() {
+      var doc = getDocument();
+      doc.removeEventListener("mousedown", onDocumentPress, true);
+      doc.removeEventListener("touchend", onDocumentPress, TOUCH_OPTIONS);
+      doc.removeEventListener("touchstart", onTouchStart, TOUCH_OPTIONS);
+      doc.removeEventListener("touchmove", onTouchMove, TOUCH_OPTIONS);
+    }
+    function onTransitionedOut(duration, callback) {
+      onTransitionEnd(duration, function() {
+        if (!instance.state.isVisible && popper2.parentNode && popper2.parentNode.contains(popper2)) {
+          callback();
+        }
+      });
+    }
+    function onTransitionedIn(duration, callback) {
+      onTransitionEnd(duration, callback);
+    }
+    function onTransitionEnd(duration, callback) {
+      var box = getDefaultTemplateChildren().box;
+      function listener(event) {
+        if (event.target === box) {
+          updateTransitionEndListener(box, "remove", listener);
+          callback();
+        }
+      }
+      if (duration === 0) {
+        return callback();
+      }
+      updateTransitionEndListener(box, "remove", currentTransitionEndListener);
+      updateTransitionEndListener(box, "add", listener);
+      currentTransitionEndListener = listener;
+    }
+    function on(eventType, handler, options2) {
+      if (options2 === void 0) {
+        options2 = false;
+      }
+      var nodes = normalizeToArray(instance.props.triggerTarget || reference2);
+      nodes.forEach(function(node) {
+        node.addEventListener(eventType, handler, options2);
+        listeners.push({
+          node,
+          eventType,
+          handler,
+          options: options2
+        });
+      });
+    }
+    function addListeners() {
+      if (getIsCustomTouchBehavior()) {
+        on("touchstart", onTrigger2, {
+          passive: true
+        });
+        on("touchend", onMouseLeave, {
+          passive: true
+        });
+      }
+      splitBySpaces(instance.props.trigger).forEach(function(eventType) {
+        if (eventType === "manual") {
+          return;
+        }
+        on(eventType, onTrigger2);
+        switch (eventType) {
+          case "mouseenter":
+            on("mouseleave", onMouseLeave);
+            break;
+          case "focus":
+            on(isIE11 ? "focusout" : "blur", onBlurOrFocusOut);
+            break;
+          case "focusin":
+            on("focusout", onBlurOrFocusOut);
+            break;
+        }
+      });
+    }
+    function removeListeners() {
+      listeners.forEach(function(_ref) {
+        var node = _ref.node, eventType = _ref.eventType, handler = _ref.handler, options2 = _ref.options;
+        node.removeEventListener(eventType, handler, options2);
+      });
+      listeners = [];
+    }
+    function onTrigger2(event) {
+      var _lastTriggerEvent;
+      var shouldScheduleClickHide = false;
+      if (!instance.state.isEnabled || isEventListenerStopped(event) || didHideDueToDocumentMouseDown) {
+        return;
+      }
+      var wasFocused = ((_lastTriggerEvent = lastTriggerEvent) == null ? void 0 : _lastTriggerEvent.type) === "focus";
+      lastTriggerEvent = event;
+      currentTarget = event.currentTarget;
+      handleAriaExpandedAttribute();
+      if (!instance.state.isVisible && isMouseEvent(event)) {
+        mouseMoveListeners.forEach(function(listener) {
+          return listener(event);
+        });
+      }
+      if (event.type === "click" && (instance.props.trigger.indexOf("mouseenter") < 0 || isVisibleFromClick) && instance.props.hideOnClick !== false && instance.state.isVisible) {
+        shouldScheduleClickHide = true;
+      } else {
+        scheduleShow(event);
+      }
+      if (event.type === "click") {
+        isVisibleFromClick = !shouldScheduleClickHide;
+      }
+      if (shouldScheduleClickHide && !wasFocused) {
+        scheduleHide(event);
+      }
+    }
+    function onMouseMove(event) {
+      var target = event.target;
+      var isCursorOverReferenceOrPopper = getCurrentTarget().contains(target) || popper2.contains(target);
+      if (event.type === "mousemove" && isCursorOverReferenceOrPopper) {
+        return;
+      }
+      var popperTreeData = getNestedPopperTree().concat(popper2).map(function(popper3) {
+        var _instance$popperInsta;
+        var instance2 = popper3._tippy;
+        var state2 = (_instance$popperInsta = instance2.popperInstance) == null ? void 0 : _instance$popperInsta.state;
+        if (state2) {
+          return {
+            popperRect: popper3.getBoundingClientRect(),
+            popperState: state2,
+            props
+          };
+        }
+        return null;
+      }).filter(Boolean);
+      if (isCursorOutsideInteractiveBorder(popperTreeData, event)) {
+        cleanupInteractiveMouseListeners();
+        scheduleHide(event);
+      }
+    }
+    function onMouseLeave(event) {
+      var shouldBail = isEventListenerStopped(event) || instance.props.trigger.indexOf("click") >= 0 && isVisibleFromClick;
+      if (shouldBail) {
+        return;
+      }
+      if (instance.props.interactive) {
+        instance.hideWithInteractivity(event);
+        return;
+      }
+      scheduleHide(event);
+    }
+    function onBlurOrFocusOut(event) {
+      if (instance.props.trigger.indexOf("focusin") < 0 && event.target !== getCurrentTarget()) {
+        return;
+      }
+      if (instance.props.interactive && event.relatedTarget && popper2.contains(event.relatedTarget)) {
+        return;
+      }
+      scheduleHide(event);
+    }
+    function isEventListenerStopped(event) {
+      return currentInput.isTouch ? getIsCustomTouchBehavior() !== event.type.indexOf("touch") >= 0 : false;
+    }
+    function createPopperInstance() {
+      destroyPopperInstance();
+      var _instance$props2 = instance.props, popperOptions = _instance$props2.popperOptions, placement = _instance$props2.placement, offset2 = _instance$props2.offset, getReferenceClientRect = _instance$props2.getReferenceClientRect, moveTransition = _instance$props2.moveTransition;
+      var arrow2 = getIsDefaultRenderFn() ? getChildren(popper2).arrow : null;
+      var computedReference = getReferenceClientRect ? {
+        getBoundingClientRect: getReferenceClientRect,
+        contextElement: getReferenceClientRect.contextElement || getCurrentTarget()
+      } : reference2;
+      var tippyModifier = {
+        name: "$$tippy",
+        enabled: true,
+        phase: "beforeWrite",
+        requires: ["computeStyles"],
+        fn: function fn2(_ref2) {
+          var state2 = _ref2.state;
+          if (getIsDefaultRenderFn()) {
+            var _getDefaultTemplateCh = getDefaultTemplateChildren(), box = _getDefaultTemplateCh.box;
+            ["placement", "reference-hidden", "escaped"].forEach(function(attr) {
+              if (attr === "placement") {
+                box.setAttribute("data-placement", state2.placement);
+              } else {
+                if (state2.attributes.popper["data-popper-" + attr]) {
+                  box.setAttribute("data-" + attr, "");
+                } else {
+                  box.removeAttribute("data-" + attr);
+                }
+              }
+            });
+            state2.attributes.popper = {};
+          }
+        }
+      };
+      var modifiers = [{
+        name: "offset",
+        options: {
+          offset: offset2
+        }
+      }, {
+        name: "preventOverflow",
+        options: {
+          padding: {
+            top: 2,
+            bottom: 2,
+            left: 5,
+            right: 5
+          }
+        }
+      }, {
+        name: "flip",
+        options: {
+          padding: 5
+        }
+      }, {
+        name: "computeStyles",
+        options: {
+          adaptive: !moveTransition
+        }
+      }, tippyModifier];
+      if (getIsDefaultRenderFn() && arrow2) {
+        modifiers.push({
+          name: "arrow",
+          options: {
+            element: arrow2,
+            padding: 3
+          }
+        });
+      }
+      modifiers.push.apply(modifiers, (popperOptions == null ? void 0 : popperOptions.modifiers) || []);
+      instance.popperInstance = createPopper(computedReference, popper2, Object.assign({}, popperOptions, {
+        placement,
+        onFirstUpdate,
+        modifiers
+      }));
+    }
+    function destroyPopperInstance() {
+      if (instance.popperInstance) {
+        instance.popperInstance.destroy();
+        instance.popperInstance = null;
+      }
+    }
+    function mount() {
+      var appendTo = instance.props.appendTo;
+      var parentNode;
+      var node = getCurrentTarget();
+      if (instance.props.interactive && appendTo === TIPPY_DEFAULT_APPEND_TO || appendTo === "parent") {
+        parentNode = node.parentNode;
+      } else {
+        parentNode = invokeWithArgsOrReturn(appendTo, [node]);
+      }
+      if (!parentNode.contains(popper2)) {
+        parentNode.appendChild(popper2);
+      }
+      instance.state.isMounted = true;
+      createPopperInstance();
+      if (true) {
+        warnWhen(instance.props.interactive && appendTo === defaultProps.appendTo && node.nextElementSibling !== popper2, ["Interactive tippy element may not be accessible via keyboard", "navigation because it is not directly after the reference element", "in the DOM source order.", "\n\n", "Using a wrapper <div> or <span> tag around the reference element", "solves this by creating a new parentNode context.", "\n\n", "Specifying `appendTo: document.body` silences this warning, but it", "assumes you are using a focus management solution to handle", "keyboard navigation.", "\n\n", "See: https://atomiks.github.io/tippyjs/v6/accessibility/#interactivity"].join(" "));
+      }
+    }
+    function getNestedPopperTree() {
+      return arrayFrom(popper2.querySelectorAll("[data-tippy-root]"));
+    }
+    function scheduleShow(event) {
+      instance.clearDelayTimeouts();
+      if (event) {
+        invokeHook("onTrigger", [instance, event]);
+      }
+      addDocumentPress();
+      var delay = getDelay(true);
+      var _getNormalizedTouchSe = getNormalizedTouchSettings(), touchValue = _getNormalizedTouchSe[0], touchDelay = _getNormalizedTouchSe[1];
+      if (currentInput.isTouch && touchValue === "hold" && touchDelay) {
+        delay = touchDelay;
+      }
+      if (delay) {
+        showTimeout = setTimeout(function() {
+          instance.show();
+        }, delay);
+      } else {
+        instance.show();
+      }
+    }
+    function scheduleHide(event) {
+      instance.clearDelayTimeouts();
+      invokeHook("onUntrigger", [instance, event]);
+      if (!instance.state.isVisible) {
+        removeDocumentPress();
+        return;
+      }
+      if (instance.props.trigger.indexOf("mouseenter") >= 0 && instance.props.trigger.indexOf("click") >= 0 && ["mouseleave", "mousemove"].indexOf(event.type) >= 0 && isVisibleFromClick) {
+        return;
+      }
+      var delay = getDelay(false);
+      if (delay) {
+        hideTimeout = setTimeout(function() {
+          if (instance.state.isVisible) {
+            instance.hide();
+          }
+        }, delay);
+      } else {
+        scheduleHideAnimationFrame = requestAnimationFrame(function() {
+          instance.hide();
+        });
+      }
+    }
+    function enable() {
+      instance.state.isEnabled = true;
+    }
+    function disable() {
+      instance.hide();
+      instance.state.isEnabled = false;
+    }
+    function clearDelayTimeouts() {
+      clearTimeout(showTimeout);
+      clearTimeout(hideTimeout);
+      cancelAnimationFrame(scheduleHideAnimationFrame);
+    }
+    function setProps(partialProps) {
+      if (true) {
+        warnWhen(instance.state.isDestroyed, createMemoryLeakWarning("setProps"));
+      }
+      if (instance.state.isDestroyed) {
+        return;
+      }
+      invokeHook("onBeforeUpdate", [instance, partialProps]);
+      removeListeners();
+      var prevProps = instance.props;
+      var nextProps = evaluateProps(reference2, Object.assign({}, prevProps, removeUndefinedProps(partialProps), {
+        ignoreAttributes: true
+      }));
+      instance.props = nextProps;
+      addListeners();
+      if (prevProps.interactiveDebounce !== nextProps.interactiveDebounce) {
+        cleanupInteractiveMouseListeners();
+        debouncedOnMouseMove = debounce2(onMouseMove, nextProps.interactiveDebounce);
+      }
+      if (prevProps.triggerTarget && !nextProps.triggerTarget) {
+        normalizeToArray(prevProps.triggerTarget).forEach(function(node) {
+          node.removeAttribute("aria-expanded");
+        });
+      } else if (nextProps.triggerTarget) {
+        reference2.removeAttribute("aria-expanded");
+      }
+      handleAriaExpandedAttribute();
+      handleStyles();
+      if (onUpdate) {
+        onUpdate(prevProps, nextProps);
+      }
+      if (instance.popperInstance) {
+        createPopperInstance();
+        getNestedPopperTree().forEach(function(nestedPopper) {
+          requestAnimationFrame(nestedPopper._tippy.popperInstance.forceUpdate);
+        });
+      }
+      invokeHook("onAfterUpdate", [instance, partialProps]);
+    }
+    function setContent2(content) {
+      instance.setProps({
+        content
+      });
+    }
+    function show() {
+      if (true) {
+        warnWhen(instance.state.isDestroyed, createMemoryLeakWarning("show"));
+      }
+      var isAlreadyVisible = instance.state.isVisible;
+      var isDestroyed = instance.state.isDestroyed;
+      var isDisabled = !instance.state.isEnabled;
+      var isTouchAndTouchDisabled = currentInput.isTouch && !instance.props.touch;
+      var duration = getValueAtIndexOrReturn(instance.props.duration, 0, defaultProps.duration);
+      if (isAlreadyVisible || isDestroyed || isDisabled || isTouchAndTouchDisabled) {
+        return;
+      }
+      if (getCurrentTarget().hasAttribute("disabled")) {
+        return;
+      }
+      invokeHook("onShow", [instance], false);
+      if (instance.props.onShow(instance) === false) {
+        return;
+      }
+      instance.state.isVisible = true;
+      if (getIsDefaultRenderFn()) {
+        popper2.style.visibility = "visible";
+      }
+      handleStyles();
+      addDocumentPress();
+      if (!instance.state.isMounted) {
+        popper2.style.transition = "none";
+      }
+      if (getIsDefaultRenderFn()) {
+        var _getDefaultTemplateCh2 = getDefaultTemplateChildren(), box = _getDefaultTemplateCh2.box, content = _getDefaultTemplateCh2.content;
+        setTransitionDuration([box, content], 0);
+      }
+      onFirstUpdate = function onFirstUpdate2() {
+        var _instance$popperInsta2;
+        if (!instance.state.isVisible || ignoreOnFirstUpdate) {
+          return;
+        }
+        ignoreOnFirstUpdate = true;
+        void popper2.offsetHeight;
+        popper2.style.transition = instance.props.moveTransition;
+        if (getIsDefaultRenderFn() && instance.props.animation) {
+          var _getDefaultTemplateCh3 = getDefaultTemplateChildren(), _box = _getDefaultTemplateCh3.box, _content = _getDefaultTemplateCh3.content;
+          setTransitionDuration([_box, _content], duration);
+          setVisibilityState([_box, _content], "visible");
+        }
+        handleAriaContentAttribute();
+        handleAriaExpandedAttribute();
+        pushIfUnique(mountedInstances, instance);
+        (_instance$popperInsta2 = instance.popperInstance) == null ? void 0 : _instance$popperInsta2.forceUpdate();
+        invokeHook("onMount", [instance]);
+        if (instance.props.animation && getIsDefaultRenderFn()) {
+          onTransitionedIn(duration, function() {
+            instance.state.isShown = true;
+            invokeHook("onShown", [instance]);
+          });
+        }
+      };
+      mount();
+    }
+    function hide2() {
+      if (true) {
+        warnWhen(instance.state.isDestroyed, createMemoryLeakWarning("hide"));
+      }
+      var isAlreadyHidden = !instance.state.isVisible;
+      var isDestroyed = instance.state.isDestroyed;
+      var isDisabled = !instance.state.isEnabled;
+      var duration = getValueAtIndexOrReturn(instance.props.duration, 1, defaultProps.duration);
+      if (isAlreadyHidden || isDestroyed || isDisabled) {
+        return;
+      }
+      invokeHook("onHide", [instance], false);
+      if (instance.props.onHide(instance) === false) {
+        return;
+      }
+      instance.state.isVisible = false;
+      instance.state.isShown = false;
+      ignoreOnFirstUpdate = false;
+      isVisibleFromClick = false;
+      if (getIsDefaultRenderFn()) {
+        popper2.style.visibility = "hidden";
+      }
+      cleanupInteractiveMouseListeners();
+      removeDocumentPress();
+      handleStyles(true);
+      if (getIsDefaultRenderFn()) {
+        var _getDefaultTemplateCh4 = getDefaultTemplateChildren(), box = _getDefaultTemplateCh4.box, content = _getDefaultTemplateCh4.content;
+        if (instance.props.animation) {
+          setTransitionDuration([box, content], duration);
+          setVisibilityState([box, content], "hidden");
+        }
+      }
+      handleAriaContentAttribute();
+      handleAriaExpandedAttribute();
+      if (instance.props.animation) {
+        if (getIsDefaultRenderFn()) {
+          onTransitionedOut(duration, instance.unmount);
+        }
+      } else {
+        instance.unmount();
+      }
+    }
+    function hideWithInteractivity(event) {
+      if (true) {
+        warnWhen(instance.state.isDestroyed, createMemoryLeakWarning("hideWithInteractivity"));
+      }
+      getDocument().addEventListener("mousemove", debouncedOnMouseMove);
+      pushIfUnique(mouseMoveListeners, debouncedOnMouseMove);
+      debouncedOnMouseMove(event);
+    }
+    function unmount() {
+      if (true) {
+        warnWhen(instance.state.isDestroyed, createMemoryLeakWarning("unmount"));
+      }
+      if (instance.state.isVisible) {
+        instance.hide();
+      }
+      if (!instance.state.isMounted) {
+        return;
+      }
+      destroyPopperInstance();
+      getNestedPopperTree().forEach(function(nestedPopper) {
+        nestedPopper._tippy.unmount();
+      });
+      if (popper2.parentNode) {
+        popper2.parentNode.removeChild(popper2);
+      }
+      mountedInstances = mountedInstances.filter(function(i) {
+        return i !== instance;
+      });
+      instance.state.isMounted = false;
+      invokeHook("onHidden", [instance]);
+    }
+    function destroy() {
+      if (true) {
+        warnWhen(instance.state.isDestroyed, createMemoryLeakWarning("destroy"));
+      }
+      if (instance.state.isDestroyed) {
+        return;
+      }
+      instance.clearDelayTimeouts();
+      instance.unmount();
+      removeListeners();
+      delete reference2._tippy;
+      instance.state.isDestroyed = true;
+      invokeHook("onDestroy", [instance]);
+    }
+  }
+  function tippy(targets, optionalProps) {
+    if (optionalProps === void 0) {
+      optionalProps = {};
+    }
+    var plugins = defaultProps.plugins.concat(optionalProps.plugins || []);
+    if (true) {
+      validateTargets(targets);
+      validateProps(optionalProps, plugins);
+    }
+    bindGlobalEventListeners();
+    var passedProps = Object.assign({}, optionalProps, {
+      plugins
+    });
+    var elements = getArrayOfElements(targets);
+    if (true) {
+      var isSingleContentElement = isElement2(passedProps.content);
+      var isMoreThanOneReferenceElement = elements.length > 1;
+      warnWhen(isSingleContentElement && isMoreThanOneReferenceElement, ["tippy() was passed an Element as the `content` prop, but more than", "one tippy instance was created by this invocation. This means the", "content element will only be appended to the last tippy instance.", "\n\n", "Instead, pass the .innerHTML of the element, or use a function that", "returns a cloned version of the element instead.", "\n\n", "1) content: element.innerHTML\n", "2) content: () => element.cloneNode(true)"].join(" "));
+    }
+    var instances = elements.reduce(function(acc, reference2) {
+      var instance = reference2 && createTippy(reference2, passedProps);
+      if (instance) {
+        acc.push(instance);
+      }
+      return acc;
+    }, []);
+    return isElement2(targets) ? instances[0] : instances;
+  }
+  tippy.defaultProps = defaultProps;
+  tippy.setDefaultProps = setDefaultProps;
+  tippy.currentInput = currentInput;
+  var applyStylesModifier = Object.assign({}, applyStyles_default, {
+    effect: function effect4(_ref) {
+      var state = _ref.state;
+      var initialStyles = {
+        popper: {
+          position: state.options.strategy,
+          left: "0",
+          top: "0",
+          margin: "0"
+        },
+        arrow: {
+          position: "absolute"
+        },
+        reference: {}
+      };
+      Object.assign(state.elements.popper.style, initialStyles.popper);
+      state.styles = initialStyles;
+      if (state.elements.arrow) {
+        Object.assign(state.elements.arrow.style, initialStyles.arrow);
+      }
+    }
+  });
+  tippy.setDefaultProps({
+    render
+  });
+  var tippy_esm_default = tippy;
+
+  // node_modules/tippy.js/dist/tippy.css
+  var tippy_default = '.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}';
+
   // src/script.js
   var API_BASE = "https://your-publisher-mime-shapes.trycloudflare.com/api/v1/reference";
   var CACHE_PREFIX = "libretexts-references:";
@@ -22551,6 +25292,30 @@
     electronic: "webpage",
     unpublished: "manuscript"
   };
+  (() => {
+    const style = document.createElement("style");
+    style.textContent = tippy_default + `
+.tippy-box[data-theme~="librecite"] {
+  background: #fff;
+  color: #222;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.14);
+  font-size: .875rem;
+  line-height: 1.5;
+  max-width: 420px !important;
+  text-align: left;
+}
+.tippy-box[data-theme~="librecite"] .tippy-arrow { color: #d0d0d0; }
+.tippy-box[data-theme~="librecite"] .bib-entry + .bib-entry {
+  border-top: 1px solid #eee;
+  margin-top: .4em;
+  padding-top: .4em;
+}
+.tippy-box[data-theme~="librecite"] a { color: #0645ad; }
+`;
+    document.head.appendChild(style);
+  })();
   document.addEventListener("DOMContentLoaded", async () => {
     const pageID = document.getElementById("pageID")?.value;
     if (!pageID) {
@@ -22571,7 +25336,8 @@
       const { allInstances, nodeMap } = collectAllCitationInstances(document.body);
       if (allInstances.length === 0) return;
       const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
-      replaceAllCitationMarkers(nodeMap, formattedCitations, config);
+      const bibHtmlByKey = buildBibHtmlMap(engine);
+      replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey);
       appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID);
     } catch (err) {
       console.error("Failed to load citations:", err);
@@ -22645,6 +25411,19 @@
     }
     return citationTexts;
   }
+  function buildBibHtmlMap(engine) {
+    const [params, entries] = engine.makeBibliography();
+    const map = /* @__PURE__ */ new Map();
+    (params.entry_ids ?? []).forEach((ids, i) => {
+      const key = ids?.[0];
+      if (!key) return;
+      const temp = document.createElement("div");
+      temp.innerHTML = entries[i] ?? "";
+      const cslEntry = temp.querySelector(".csl-entry");
+      map.set(key, (cslEntry ? cslEntry.innerHTML : entries[i] ?? "").trim());
+    });
+    return map;
+  }
   function collectAllCitationInstances(root) {
     const allInstances = [];
     const nodeMap = /* @__PURE__ */ new Map();
@@ -22684,12 +25463,12 @@
     }
     container.insertBefore(block, container.firstChild);
   }
-  function replaceAllCitationMarkers(nodeMap, formattedCitations, config) {
+  function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey) {
     for (const [textNode, instances] of nodeMap) {
-      replaceNodeCitations(textNode, instances, formattedCitations, config);
+      replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey);
     }
   }
-  function replaceNodeCitations(textNode, instances, formattedCitations, config) {
+  function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey) {
     const text = textNode.textContent;
     const fragment = document.createDocumentFragment();
     let lastIndex = 0;
@@ -22713,6 +25492,20 @@
           }
         }
       });
+      const tooltipHtml = keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map((html) => `<div class="bib-entry">${html}</div>`).join("");
+      if (tooltipHtml) {
+        tippy_esm_default(elem, {
+          content: tooltipHtml,
+          allowHTML: true,
+          theme: "librecite",
+          placement: "top",
+          maxWidth: 420,
+          interactive: true,
+          // lets users click links inside the tooltip
+          appendTo: document.body
+          // avoids overflow-hidden clipping
+        });
+      }
       fragment.appendChild(elem);
       lastIndex = matchIndex + matchLen;
     }
