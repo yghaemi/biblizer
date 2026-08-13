@@ -7,7 +7,7 @@ import cslChicago from './csl/chicago-author-date.csl';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const API_BASE = "https://wings-resulted-priest-catalog.trycloudflare.com/api/v1/reference";
+const API_BASE = "https://your-publisher-mime-shapes.trycloudflare.com/api/v1/reference";
 const CACHE_PREFIX = "libretexts-references:";
 
 const LIBRARY = extractLibrary(window.location.hostname);
