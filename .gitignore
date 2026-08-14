@@ -2,3 +2,4 @@ index.html
 version.txt
 node_modules
 package-lock.json
+.env
