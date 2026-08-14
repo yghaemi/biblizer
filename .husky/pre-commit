@@ -1,1 +1,2 @@
-npm test
+npm run build
+git add script.js script.min.js

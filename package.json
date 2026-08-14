@@ -10,10 +10,10 @@
   "dependencies": {
     "@citation-js/plugin-csl": "^0.8.2",
     "citation-js": "^0.8.2",
-    "husky": "^9.1.7",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
-    "esbuild": "latest"
+    "esbuild": "latest",
+    "husky": "^9.1.7"
   }
 }
