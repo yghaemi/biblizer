@@ -1,6 +1,23 @@
 import esbuild from 'esbuild'
+import { readFileSync } from 'fs'
 
 const watch = process.argv.includes('--watch')
+
+// Parse .env into esbuild define entries so process.env.VAR is replaced at build time
+function loadEnvDefines(path = '.env') {
+  const defines = {}
+  try {
+    for (const line of readFileSync(path, 'utf8').split('\n')) {
+      const match = line.match(/^\s*([^#=\s][^=]*?)\s*=\s*(.*?)\s*$/)
+      if (match) {
+        defines[`process.env.${match[1]}`] = JSON.stringify(match[2])
+      }
+    }
+  } catch { /* .env is optional */ }
+  return defines
+}
+
+const envDefines = loadEnvDefines()
 
 // citation-js supports both Node and browser. When targeting the browser we
 // swap out node-fetch (and its transitive Node built-ins) for native fetch.
@@ -66,6 +83,7 @@ const buildOptions = {
   minify: false,
   sourcemap: process.argv.includes('--dev'),
   loader: { '.csl': 'text', '.css': 'text' },  // import as plain strings, injected at runtime
+  define: envDefines,
   plugins: [browserStubsPlugin],
 }
 
