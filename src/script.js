@@ -327,13 +327,24 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config, b
     elem.className = 'librecite';
     elem.dataset.citationKeys = keys.join(',');
     elem.innerHTML = formattedHtml;
-    elem.addEventListener('click', () => {
+    elem.setAttribute('tabindex', '0');
+    elem.setAttribute('role', 'button');
+
+    const scrollToRef = () => {
       for (const key of keys) {
         const target = document.getElementById(`ref-${key}`);
         if (target) {
           target.scrollIntoView({ behavior: 'smooth' });
           break;
         }
+      }
+    };
+
+    elem.addEventListener('click', scrollToRef);
+    elem.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        scrollToRef();
       }
     });
 
