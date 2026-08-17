@@ -145,10 +145,10 @@ function getCachedReferences(projectID) {
   return raw ? JSON.parse(raw) : null;
 }
 
-function setCachedReferences(projectID, lastUpdatedAt, referenceItems) {
+function setCachedReferences(projectID, lastUpdatedAt, {referenceItems, toc}) {
   localStorage.setItem(
     getCacheKey(projectID),
-    JSON.stringify({ lastUpdatedAt, referenceItems }),
+    JSON.stringify({ lastUpdatedAt, referenceItems, toc }),
   );
 }
 
