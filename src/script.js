@@ -401,7 +401,7 @@ function appendReferencesSection(engine, config, displayLocation, pageID, backma
 
   // Use a pre-existing #reference-output placeholder, or create a new section.
   let container = document.getElementById('reference-output');
-  if (!container) {
+  if (container) {
     const section = document.createElement('section');
     section.id = 'references';
     const heading = document.createElement('h2');
@@ -409,6 +409,9 @@ function appendReferencesSection(engine, config, displayLocation, pageID, backma
     section.appendChild(heading);
     document.body.appendChild(section);
     container = section;
+  }
+  else {
+    return;
   }
 
   if (displayLocation === 'backmatter' && pageID === backmatterPageID) {

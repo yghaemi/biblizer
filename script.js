@@ -25535,7 +25535,7 @@
     if (!bibEntries?.length) return;
     const entryIds = params.entry_ids ?? [];
     let container = document.getElementById("reference-output");
-    if (!container) {
+    if (container) {
       const section = document.createElement("section");
       section.id = "references";
       const heading = document.createElement("h2");
@@ -25543,6 +25543,8 @@
       section.appendChild(heading);
       document.body.appendChild(section);
       container = section;
+    } else {
+      return;
     }
     if (displayLocation === "backmatter" && pageID === backmatterPageID) {
       container.style.display = "block";
