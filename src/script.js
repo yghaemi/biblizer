@@ -341,12 +341,6 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config, b
     };
 
     elem.addEventListener('click', scrollToRef);
-    elem.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        scrollToRef();
-      }
-    });
 
     // Build tooltip content from bibliography entries for each cited key
     const tooltipHtml = keys
@@ -355,17 +349,37 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config, b
       .map(html => `<div class="bib-entry">${html}</div>`)
       .join('');
 
-    if (tooltipHtml) {
-      tippy(elem, {
-        content: tooltipHtml,
-        allowHTML: true,
-        theme: 'librecite',
-        placement: 'top',
-        maxWidth: 420,
-        interactive: true,        // lets users click links inside the tooltip
-        appendTo: document.body,  // avoids overflow-hidden clipping
-      });
-    }
+    // Create the tippy instance in manual+mouseenter mode so keyboard users
+    // control visibility explicitly (Space to show, Escape to hide) while
+    // mouse users still get the hover tooltip.
+    const instance = tooltipHtml
+      ? tippy(elem, {
+          content: tooltipHtml,
+          allowHTML: true,
+          theme: 'librecite',
+          placement: 'top',
+          maxWidth: 420,
+          interactive: true,        // lets users click links inside the tooltip
+          appendTo: document.body,  // avoids overflow-hidden clipping
+          trigger: 'mouseenter',    // mouse hover only; keyboard handled below
+        })
+      : null;
+
+    elem.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        scrollToRef();
+      } else if (e.key === ' ') {
+        // Space toggles the tooltip
+        e.preventDefault();
+        if (instance) {
+          instance.state.isVisible ? instance.hide() : instance.show();
+        }
+      } else if (e.key === 'Escape') {
+        // Escape always dismisses
+        if (instance) instance.hide();
+      }
+    });
 
     fragment.appendChild(elem);
     lastIndex = matchIndex + matchLen;

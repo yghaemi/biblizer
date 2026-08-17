@@ -25495,26 +25495,33 @@
         }
       };
       elem.addEventListener("click", scrollToRef);
+      const tooltipHtml = keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map((html) => `<div class="bib-entry">${html}</div>`).join("");
+      const instance = tooltipHtml ? tippy_esm_default(elem, {
+        content: tooltipHtml,
+        allowHTML: true,
+        theme: "librecite",
+        placement: "top",
+        maxWidth: 420,
+        interactive: true,
+        // lets users click links inside the tooltip
+        appendTo: document.body,
+        // avoids overflow-hidden clipping
+        trigger: "mouseenter"
+        // mouse hover only; keyboard handled below
+      }) : null;
       elem.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
+        if (e.key === "Enter") {
           e.preventDefault();
           scrollToRef();
+        } else if (e.key === " ") {
+          e.preventDefault();
+          if (instance) {
+            instance.state.isVisible ? instance.hide() : instance.show();
+          }
+        } else if (e.key === "Escape") {
+          if (instance) instance.hide();
         }
       });
-      const tooltipHtml = keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map((html) => `<div class="bib-entry">${html}</div>`).join("");
-      if (tooltipHtml) {
-        tippy_esm_default(elem, {
-          content: tooltipHtml,
-          allowHTML: true,
-          theme: "librecite",
-          placement: "top",
-          maxWidth: 420,
-          interactive: true,
-          // lets users click links inside the tooltip
-          appendTo: document.body
-          // avoids overflow-hidden clipping
-        });
-      }
       fragment.appendChild(elem);
       lastIndex = matchIndex + matchLen;
     }
