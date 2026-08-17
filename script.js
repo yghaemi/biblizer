@@ -25325,7 +25325,7 @@
     try {
       const pageInfo = await fetchJSON(`${API_BASE}/page/${pageID}/library/${LIBRARY}`);
       const { projectID, lastUpdatedAt, format: format3, displayLocation, pageTitle, backmatterPageID, backmatterReferenceList } = pageInfo;
-      const referenceItems = await getReferences(projectID, lastUpdatedAt);
+      const { referenceItems, toc } = await getReferences(projectID, lastUpdatedAt);
       const config = getFormatConfig(format3);
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
@@ -25370,8 +25370,8 @@
     const cached = getCachedReferences(projectID);
     if (isCacheValid(cached, lastUpdatedAt)) return cached.referenceItems;
     const data2 = await fetchJSON(`${API_BASE}/projects/${projectID}`);
-    setCachedReferences(projectID, lastUpdatedAt, data2.referenceItems);
-    return data2.referenceItems;
+    setCachedReferences(projectID, lastUpdatedAt, { referenceItems: data2.referenceItems, toc: data2.toc });
+    return { referenceItems: data2.referenceItems, toc: data2.toc };
   }
   function loadCslStyle(styleName) {
     if (loadedCslStyles.has(styleName)) return;

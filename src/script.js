@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const pageInfo = await fetchJSON(`${API_BASE}/page/${pageID}/library/${LIBRARY}`);
     const { projectID, lastUpdatedAt, format, displayLocation, pageTitle, backmatterPageID, backmatterReferenceList } = pageInfo;
-    const referenceItems = await getReferences(projectID, lastUpdatedAt);
+    const {referenceItems,toc} = await getReferences(projectID, lastUpdatedAt);
 
     const config = getFormatConfig(format);
     loadCslStyle(config.cslStyle);
@@ -164,8 +164,8 @@ async function getReferences(projectID, lastUpdatedAt) {
   const cached = getCachedReferences(projectID);
   if (isCacheValid(cached, lastUpdatedAt)) return cached.referenceItems;
   const data = await fetchJSON(`${API_BASE}/projects/${projectID}`);
-  setCachedReferences(projectID, lastUpdatedAt, data.referenceItems);
-  return data.referenceItems;
+  setCachedReferences(projectID, lastUpdatedAt, {referenceItems: data.referenceItems, toc: data.toc});
+  return {referenceItems: data.referenceItems, toc: data.toc};
 }
 
 // ─── CSL / Citeproc ──────────────────────────────────────────────────────────
