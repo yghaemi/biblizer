@@ -9,7 +9,7 @@ import tippyCss from 'tippy.js/dist/tippy.css';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const API_BASE = "https://fish-max-theatre-hotel.trycloudflare.com/api/v1/reference";
+const API_BASE = "https://losing-dragon-asthma-asbestos.trycloudflare.com/api/v1/reference";
 const CACHE_PREFIX = "libretexts-references:";
 
 const LIBRARY = extractLibrary(window.location.hostname);
