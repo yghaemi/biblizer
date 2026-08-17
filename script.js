@@ -25542,7 +25542,6 @@
       heading.textContent = config.heading;
       section.appendChild(heading);
       document.body.appendChild(section);
-      container = section;
     } else {
       return;
     }
