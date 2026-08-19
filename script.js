@@ -25367,7 +25367,10 @@
     document.head.appendChild(style);
   })();
   document.addEventListener("DOMContentLoaded", async () => {
-    const pageID = document.getElementById("pageID")?.value;
+    const pageID = (
+      /** @type {HTMLInputElement|null} */
+      document.getElementById("pageID")?.value
+    );
     if (!pageID) {
       console.error("pageID not found");
       return;

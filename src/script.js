@@ -1,3 +1,19 @@
+// @ts-check
+/**
+ * @typedef {import('./types').PageInfo}          PageInfo
+ * @typedef {import('./types').ReferenceItem}     ReferenceItem
+ * @typedef {import('./types').ProjectData}       ProjectData
+ * @typedef {import('./types').TocNode}           TocNode
+ * @typedef {import('./types').CachedProjectData} CachedProjectData
+ * @typedef {import('./types').FormatConfig}      FormatConfig
+ * @typedef {import('./types').CslAuthor}         CslAuthor
+ * @typedef {import('./types').CslDate}           CslDate
+ * @typedef {import('./types').CslJson}           CslJson
+ * @typedef {import('./types').CitationInstance}  CitationInstance
+ * @typedef {import('./types').NodeCitationMeta}  NodeCitationMeta
+ * @typedef {import('./types').CiteprocEngine}    CiteprocEngine
+ */
+
 import { plugins } from "@citation-js/core";
 import "@citation-js/plugin-csl";
 import cslIeee from "./csl/ieee.csl";
@@ -142,7 +158,7 @@ const ENTRY_TYPE_MAP = {
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const pageID = document.getElementById("pageID")?.value;
+  const pageID = /** @type {HTMLInputElement|null} */ (document.getElementById("pageID"))?.value;
   if (!pageID) {
     console.error("pageID not found");
     return;

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "lib": ["ES2021", "DOM"],
+
+    // Type-check JS files via JSDoc without requiring .ts conversion
+    "allowJs": true,
+    "checkJs": true,
+
+    // Enable the most useful checks without being too noisy on existing JS
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+
+    // No TS compilation output — esbuild handles the actual build
+    "noEmit": true,
+
+    // Pick up ambient declarations from src/global.d.ts
+    "typeRoots": ["./node_modules/@types", "./src"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "script.js", "script.min.js"]
+}
