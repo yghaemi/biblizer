@@ -25397,15 +25397,13 @@
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
-      if (displayLocation === "backmatter" && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
-        injectBackmatterMarkers(backmatterReferenceList);
-      }
-      if (Array.isArray(selectedList) && selectedList.includes(pageID) && toc) {
-        const groupRefs = collectGroupRefs(toc, pageID);
-        if (groupRefs.length > 0) {
-          injectBackmatterMarkers(groupRefs);
-        }
-      }
+      const scopeRefs = collectScopeRefs(
+        displayLocation,
+        toc,
+        pageID,
+        backmatterReferenceList
+      );
+      if (scopeRefs.length > 0) injectCitationMarkers(scopeRefs);
       const { allInstances, nodeMap } = collectAllCitationInstances(
         document.body
       );
@@ -25421,12 +25419,17 @@
         config,
         bibHtmlByKey
       );
+      const refUsageMap = buildRefUsageMap(toc);
       appendReferencesSection(
         engine,
         config,
-        displayLocation,
-        pageID,
-        backmatterPageID
+        shouldDisplayBibliography(
+          displayLocation,
+          pageID,
+          backmatterPageID,
+          selectedList
+        ),
+        refUsageMap
       );
     } catch (err) {
       console.error("Failed to load citations:", err);
@@ -25550,30 +25553,68 @@
   function parseCitationKeys(content) {
     return content.split(",").map((k) => k.trim()).filter(Boolean);
   }
-  function collectGroupRefs(toc, pageId) {
-    const id = String(pageId);
+  function collectScopeRefs(displayLocation, toc, pageID, backmatterReferenceList) {
+    if (displayLocation === "endOfChapter") {
+      return collectChapterRefs(toc, pageID);
+    }
+    if (displayLocation === "backmatter") {
+      return backmatterReferenceList?.length ? [...backmatterReferenceList] : collectAllTocRefs(toc);
+    }
+    return [];
+  }
+  function collectChapterRefs(toc, pageId) {
+    if (!toc) return [];
     const nodeMap = /* @__PURE__ */ new Map();
     const parentMap = /* @__PURE__ */ new Map();
-    (function index(node2, parent2) {
+    (function index(node2, parent) {
       nodeMap.set(String(node2.id), node2);
-      if (parent2) parentMap.set(String(node2.id), parent2);
+      if (parent) parentMap.set(String(node2.id), parent);
       for (const child of node2.children ?? []) index(child, node2);
     })(toc, null);
-    const node = nodeMap.get(id);
+    let node = nodeMap.get(String(pageId));
     if (!node) return [];
-    const parent = parentMap.get(id);
-    const isBookImmediateChild = parent && !parentMap.has(String(parent.id));
-    const subtreeRoot = !parent || isBookImmediateChild ? node : parent;
+    while (true) {
+      const parent = parentMap.get(String(node.id));
+      if (!parent) return [];
+      if (!parentMap.has(String(parent.id))) break;
+      node = parent;
+    }
+    return subtreeRefs(node);
+  }
+  function collectAllTocRefs(toc) {
+    return toc ? subtreeRefs(toc) : [];
+  }
+  function subtreeRefs(root) {
     const refs = /* @__PURE__ */ new Set();
-    const queue = [subtreeRoot];
+    const queue = [root];
     while (queue.length > 0) {
-      const current = queue.shift();
-      for (const ref2 of current.refs ?? []) refs.add(ref2);
-      for (const child of current.children ?? []) queue.push(child);
+      const node = queue.shift();
+      for (const ref2 of node.refs ?? []) refs.add(ref2);
+      for (const child of node.children ?? []) queue.push(child);
     }
     return [...refs];
   }
-  function injectBackmatterMarkers(referenceList) {
+  function buildRefUsageMap(toc) {
+    const map = /* @__PURE__ */ new Map();
+    if (!toc) return /* @__PURE__ */ new Map();
+    const queue = [toc];
+    while (queue.length > 0) {
+      const node = queue.shift();
+      if (node.id && node.title && Array.isArray(node.refs)) {
+        for (const key of node.refs) {
+          if (!map.has(key)) map.set(key, /* @__PURE__ */ new Map());
+          map.get(key).set(String(node.id), node.title);
+        }
+      }
+      for (const child of node.children ?? []) queue.push(child);
+    }
+    const result = /* @__PURE__ */ new Map();
+    for (const [key, pages] of map) {
+      result.set(key, [...pages.entries()].map(([id, title]) => ({ id, title })));
+    }
+    return result;
+  }
+  function injectCitationMarkers(referenceList) {
     const container = document.querySelector("section.mt-content-container");
     if (!container) return;
     const block = document.createElement("div");
@@ -25637,8 +25678,9 @@
         // lets users click links inside the tooltip
         appendTo: document.body,
         // avoids overflow-hidden clipping
-        trigger: "mouseenter"
+        trigger: "mouseenter",
         // mouse hover only; keyboard handled below
+        delay: [500, 0]
       }) : null;
       elem.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
@@ -25661,7 +25703,20 @@
     }
     textNode.parentNode.replaceChild(fragment, textNode);
   }
-  function appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID) {
+  function shouldDisplayBibliography(displayLocation, pageID, backmatterPageID, selectedList) {
+    const isSelected = Array.isArray(selectedList) && selectedList.includes(pageID);
+    switch (displayLocation) {
+      case "endOfPage":
+        return true;
+      case "endOfChapter":
+        return isSelected;
+      case "backmatter":
+        return pageID === backmatterPageID || isSelected;
+      default:
+        return false;
+    }
+  }
+  function appendReferencesSection(engine, config, visible, refUsageMap) {
     const [params, bibEntries] = engine.makeBibliography();
     if (!bibEntries?.length) return;
     const entryIds = params.entry_ids ?? [];
@@ -25670,13 +25725,7 @@
     const heading = document.createElement("h2");
     heading.textContent = config.heading;
     container.appendChild(heading);
-    if (displayLocation === "endOfPage" || displayLocation === "endOfChapter") {
-      container.style.display = "block";
-    } else if (displayLocation === "backmatter" && pageID === backmatterPageID) {
-      container.style.display = "block";
-    } else {
-      container.style.display = "none";
-    }
+    container.style.display = visible ? "block" : "none";
     const list6 = document.createElement(config.listType);
     list6.className = "references-list";
     bibEntries.forEach((entryHtml, i) => {
@@ -25687,6 +25736,38 @@
       temp.innerHTML = entryHtml;
       const cslEntry = temp.querySelector(".csl-entry");
       li.innerHTML = cslEntry ? cslEntry.innerHTML : entryHtml;
+      if (key && refUsageMap) {
+        const pages = refUsageMap.get(key);
+        if (pages && pages.length > 0) {
+          const items = pages.map(({ id, title }) => {
+            const href = `https://${LIBRARY}.libretexts.org/@go/page/${id}`;
+            return `<li><a href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a></li>`;
+          }).join("");
+          const tooltipHtml = `<div class="librecite-usage-tooltip"><strong>Cited in:</strong><ul>${items}</ul></div>`;
+          li.setAttribute("tabindex", "0");
+          li.setAttribute("role", "button");
+          const instance = tippy_esm_default(li, {
+            content: tooltipHtml,
+            allowHTML: true,
+            theme: "librecite",
+            placement: "top-start",
+            followCursor: "initial",
+            maxWidth: 340,
+            interactive: true,
+            appendTo: document.body,
+            trigger: "mouseenter focus",
+            delay: [1e3, 0]
+          });
+          li.addEventListener("keydown", (e) => {
+            if (e.key === " ") {
+              e.preventDefault();
+              instance.state.isVisible ? instance.hide() : instance.show();
+            } else if (e.key === "Escape") {
+              instance.hide();
+            }
+          });
+        }
+      }
       list6.appendChild(li);
     });
     container.appendChild(list6);

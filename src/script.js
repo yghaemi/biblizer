@@ -189,25 +189,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     const cslData = referenceItems.map(toCslJson);
     const engine = buildCiteprocEngine(cslData, config.cslStyle);
 
-    // When displayLocation is 'backmatter', inject hidden \librecite{key} markers
-    // on every page so all backmatter references are collected and numbered
-    // consistently, even if they aren't explicitly cited in the visible text.
-    if (
-      displayLocation === "backmatter" &&
-      Array.isArray(backmatterReferenceList) &&
-      backmatterReferenceList.length > 0
-    ) {
-      injectBackmatterMarkers(backmatterReferenceList);
-    }
-
-    // When this page is part of a selectedList group, inject the BFS-collected
-    // refs for its TOC neighbourhood so numbering is consistent across the group.
-    if (Array.isArray(selectedList) && selectedList.includes(pageID) && toc) {
-      const groupRefs = collectGroupRefs(toc, pageID);
-      if (groupRefs.length > 0) {
-        injectBackmatterMarkers(groupRefs);
-      }
-    }
+    // Numeric styles (IEEE, AMA, Vancouver) number citations in order of first
+    // appearance, so the number rendered next to an in-text citation only matches
+    // the bibliography if every page in a bibliography scope feeds citeproc the
+    // identical key set.  Inject hidden markers to establish that shared scope:
+    //
+    //   endOfPage    → nothing to inject; the page's own visible \librecite
+    //                  markers are exactly what belongs in its bibliography.
+    //   endOfChapter → every ref in the chapter subtree containing this page
+    //                  (chapter's own refs + siblings + all descendants).
+    //   backmatter   → every ref in the book.
+    const scopeRefs = collectScopeRefs(
+      displayLocation,
+      toc,
+      pageID,
+      backmatterReferenceList,
+    );
+    if (scopeRefs.length > 0) injectCitationMarkers(scopeRefs);
 
     const { allInstances, nodeMap } = collectAllCitationInstances(
       document.body,
@@ -225,12 +223,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       config,
       bibHtmlByKey,
     );
+    const refUsageMap = buildRefUsageMap(toc);
     appendReferencesSection(
       engine,
       config,
-      displayLocation,
-      pageID,
-      backmatterPageID,
+      shouldDisplayBibliography(
+        displayLocation,
+        pageID,
+        backmatterPageID,
+        selectedList,
+      ),
+      refUsageMap,
     );
   } catch (err) {
     console.error("Failed to load citations:", err);
@@ -408,20 +411,62 @@ function parseCitationKeys(content) {
 
 // ─── TOC Helpers ─────────────────────────────────────────────────────────────
 
-// Walks the TOC tree and returns the flat set of refs that should be displayed
-// alongside pageId, using BFS over the relevant subtree:
-//
-//  • Book-immediate-child (chapter): collect from its own subtree only.
-//  • Deeper page (section/subsection): go up one level to the parent and
-//    collect from the parent's entire subtree (the page + all its siblings +
-//    all their descendants + the parent's own refs).
-//
-// TОС node shape: { id: string, refs: string[], children: TocNode[] }
-function collectGroupRefs(toc, pageId) {
-  const id = String(pageId);
+/**
+ * Resolve the set of reference keys that make up this page's bibliography
+ * scope.  Returns `[]` for `endOfPage`, where the page's own visible markers
+ * already are the scope and nothing needs injecting.
+ *
+ * @param {string} displayLocation  'endOfPage' | 'endOfChapter' | 'backmatter'
+ * @param {TocNode|null|undefined} toc
+ * @param {string} pageID
+ * @param {string[]|null|undefined} backmatterReferenceList
+ * @returns {string[]}
+ */
+function collectScopeRefs(
+  displayLocation,
+  toc,
+  pageID,
+  backmatterReferenceList,
+) {
+  if (displayLocation === "endOfChapter") {
+    return collectChapterRefs(toc, pageID);
+  }
+  if (displayLocation === "backmatter") {
+    // The API normally supplies the book-wide list; fall back to walking the
+    // TOC so a missing list doesn't silently produce an empty bibliography.
+    return backmatterReferenceList?.length
+      ? [...backmatterReferenceList]
+      : collectAllTocRefs(toc);
+  }
+  return [];
+}
 
-  // Index every node and record its parent in a single DFS pass.
+/**
+ * BFS-collect every ref key in the chapter subtree that contains `pageId`.
+ *
+ * The subtree root is the ancestor that is a **direct child of the book root**
+ * — the chapter.  Because every page inside a chapter resolves to that same
+ * root, this returns an identical key set (in identical BFS order) no matter
+ * which page of the chapter is asking, which is what keeps numeric citation
+ * numbers aligned with the chapter bibliography.
+ *
+ * A page that is itself a direct book child is its own chapter root, so it
+ * collects only its own refs and those of its descendants.
+ *
+ * Example: pages 9214, 9242, 9878 and 9888 all resolve to chapter root 9214
+ * and each collect 9214.refs + 9242.refs + 9243.refs + 9878.refs + 9888.refs…
+ *
+ * @param {TocNode|null|undefined} toc
+ * @param {string} pageId
+ * @returns {string[]}
+ */
+function collectChapterRefs(toc, pageId) {
+  if (!toc) return [];
+
+  // Single DFS to build nodeMap (id → node) and parentMap (id → parent).
+  /** @type {Map<string, TocNode>} */
   const nodeMap = new Map();
+  /** @type {Map<string, TocNode>} */
   const parentMap = new Map();
 
   (function index(node, parent) {
@@ -430,34 +475,94 @@ function collectGroupRefs(toc, pageId) {
     for (const child of node.children ?? []) index(child, node);
   })(toc, null);
 
-  const node = nodeMap.get(id);
+  let node = nodeMap.get(String(pageId));
   if (!node) return [];
 
-  const parent = parentMap.get(id);
-  // A node whose parent has no parent of its own is an immediate child of the
-  // book root → collect from its own subtree.  All deeper nodes → use parent.
-  const isBookImmediateChild = parent && !parentMap.has(String(parent.id));
-  const subtreeRoot = !parent || isBookImmediateChild ? node : parent;
-
-  // BFS over the chosen subtree to accumulate every ref key.
-  const refs = new Set();
-  const queue = [subtreeRoot];
-  while (queue.length > 0) {
-    const current = queue.shift();
-    for (const ref of current.refs ?? []) refs.add(ref);
-    for (const child of current.children ?? []) queue.push(child);
+  // Walk up until the parent is the book root (a node with no parent itself).
+  while (true) {
+    const parent = parentMap.get(String(node.id));
+    if (!parent) return []; // node is the book root — no enclosing chapter
+    if (!parentMap.has(String(parent.id))) break; // parent is the book root
+    node = parent;
   }
 
+  return subtreeRefs(node);
+}
+
+/**
+ * BFS-collect every ref key in the whole book, used for backmatter scope.
+ *
+ * @param {TocNode|null|undefined} toc
+ * @returns {string[]}
+ */
+function collectAllTocRefs(toc) {
+  return toc ? subtreeRefs(toc) : [];
+}
+
+/**
+ * BFS over a TOC subtree, accumulating ref keys in first-seen order.
+ *
+ * @param {TocNode} root
+ * @returns {string[]}
+ */
+function subtreeRefs(root) {
+  const refs = new Set();
+  const queue = [root];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    for (const ref of node.refs ?? []) refs.add(ref);
+    for (const child of node.children ?? []) queue.push(child);
+  }
   return [...refs];
+}
+
+/**
+ * Traverse the full TOC tree and build a reverse map:
+ *   citationKey → [{id, title}] of pages that cite it
+ *
+ * Nodes whose `refs` array is non-empty and whose `title` is set contribute
+ * to the map.  Duplicate page IDs for the same key are deduplicated.
+ *
+ * @param {TocNode|null|undefined} toc
+ * @returns {Map<string, {id: string, title: string}[]>}
+ */
+function buildRefUsageMap(toc) {
+  /** @type {Map<string, Map<string, string>>} key → (pageId → pageTitle) */
+  const map = new Map();
+  if (!toc) return new Map();
+
+  const queue = [toc];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (node.id && node.title && Array.isArray(node.refs)) {
+      for (const key of node.refs) {
+        if (!map.has(key)) map.set(key, new Map());
+        map.get(key).set(String(node.id), node.title);
+      }
+    }
+    for (const child of node.children ?? []) queue.push(child);
+  }
+
+  // Convert inner Maps → sorted arrays of {id, title}.
+  /** @type {Map<string, {id: string, title: string}[]>} */
+  const result = new Map();
+  for (const [key, pages] of map) {
+    result.set(key, [...pages.entries()].map(([id, title]) => ({ id, title })));
+  }
+  return result;
 }
 
 // ─── DOM Manipulation ────────────────────────────────────────────────────────
 
 // Inserts a hidden <div> as the first child of the first
 // <section class="mt-content-container">, containing one \librecite{key}
-// text node per item in the list. This makes every backmatter reference
-// visible to collectAllCitationInstances without appearing on screen.
-function injectBackmatterMarkers(referenceList) {
+// text node per item in the list. This makes every scope reference visible to
+// collectAllCitationInstances without appearing on screen.
+//
+// The block goes first so citeproc assigns numbers in the scope's order before
+// it reaches any visible citation, giving every page in the scope the same
+// key → number mapping.
+function injectCitationMarkers(referenceList) {
   const container = document.querySelector("section.mt-content-container");
   if (!container) return;
 
@@ -555,6 +660,8 @@ function replaceNodeCitations(
           interactive: true, // lets users click links inside the tooltip
           appendTo: document.body, // avoids overflow-hidden clipping
           trigger: "mouseenter", // mouse hover only; keyboard handled below
+          delay: [500, 0],
+
         })
       : null;
 
@@ -585,13 +692,50 @@ function replaceNodeCitations(
   textNode.parentNode.replaceChild(fragment, textNode);
 }
 
-function appendReferencesSection(
-  engine,
-  config,
+/**
+ * Whether this page is the one that renders the bibliography for its scope.
+ *
+ *   endOfPage    → every page shows its own bibliography
+ *   endOfChapter → only the chapter's designated page (a selectedList member)
+ *   backmatter   → only the designated backmatter page
+ *
+ * Non-display pages still build the bibliography — that is what assigns the
+ * citation numbers — they just keep the container hidden.
+ *
+ * @param {string} displayLocation
+ * @param {string} pageID
+ * @param {string|null|undefined} backmatterPageID
+ * @param {string[]|null|undefined} selectedList
+ * @returns {boolean}
+ */
+function shouldDisplayBibliography(
   displayLocation,
   pageID,
   backmatterPageID,
+  selectedList,
 ) {
+  const isSelected =
+    Array.isArray(selectedList) && selectedList.includes(pageID);
+
+  switch (displayLocation) {
+    case "endOfPage":
+      return true;
+    case "endOfChapter":
+      return isSelected;
+    case "backmatter":
+      return pageID === backmatterPageID || isSelected;
+    default:
+      return false;
+  }
+}
+
+/**
+ * @param {CiteprocEngine} engine
+ * @param {FormatConfig} config
+ * @param {boolean} visible  whether this page renders the bibliography
+ * @param {Map<string, {id: string, title: string}[]>} refUsageMap  citationKey → pages that cite it
+ */
+function appendReferencesSection(engine, config, visible, refUsageMap) {
   const [params, bibEntries] = engine.makeBibliography();
   if (!bibEntries?.length) return;
 
@@ -606,21 +750,7 @@ function appendReferencesSection(
   heading.textContent = config.heading;
   container.appendChild(heading);
 
-  // Visibility: hide on non-display pages.
-  //   endOfPage      → always visible
-  //   endOfChapter   → always visible (chapter-level landing page)
-  //   backmatter     → visible only on the designated backmatter page
-  //   anything else  → hidden
-  if (displayLocation === "endOfPage" || displayLocation === "endOfChapter") {
-    container.style.display = "block";
-  } else if (
-    displayLocation === "backmatter" &&
-    pageID === backmatterPageID
-  ) {
-    container.style.display = "block";
-  } else {
-    container.style.display = "none";
-  }
+  container.style.display = visible ? "block" : "none";
 
   const list = document.createElement(config.listType);
   list.className = "references-list";
@@ -636,6 +766,49 @@ function appendReferencesSection(
     temp.innerHTML = entryHtml;
     const cslEntry = temp.querySelector(".csl-entry");
     li.innerHTML = cslEntry ? cslEntry.innerHTML : entryHtml;
+
+    // Tooltip: list the TOC page titles (with links) that cite this reference.
+    if (key && refUsageMap) {
+      const pages = refUsageMap.get(key);
+      if (pages && pages.length > 0) {
+        const items = pages
+          .map(({ id, title }) => {
+            const href = `https://${LIBRARY}.libretexts.org/@go/page/${id}`;
+            return `<li><a href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a></li>`;
+          })
+          .join("");
+        const tooltipHtml =
+          `<div class="librecite-usage-tooltip">` +
+          `<strong>Cited in:</strong>` +
+          `<ul>${items}</ul>` +
+          `</div>`;
+
+        li.setAttribute("tabindex", "0");
+        li.setAttribute("role", "button");
+
+        const instance = tippy(li, {
+          content: tooltipHtml,
+          allowHTML: true,
+          theme: "librecite",
+          placement: "top-start",
+          followCursor: "initial",
+          maxWidth: 340,
+          interactive: true,
+          appendTo: document.body,
+          trigger: "mouseenter focus",
+          delay: [1000, 0],
+        });
+
+        li.addEventListener("keydown", (e) => {
+          if (e.key === " ") {
+            e.preventDefault();
+            instance.state.isVisible ? instance.hide() : instance.show();
+          } else if (e.key === "Escape") {
+            instance.hide();
+          }
+        });
+      }
+    }
 
     list.appendChild(li);
   });

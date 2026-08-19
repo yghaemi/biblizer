@@ -60,6 +60,7 @@ export interface ProjectData {
  */
 export interface TocNode {
   id: string;
+  title: string;
   refs: string[];
   children: TocNode[];
 }
