@@ -25259,23 +25259,73 @@
   var CACHE_PREFIX = "libretexts-references:";
   var LIBRARY = extractLibrary(window.location.hostname);
   var BUNDLED_CSL_STYLES = {
-    "ieee": ieee_default,
+    ieee: ieee_default,
     "american-medical-association": american_medical_association_default,
     "modern-language-association": modern_language_association_default,
     "chicago-author-date": chicago_author_date_default
   };
   var loadedCslStyles = /* @__PURE__ */ new Set(["apa", "vancouver", "harvard1"]);
   var FORMAT_CONFIG = {
-    IEEE: { cslStyle: "ieee", heading: "References", listType: "ul", superscript: true },
-    Vancouver: { cslStyle: "vancouver", heading: "References", listType: "ul", superscript: false },
-    AMA: { cslStyle: "american-medical-association", heading: "References", listType: "ul", superscript: true },
-    CSM: { cslStyle: "ieee", heading: "References", listType: "ul", superscript: true },
-    ASN: { cslStyle: "american-medical-association", heading: "References", listType: "ul", superscript: true },
-    ANSI: { cslStyle: "ieee", heading: "References", listType: "ul", superscript: true },
-    APA: { cslStyle: "apa", heading: "References", listType: "ul", superscript: false },
-    MLA: { cslStyle: "modern-language-association", heading: "Works Cited", listType: "ul", superscript: false },
-    Chicago: { cslStyle: "chicago-author-date", heading: "References", listType: "ul", superscript: false },
-    Harvard: { cslStyle: "harvard1", heading: "Reference List", listType: "ul", superscript: false }
+    IEEE: {
+      cslStyle: "ieee",
+      heading: "References",
+      listType: "ul",
+      superscript: true
+    },
+    Vancouver: {
+      cslStyle: "vancouver",
+      heading: "References",
+      listType: "ul",
+      superscript: false
+    },
+    AMA: {
+      cslStyle: "american-medical-association",
+      heading: "References",
+      listType: "ul",
+      superscript: true
+    },
+    CSM: {
+      cslStyle: "ieee",
+      heading: "References",
+      listType: "ul",
+      superscript: true
+    },
+    ASN: {
+      cslStyle: "american-medical-association",
+      heading: "References",
+      listType: "ul",
+      superscript: true
+    },
+    ANSI: {
+      cslStyle: "ieee",
+      heading: "References",
+      listType: "ul",
+      superscript: true
+    },
+    APA: {
+      cslStyle: "apa",
+      heading: "References",
+      listType: "ul",
+      superscript: false
+    },
+    MLA: {
+      cslStyle: "modern-language-association",
+      heading: "Works Cited",
+      listType: "ul",
+      superscript: false
+    },
+    Chicago: {
+      cslStyle: "chicago-author-date",
+      heading: "References",
+      listType: "ul",
+      superscript: false
+    },
+    Harvard: {
+      cslStyle: "harvard1",
+      heading: "Reference List",
+      listType: "ul",
+      superscript: false
+    }
   };
   var ENTRY_TYPE_MAP = {
     article: "article-journal",
@@ -25323,9 +25373,23 @@
       return;
     }
     try {
-      const pageInfo = await fetchJSON(`${API_BASE}/page/${pageID}/library/${LIBRARY}`);
-      const { projectID, lastUpdatedAt, format: format3, displayLocation, pageTitle, backmatterPageID, backmatterReferenceList } = pageInfo;
-      const { referenceItems, toc } = await getReferences(projectID, lastUpdatedAt);
+      const pageInfo = await fetchJSON(
+        `${API_BASE}/page/${pageID}/library/${LIBRARY}`
+      );
+      const {
+        projectID,
+        lastUpdatedAt,
+        format: format3,
+        displayLocation,
+        pageTitle,
+        backmatterPageID,
+        backmatterReferenceList,
+        selectedList
+      } = pageInfo;
+      const { referenceItems, toc } = await getReferences(
+        projectID,
+        lastUpdatedAt
+      );
       const config = getFormatConfig(format3);
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
@@ -25333,12 +25397,34 @@
       if (displayLocation === "backmatter" && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
         injectBackmatterMarkers(backmatterReferenceList);
       }
-      const { allInstances, nodeMap } = collectAllCitationInstances(document.body);
+      if (Array.isArray(selectedList) && selectedList.includes(pageID) && toc) {
+        const groupRefs = collectGroupRefs(toc, pageID);
+        if (groupRefs.length > 0) {
+          injectBackmatterMarkers(groupRefs);
+        }
+      }
+      const { allInstances, nodeMap } = collectAllCitationInstances(
+        document.body
+      );
       if (allInstances.length === 0) return;
-      const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
+      const formattedCitations = processCitationsWithCiteproc(
+        engine,
+        allInstances
+      );
       const bibHtmlByKey = buildBibHtmlMap(engine);
-      replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey);
-      appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID);
+      replaceAllCitationMarkers(
+        nodeMap,
+        formattedCitations,
+        config,
+        bibHtmlByKey
+      );
+      appendReferencesSection(
+        engine,
+        config,
+        displayLocation,
+        pageID,
+        backmatterPageID
+      );
     } catch (err) {
       console.error("Failed to load citations:", err);
     }
@@ -25368,16 +25454,23 @@
   }
   async function getReferences(projectID, lastUpdatedAt) {
     const cached = getCachedReferences(projectID);
-    if (isCacheValid(cached, lastUpdatedAt)) return cached.referenceItems;
+    if (isCacheValid(cached, lastUpdatedAt)) {
+      return { referenceItems: cached.referenceItems, toc: cached.toc };
+    }
     const data2 = await fetchJSON(`${API_BASE}/projects/${projectID}`);
-    setCachedReferences(projectID, lastUpdatedAt, { referenceItems: data2.referenceItems, toc: data2.toc });
+    setCachedReferences(projectID, lastUpdatedAt, {
+      referenceItems: data2.referenceItems,
+      toc: data2.toc
+    });
     return { referenceItems: data2.referenceItems, toc: data2.toc };
   }
   function loadCslStyle(styleName) {
     if (loadedCslStyles.has(styleName)) return;
     const xml = BUNDLED_CSL_STYLES[styleName];
     if (!xml) {
-      throw new Error(`CSL style "${styleName}" is not bundled. Add it to src/csl/.`);
+      throw new Error(
+        `CSL style "${styleName}" is not bundled. Add it to src/csl/.`
+      );
     }
     plugins_exports.config.get("@csl").styles.add(styleName, xml);
     loadedCslStyles.add(styleName);
@@ -25397,7 +25490,11 @@
         citationItems: allInstances[i].keys.map((id) => ({ id })),
         properties: { noteIndex: 0 }
       };
-      const [, updates = []] = engine.processCitationCluster(citation2, citationsPre, []);
+      const [, updates = []] = engine.processCitationCluster(
+        citation2,
+        citationsPre,
+        []
+      );
       for (const update of updates) {
         const [, text, id] = Array.isArray(update) ? update : [];
         if (typeof id === "string") {
@@ -25450,6 +25547,29 @@
   function parseCitationKeys(content) {
     return content.split(",").map((k) => k.trim()).filter(Boolean);
   }
+  function collectGroupRefs(toc, pageId) {
+    const id = String(pageId);
+    const nodeMap = /* @__PURE__ */ new Map();
+    const parentMap = /* @__PURE__ */ new Map();
+    (function index(node2, parent2) {
+      nodeMap.set(String(node2.id), node2);
+      if (parent2) parentMap.set(String(node2.id), parent2);
+      for (const child of node2.children ?? []) index(child, node2);
+    })(toc, null);
+    const node = nodeMap.get(id);
+    if (!node) return [];
+    const parent = parentMap.get(id);
+    const isBookImmediateChild = parent && !parentMap.has(String(parent.id));
+    const subtreeRoot = !parent || isBookImmediateChild ? node : parent;
+    const refs = /* @__PURE__ */ new Set();
+    const queue = [subtreeRoot];
+    while (queue.length > 0) {
+      const current = queue.shift();
+      for (const ref2 of current.refs ?? []) refs.add(ref2);
+      for (const child of current.children ?? []) queue.push(child);
+    }
+    return [...refs];
+  }
   function injectBackmatterMarkers(referenceList) {
     const container = document.querySelector("section.mt-content-container");
     if (!container) return;
@@ -25465,7 +25585,13 @@
   }
   function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey) {
     for (const [textNode, instances] of nodeMap) {
-      replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey);
+      replaceNodeCitations(
+        textNode,
+        instances,
+        formattedCitations,
+        config,
+        bibHtmlByKey
+      );
     }
   }
   function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey) {
@@ -25474,7 +25600,9 @@
     let lastIndex = 0;
     for (const { keys, matchIndex, matchLen, instanceIndex } of instances) {
       if (matchIndex > lastIndex) {
-        fragment.appendChild(document.createTextNode(text.slice(lastIndex, matchIndex)));
+        fragment.appendChild(
+          document.createTextNode(text.slice(lastIndex, matchIndex))
+        );
       }
       const formattedHtml = formattedCitations[instanceIndex] ?? "?";
       const hasSup = formattedHtml.includes("<sup");
@@ -25549,6 +25677,7 @@
       container.style.display = "block";
     } else if (displayLocation !== "endOfPage") {
       container.style.display = "none";
+    } else if (displayLocation === "endOfChapter") {
     }
     const list6 = document.createElement(config.listType);
     list6.className = "references-list";

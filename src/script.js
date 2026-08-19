@@ -1,11 +1,11 @@
-import { plugins } from '@citation-js/core';
-import '@citation-js/plugin-csl';
-import cslIeee from './csl/ieee.csl';
-import cslAma from './csl/american-medical-association.csl';
-import cslMla from './csl/modern-language-association.csl';
-import cslChicago from './csl/chicago-author-date.csl';
-import tippy from 'tippy.js';
-import tippyCss from 'tippy.js/dist/tippy.css';
+import { plugins } from "@citation-js/core";
+import "@citation-js/plugin-csl";
+import cslIeee from "./csl/ieee.csl";
+import cslAma from "./csl/american-medical-association.csl";
+import cslMla from "./csl/modern-language-association.csl";
+import cslChicago from "./csl/chicago-author-date.csl";
+import tippy from "tippy.js";
+import tippyCss from "tippy.js/dist/tippy.css";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -16,14 +16,14 @@ const LIBRARY = extractLibrary(window.location.hostname);
 
 // CSL XML bundled at build time — keyed by the style name used in FORMAT_CONFIG
 const BUNDLED_CSL_STYLES = {
-  'ieee':                         cslIeee,
-  'american-medical-association': cslAma,
-  'modern-language-association':  cslMla,
-  'chicago-author-date':          cslChicago,
+  ieee: cslIeee,
+  "american-medical-association": cslAma,
+  "modern-language-association": cslMla,
+  "chicago-author-date": cslChicago,
 };
 
 // Styles shipped inside @citation-js/plugin-csl — already registered
-const loadedCslStyles = new Set(['apa', 'vancouver', 'harvard1']);
+const loadedCslStyles = new Set(["apa", "vancouver", "harvard1"]);
 
 // ─── Format config ────────────────────────────────────────────────────────────
 // cslStyle   – name passed to citeproc engine
@@ -32,39 +32,91 @@ const loadedCslStyles = new Set(['apa', 'vancouver', 'harvard1']);
 // superscript – wrap in-text citation in <sup> when citeproc hasn't already done so
 
 const FORMAT_CONFIG = {
-  IEEE:      { cslStyle: 'ieee',                         heading: 'References',     listType: 'ul', superscript: true  },
-  Vancouver: { cslStyle: 'vancouver',                    heading: 'References',     listType: 'ul', superscript: false },
-  AMA:       { cslStyle: 'american-medical-association', heading: 'References',     listType: 'ul', superscript: true  },
-  CSM:       { cslStyle: 'ieee',                         heading: 'References',     listType: 'ul', superscript: true  },
-  ASN:       { cslStyle: 'american-medical-association', heading: 'References',     listType: 'ul', superscript: true  },
-  ANSI:      { cslStyle: 'ieee',                         heading: 'References',     listType: 'ul', superscript: true  },
-  APA:       { cslStyle: 'apa',                          heading: 'References',     listType: 'ul', superscript: false },
-  MLA:       { cslStyle: 'modern-language-association',  heading: 'Works Cited',    listType: 'ul', superscript: false },
-  Chicago:   { cslStyle: 'chicago-author-date',          heading: 'References',     listType: 'ul', superscript: false },
-  Harvard:   { cslStyle: 'harvard1',                     heading: 'Reference List', listType: 'ul', superscript: false },
+  IEEE: {
+    cslStyle: "ieee",
+    heading: "References",
+    listType: "ul",
+    superscript: true,
+  },
+  Vancouver: {
+    cslStyle: "vancouver",
+    heading: "References",
+    listType: "ul",
+    superscript: false,
+  },
+  AMA: {
+    cslStyle: "american-medical-association",
+    heading: "References",
+    listType: "ul",
+    superscript: true,
+  },
+  CSM: {
+    cslStyle: "ieee",
+    heading: "References",
+    listType: "ul",
+    superscript: true,
+  },
+  ASN: {
+    cslStyle: "american-medical-association",
+    heading: "References",
+    listType: "ul",
+    superscript: true,
+  },
+  ANSI: {
+    cslStyle: "ieee",
+    heading: "References",
+    listType: "ul",
+    superscript: true,
+  },
+  APA: {
+    cslStyle: "apa",
+    heading: "References",
+    listType: "ul",
+    superscript: false,
+  },
+  MLA: {
+    cslStyle: "modern-language-association",
+    heading: "Works Cited",
+    listType: "ul",
+    superscript: false,
+  },
+  Chicago: {
+    cslStyle: "chicago-author-date",
+    heading: "References",
+    listType: "ul",
+    superscript: false,
+  },
+  Harvard: {
+    cslStyle: "harvard1",
+    heading: "Reference List",
+    listType: "ul",
+    superscript: false,
+  },
 };
 
 // BibTeX entry types → CSL types
 const ENTRY_TYPE_MAP = {
-  article:       'article-journal',
-  incollection:  'chapter',
-  book:          'book',
-  inproceedings: 'paper-conference',
-  proceedings:   'book',
-  techreport:    'report',
-  thesis:        'thesis',
-  mastersthesis: 'thesis',
-  phdthesis:     'thesis',
-  misc:          'document',
-  online:        'webpage',
-  electronic:    'webpage',
-  unpublished:   'manuscript',
+  article: "article-journal",
+  incollection: "chapter",
+  book: "book",
+  inproceedings: "paper-conference",
+  proceedings: "book",
+  techreport: "report",
+  thesis: "thesis",
+  mastersthesis: "thesis",
+  phdthesis: "thesis",
+  misc: "document",
+  online: "webpage",
+  electronic: "webpage",
+  unpublished: "manuscript",
 };
 
 // Inject tippy's CSS + a small custom override for bibliography tooltips
-;(() => {
-  const style = document.createElement('style');
-  style.textContent = tippyCss + `
+(() => {
+  const style = document.createElement("style");
+  style.textContent =
+    tippyCss +
+    `
 .tippy-box[data-theme~="librecite"] {
   background: #fff;
   color: #222;
@@ -97,9 +149,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const pageInfo = await fetchJSON(`${API_BASE}/page/${pageID}/library/${LIBRARY}`);
-    const { projectID, lastUpdatedAt, format, displayLocation, pageTitle, backmatterPageID, backmatterReferenceList } = pageInfo;
-    const {referenceItems,toc} = await getReferences(projectID, lastUpdatedAt);
+    const pageInfo = await fetchJSON(
+      `${API_BASE}/page/${pageID}/library/${LIBRARY}`,
+    );
+    const {
+      projectID,
+      lastUpdatedAt,
+      format,
+      displayLocation,
+      pageTitle,
+      backmatterPageID,
+      backmatterReferenceList,
+      selectedList,
+    } = pageInfo;
+    const { referenceItems, toc } = await getReferences(
+      projectID,
+      lastUpdatedAt,
+    );
 
     const config = getFormatConfig(format);
     loadCslStyle(config.cslStyle);
@@ -110,17 +176,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     // When displayLocation is 'backmatter', inject hidden \librecite{key} markers
     // on every page so all backmatter references are collected and numbered
     // consistently, even if they aren't explicitly cited in the visible text.
-    if (displayLocation === 'backmatter' && Array.isArray(backmatterReferenceList) && backmatterReferenceList.length > 0) {
+    if (
+      displayLocation === "backmatter" &&
+      Array.isArray(backmatterReferenceList) &&
+      backmatterReferenceList.length > 0
+    ) {
       injectBackmatterMarkers(backmatterReferenceList);
     }
 
-    const { allInstances, nodeMap } = collectAllCitationInstances(document.body);
+    // When this page is part of a selectedList group, inject the BFS-collected
+    // refs for its TOC neighbourhood so numbering is consistent across the group.
+    if (Array.isArray(selectedList) && selectedList.includes(pageID) && toc) {
+      const groupRefs = collectGroupRefs(toc, pageID);
+      if (groupRefs.length > 0) {
+        injectBackmatterMarkers(groupRefs);
+      }
+    }
+
+    const { allInstances, nodeMap } = collectAllCitationInstances(
+      document.body,
+    );
     if (allInstances.length === 0) return;
 
-    const formattedCitations = processCitationsWithCiteproc(engine, allInstances);
+    const formattedCitations = processCitationsWithCiteproc(
+      engine,
+      allInstances,
+    );
     const bibHtmlByKey = buildBibHtmlMap(engine);
-    replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey);
-    appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID);
+    replaceAllCitationMarkers(
+      nodeMap,
+      formattedCitations,
+      config,
+      bibHtmlByKey,
+    );
+    appendReferencesSection(
+      engine,
+      config,
+      displayLocation,
+      pageID,
+      backmatterPageID,
+    );
   } catch (err) {
     console.error("Failed to load citations:", err);
   }
@@ -145,7 +240,11 @@ function getCachedReferences(projectID) {
   return raw ? JSON.parse(raw) : null;
 }
 
-function setCachedReferences(projectID, lastUpdatedAt, {referenceItems, toc}) {
+function setCachedReferences(
+  projectID,
+  lastUpdatedAt,
+  { referenceItems, toc },
+) {
   localStorage.setItem(
     getCacheKey(projectID),
     JSON.stringify({ lastUpdatedAt, referenceItems, toc }),
@@ -162,10 +261,15 @@ function isCacheValid(cached, lastUpdatedAt) {
 
 async function getReferences(projectID, lastUpdatedAt) {
   const cached = getCachedReferences(projectID);
-  if (isCacheValid(cached, lastUpdatedAt)) return cached.referenceItems;
+  if (isCacheValid(cached, lastUpdatedAt)) {
+    return { referenceItems: cached.referenceItems, toc: cached.toc };
+  }
   const data = await fetchJSON(`${API_BASE}/projects/${projectID}`);
-  setCachedReferences(projectID, lastUpdatedAt, {referenceItems: data.referenceItems, toc: data.toc});
-  return {referenceItems: data.referenceItems, toc: data.toc};
+  setCachedReferences(projectID, lastUpdatedAt, {
+    referenceItems: data.referenceItems,
+    toc: data.toc,
+  });
+  return { referenceItems: data.referenceItems, toc: data.toc };
 }
 
 // ─── CSL / Citeproc ──────────────────────────────────────────────────────────
@@ -175,14 +279,16 @@ function loadCslStyle(styleName) {
 
   const xml = BUNDLED_CSL_STYLES[styleName];
   if (!xml) {
-    throw new Error(`CSL style "${styleName}" is not bundled. Add it to src/csl/.`);
+    throw new Error(
+      `CSL style "${styleName}" is not bundled. Add it to src/csl/.`,
+    );
   }
-  plugins.config.get('@csl').styles.add(styleName, xml);
+  plugins.config.get("@csl").styles.add(styleName, xml);
   loadedCslStyles.add(styleName);
 }
 
 function buildCiteprocEngine(cslData, styleName) {
-  return plugins.config.get('@csl').engine(cslData, styleName, 'en-US', 'html');
+  return plugins.config.get("@csl").engine(cslData, styleName, "en-US", "html");
 }
 
 // Process all citation instances through citeproc in document order.
@@ -190,30 +296,34 @@ function buildCiteprocEngine(cslData, styleName) {
 // needs for correct numbering and author-date disambiguation (e.g. Smith 2020a
 // vs Smith 2020b).
 function processCitationsWithCiteproc(engine, allInstances) {
-  const uniqueIds = [...new Set(allInstances.flatMap(inst => inst.keys))];
+  const uniqueIds = [...new Set(allInstances.flatMap((inst) => inst.keys))];
   engine.updateItems(uniqueIds);
 
-  const citationTexts = new Array(allInstances.length).fill('?');
+  const citationTexts = new Array(allInstances.length).fill("?");
   const citationsPre = [];
 
   for (let i = 0; i < allInstances.length; i++) {
     const citationId = `cite-${i}`;
     const citation = {
       citationID: citationId,
-      citationItems: allInstances[i].keys.map(id => ({ id })),
+      citationItems: allInstances[i].keys.map((id) => ({ id })),
       properties: { noteIndex: 0 },
     };
 
-    const [, updates = []] = engine.processCitationCluster(citation, citationsPre, []);
+    const [, updates = []] = engine.processCitationCluster(
+      citation,
+      citationsPre,
+      [],
+    );
 
     // updates: [[position, formattedText, citationID], ...]
     // Earlier citations may be re-emitted if disambiguation changes them.
     for (const update of updates) {
       const [, text, id] = Array.isArray(update) ? update : [];
-      if (typeof id === 'string') {
-        const idx = parseInt(id.replace('cite-', ''), 10);
+      if (typeof id === "string") {
+        const idx = parseInt(id.replace("cite-", ""), 10);
         if (idx >= 0 && idx < allInstances.length) {
-          citationTexts[idx] = text ?? '?';
+          citationTexts[idx] = text ?? "?";
         }
       }
     }
@@ -232,10 +342,10 @@ function buildBibHtmlMap(engine) {
   (params.entry_ids ?? []).forEach((ids, i) => {
     const key = ids?.[0];
     if (!key) return;
-    const temp = document.createElement('div');
-    temp.innerHTML = entries[i] ?? '';
-    const cslEntry = temp.querySelector('.csl-entry');
-    map.set(key, (cslEntry ? cslEntry.innerHTML : entries[i] ?? '').trim());
+    const temp = document.createElement("div");
+    temp.innerHTML = entries[i] ?? "";
+    const cslEntry = temp.querySelector(".csl-entry");
+    map.set(key, (cslEntry ? cslEntry.innerHTML : (entries[i] ?? "")).trim());
   });
   return map;
 }
@@ -252,7 +362,7 @@ function collectAllCitationInstances(root) {
 
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     const text = node.textContent;
-    if (!text.includes('\\librecite{')) continue;
+    if (!text.includes("\\librecite{")) continue;
 
     const nodeInstances = [];
     nodeMap.set(node, nodeInstances);
@@ -274,7 +384,55 @@ function collectAllCitationInstances(root) {
 }
 
 function parseCitationKeys(content) {
-  return content.split(",").map(k => k.trim()).filter(Boolean);
+  return content
+    .split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+}
+
+// ─── TOC Helpers ─────────────────────────────────────────────────────────────
+
+// Walks the TOC tree and returns the flat set of refs that should be displayed
+// alongside pageId, using BFS over the relevant subtree:
+//
+//  • Book-immediate-child (chapter): collect from its own subtree only.
+//  • Deeper page (section/subsection): go up one level to the parent and
+//    collect from the parent's entire subtree (the page + all its siblings +
+//    all their descendants + the parent's own refs).
+//
+// TОС node shape: { id: string, refs: string[], children: TocNode[] }
+function collectGroupRefs(toc, pageId) {
+  const id = String(pageId);
+
+  // Index every node and record its parent in a single DFS pass.
+  const nodeMap = new Map();
+  const parentMap = new Map();
+
+  (function index(node, parent) {
+    nodeMap.set(String(node.id), node);
+    if (parent) parentMap.set(String(node.id), parent);
+    for (const child of node.children ?? []) index(child, node);
+  })(toc, null);
+
+  const node = nodeMap.get(id);
+  if (!node) return [];
+
+  const parent = parentMap.get(id);
+  // A node whose parent has no parent of its own is an immediate child of the
+  // book root → collect from its own subtree.  All deeper nodes → use parent.
+  const isBookImmediateChild = parent && !parentMap.has(String(parent.id));
+  const subtreeRoot = !parent || isBookImmediateChild ? node : parent;
+
+  // BFS over the chosen subtree to accumulate every ref key.
+  const refs = new Set();
+  const queue = [subtreeRoot];
+  while (queue.length > 0) {
+    const current = queue.shift();
+    for (const ref of current.refs ?? []) refs.add(ref);
+    for (const child of current.children ?? []) queue.push(child);
+  }
+
+  return [...refs];
 }
 
 // ─── DOM Manipulation ────────────────────────────────────────────────────────
@@ -284,15 +442,15 @@ function parseCitationKeys(content) {
 // text node per item in the list. This makes every backmatter reference
 // visible to collectAllCitationInstances without appearing on screen.
 function injectBackmatterMarkers(referenceList) {
-  const container = document.querySelector('section.mt-content-container');
+  const container = document.querySelector("section.mt-content-container");
   if (!container) return;
 
-  const block = document.createElement('div');
-  block.style.display = 'none';
-  block.setAttribute('aria-hidden', 'true');
+  const block = document.createElement("div");
+  block.style.display = "none";
+  block.setAttribute("aria-hidden", "true");
 
   for (const key of referenceList) {
-    const span = document.createElement('span');
+    const span = document.createElement("span");
     span.textContent = `\\librecite{${key}}`;
     block.appendChild(span);
   }
@@ -300,54 +458,73 @@ function injectBackmatterMarkers(referenceList) {
   container.insertBefore(block, container.firstChild);
 }
 
-function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey) {
+function replaceAllCitationMarkers(
+  nodeMap,
+  formattedCitations,
+  config,
+  bibHtmlByKey,
+) {
   for (const [textNode, instances] of nodeMap) {
-    replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey);
+    replaceNodeCitations(
+      textNode,
+      instances,
+      formattedCitations,
+      config,
+      bibHtmlByKey,
+    );
   }
 }
 
-function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey) {
+function replaceNodeCitations(
+  textNode,
+  instances,
+  formattedCitations,
+  config,
+  bibHtmlByKey,
+) {
   const text = textNode.textContent;
   const fragment = document.createDocumentFragment();
   let lastIndex = 0;
 
   for (const { keys, matchIndex, matchLen, instanceIndex } of instances) {
     if (matchIndex > lastIndex) {
-      fragment.appendChild(document.createTextNode(text.slice(lastIndex, matchIndex)));
+      fragment.appendChild(
+        document.createTextNode(text.slice(lastIndex, matchIndex)),
+      );
     }
 
-    const formattedHtml = formattedCitations[instanceIndex] ?? '?';
+    const formattedHtml = formattedCitations[instanceIndex] ?? "?";
 
     // Some CSL styles (e.g. AMA) emit their own <sup> via vertical-align="sup".
     // Only add a <sup> wrapper when the format wants superscript AND citeproc
     // hasn't already produced one (avoids double-nesting).
-    const hasSup = formattedHtml.includes('<sup');
-    const tag = config.superscript && !hasSup ? 'sup' : 'span';
+    const hasSup = formattedHtml.includes("<sup");
+    const tag = config.superscript && !hasSup ? "sup" : "span";
     const elem = document.createElement(tag);
-    elem.className = 'librecite';
-    elem.dataset.citationKeys = keys.join(',');
+    elem.className = "librecite";
+    elem.dataset.citationKeys = keys.join(",");
     elem.innerHTML = formattedHtml;
-    elem.setAttribute('tabindex', '0');
-    elem.setAttribute('role', 'button');
+    elem.setAttribute("tabindex", "0");
+    elem.setAttribute("role", "button");
 
     const scrollToRef = () => {
       for (const key of keys) {
         const target = document.getElementById(`ref-${key}`);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
+          target.scrollIntoView({ behavior: "smooth" });
           break;
         }
       }
     };
 
-    elem.addEventListener('click', scrollToRef);
+    elem.addEventListener("click", scrollToRef);
 
     // Build tooltip content from bibliography entries for each cited key
     const tooltipHtml = keys
-      .map(k => bibHtmlByKey?.get(k))
+      .map((k) => bibHtmlByKey?.get(k))
       .filter(Boolean)
-      .map(html => `<div class="bib-entry">${html}</div>`)
-      .join('');
+      .map((html) => `<div class="bib-entry">${html}</div>`)
+      .join("");
 
     // Create the tippy instance in manual+mouseenter mode so keyboard users
     // control visibility explicitly (Space to show, Escape to hide) while
@@ -356,26 +533,26 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config, b
       ? tippy(elem, {
           content: tooltipHtml,
           allowHTML: true,
-          theme: 'librecite',
-          placement: 'top',
+          theme: "librecite",
+          placement: "top",
           maxWidth: 420,
-          interactive: true,        // lets users click links inside the tooltip
-          appendTo: document.body,  // avoids overflow-hidden clipping
-          trigger: 'mouseenter',    // mouse hover only; keyboard handled below
+          interactive: true, // lets users click links inside the tooltip
+          appendTo: document.body, // avoids overflow-hidden clipping
+          trigger: "mouseenter", // mouse hover only; keyboard handled below
         })
       : null;
 
-    elem.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+    elem.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
         e.preventDefault();
         scrollToRef();
-      } else if (e.key === ' ') {
+      } else if (e.key === " ") {
         // Space toggles the tooltip
         e.preventDefault();
         if (instance) {
           instance.state.isVisible ? instance.hide() : instance.show();
         }
-      } else if (e.key === 'Escape') {
+      } else if (e.key === "Escape") {
         // Escape always dismisses
         if (instance) instance.hide();
       }
@@ -392,7 +569,13 @@ function replaceNodeCitations(textNode, instances, formattedCitations, config, b
   textNode.parentNode.replaceChild(fragment, textNode);
 }
 
-function appendReferencesSection(engine, config, displayLocation, pageID, backmatterPageID) {
+function appendReferencesSection(
+  engine,
+  config,
+  displayLocation,
+  pageID,
+  backmatterPageID,
+) {
   const [params, bibEntries] = engine.makeBibliography();
   if (!bibEntries?.length) return;
 
@@ -400,39 +583,39 @@ function appendReferencesSection(engine, config, displayLocation, pageID, backma
   const entryIds = params.entry_ids ?? [];
 
   // Use a pre-existing #reference-output placeholder, or create a new section.
-  let container = document.getElementById('reference-output');
+  let container = document.getElementById("reference-output");
   if (container) {
-    const section = document.createElement('section');
-    section.id = 'references';
-    const heading = document.createElement('h2');
+    const section = document.createElement("section");
+    section.id = "references";
+    const heading = document.createElement("h2");
     heading.textContent = config.heading;
     section.appendChild(heading);
     document.body.appendChild(section);
     // container = section;
-  }
-  else {
+  } else {
     return;
   }
 
-  if (displayLocation === 'backmatter' && pageID === backmatterPageID) {
-    container.style.display = 'block';
-  } else if (displayLocation !== 'endOfPage') {
-    container.style.display = 'none';
+  if (displayLocation === "backmatter" && pageID === backmatterPageID) {
+    container.style.display = "block";
+  } else if (displayLocation !== "endOfPage") {
+    container.style.display = "none";
+  } else if (displayLocation === "endOfChapter") {
   }
 
   const list = document.createElement(config.listType);
-  list.className = 'references-list';
+  list.className = "references-list";
 
   bibEntries.forEach((entryHtml, i) => {
     const key = entryIds[i]?.[0];
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     if (key) li.id = `ref-${key}`;
 
     // Citeproc wraps each entry in <div class="csl-entry">; unwrap for clean
     // <li> content that matches the existing page CSS expectations.
-    const temp = document.createElement('div');
+    const temp = document.createElement("div");
     temp.innerHTML = entryHtml;
-    const cslEntry = temp.querySelector('.csl-entry');
+    const cslEntry = temp.querySelector(".csl-entry");
     li.innerHTML = cslEntry ? cslEntry.innerHTML : entryHtml;
 
     list.appendChild(li);
@@ -446,14 +629,14 @@ function appendReferencesSection(engine, config, displayLocation, pageID, backma
 function toCslJson(item) {
   return {
     id: item.citationKey,
-    type: ENTRY_TYPE_MAP[item.entryType?.toLowerCase()] ?? 'document',
-    title: item.title ?? 'Untitled',
+    type: ENTRY_TYPE_MAP[item.entryType?.toLowerCase()] ?? "document",
+    title: item.title ?? "Untitled",
     author: parseAuthorToCsl(item.author),
-    issued: item.year ? { 'date-parts': [[Number(item.year)]] } : undefined,
-    'container-title': item.journal ?? item.booktitle ?? undefined,
+    issued: item.year ? { "date-parts": [[Number(item.year)]] } : undefined,
+    "container-title": item.journal ?? item.booktitle ?? undefined,
     volume: item.volume ?? undefined,
     issue: item.number ?? undefined,
-    page: item.pages?.replace(/--/g, '-') ?? undefined,
+    page: item.pages?.replace(/--/g, "-") ?? undefined,
     URL: item.url ?? undefined,
     publisher: item.publisher ?? undefined,
     note: item.note ?? undefined,
@@ -467,11 +650,11 @@ function parseAuthorToCsl(authorString) {
 
   return authorString
     .split(/\s+and\s+/i)
-    .map(name => name.trim())
+    .map((name) => name.trim())
     .filter(Boolean)
-    .map(name => {
-      if (name.includes(',')) {
-        const commaIdx = name.indexOf(',');
+    .map((name) => {
+      if (name.includes(",")) {
+        const commaIdx = name.indexOf(",");
         return {
           family: name.slice(0, commaIdx).trim(),
           given: name.slice(commaIdx + 1).trim(),
@@ -480,7 +663,7 @@ function parseAuthorToCsl(authorString) {
       const parts = name.split(/\s+/);
       return {
         family: parts[parts.length - 1],
-        given: parts.slice(0, -1).join(' '),
+        given: parts.slice(0, -1).join(" "),
       };
     });
 }
