@@ -598,25 +598,28 @@ function appendReferencesSection(
   // params.entry_ids is [[id1], [id2], ...] – one inner array per entry
   const entryIds = params.entry_ids ?? [];
 
-  // Use a pre-existing #reference-output placeholder, or create a new section.
-  let container = document.getElementById("reference-output");
-  if (container) {
-    const section = document.createElement("section");
-    section.id = "references";
-    const heading = document.createElement("h2");
-    heading.textContent = config.heading;
-    section.appendChild(heading);
-    document.body.appendChild(section);
-    // container = section;
-  } else {
-    return;
-  }
+  const container = document.getElementById("reference-output");
+  if (!container) return;
 
-  if (displayLocation === "backmatter" && pageID === backmatterPageID) {
+  // Heading
+  const heading = document.createElement("h2");
+  heading.textContent = config.heading;
+  container.appendChild(heading);
+
+  // Visibility: hide on non-display pages.
+  //   endOfPage      → always visible
+  //   endOfChapter   → always visible (chapter-level landing page)
+  //   backmatter     → visible only on the designated backmatter page
+  //   anything else  → hidden
+  if (displayLocation === "endOfPage" || displayLocation === "endOfChapter") {
     container.style.display = "block";
-  } else if (displayLocation !== "endOfPage") {
+  } else if (
+    displayLocation === "backmatter" &&
+    pageID === backmatterPageID
+  ) {
+    container.style.display = "block";
+  } else {
     container.style.display = "none";
-  } else if (displayLocation === "endOfChapter") {
   }
 
   const list = document.createElement(config.listType);

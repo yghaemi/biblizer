@@ -25665,22 +25665,17 @@
     const [params, bibEntries] = engine.makeBibliography();
     if (!bibEntries?.length) return;
     const entryIds = params.entry_ids ?? [];
-    let container = document.getElementById("reference-output");
-    if (container) {
-      const section = document.createElement("section");
-      section.id = "references";
-      const heading = document.createElement("h2");
-      heading.textContent = config.heading;
-      section.appendChild(heading);
-      document.body.appendChild(section);
-    } else {
-      return;
-    }
-    if (displayLocation === "backmatter" && pageID === backmatterPageID) {
+    const container = document.getElementById("reference-output");
+    if (!container) return;
+    const heading = document.createElement("h2");
+    heading.textContent = config.heading;
+    container.appendChild(heading);
+    if (displayLocation === "endOfPage" || displayLocation === "endOfChapter") {
       container.style.display = "block";
-    } else if (displayLocation !== "endOfPage") {
+    } else if (displayLocation === "backmatter" && pageID === backmatterPageID) {
+      container.style.display = "block";
+    } else {
       container.style.display = "none";
-    } else if (displayLocation === "endOfChapter") {
     }
     const list6 = document.createElement(config.listType);
     list6.className = "references-list";
