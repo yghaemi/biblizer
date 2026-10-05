@@ -28,6 +28,8 @@ import tippyCss from "tippy.js/dist/tippy.css";
 const API_BASE = `${process.env.API_HOST}/api/v1/reference`;
 const CACHE_PREFIX = "libretexts-references:";
 
+const DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
+
 const LIBRARY = extractLibrary(window.location.hostname);
 
 // CSL XML bundled at build time — keyed by the style name used in FORMAT_CONFIG
@@ -158,9 +160,14 @@ const ENTRY_TYPE_MAP = {
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const pageID = /** @type {HTMLInputElement|null} */ (document.getElementById("pageID"))?.value;
-  if (!pageID) {
-    console.error("pageID not found");
+  // Resolve the page actually in the address bar via the Deki API, so the id
+  // is right even when this page has been transcluded into another.
+  /** @type {string} */
+  let pageID;
+  try {
+    pageID = await fetchCurrentPageId(LIBRARY);
+  } catch (err) {
+    console.error("pageID not found:", err);
     return;
   }
 
@@ -173,7 +180,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       lastUpdatedAt,
       format,
       displayLocation,
-      pageTitle,
       backmatterPageID,
       backmatterReferenceList,
       selectedList,
@@ -241,6 +247,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ─── API ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Look up the current page's id through MindTouch's Deki API, keyed off
+ * window.location.
+ * @param {string} library
+ * @returns {Promise<string>}
+ */
+async function fetchCurrentPageId(library) {
+  const tokenResponse = await fetch(DEKI_TOKEN_URL);
+  if (!tokenResponse.ok) throw new Error(`HTTP ${tokenResponse.status} for ${DEKI_TOKEN_URL}`);
+  /** @type {Record<string, string>} */
+  const tokens = await tokenResponse.json();
+  const token = tokens[library];
+  if (!token) throw new Error(`No x-deki-token for library "${library}"`);
+
+  // Deki's page-by-path lookup expects the path (no leading slash, no domain)
+  // double URL-encoded as a single path segment.
+  const path = window.location.pathname.replace(/^\//, "");
+  const encodedPath = encodeURIComponent(encodeURIComponent(path));
+  const url = `https://${library}.libretexts.org/@api/deki/pages/=${encodedPath}?dream.out.format=json`;
+
+  const response = await fetch(url, {
+    headers: { "x-deki-token": token, "x-requested-with": "XMLHttpRequest" },
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
+  const data = await response.json();
+  if (!data?.["@id"]) throw new Error("Deki pages response missing @id");
+  return String(data["@id"]);
+}
 
 async function fetchJSON(url) {
   const response = await fetch(url);

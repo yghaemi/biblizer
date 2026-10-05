@@ -3,3 +3,6 @@ version.txt
 node_modules
 package-lock.json
 .env
+
+.cursor
+.vscode

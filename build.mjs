@@ -76,7 +76,7 @@ export const Blob = globalThis.Blob;
 const buildOptions = {
   entryPoints: ['src/script.js'],
   bundle: true,
-  outfile: 'script.js',
+  outfile: 'dist/script.js',
   format: 'iife',
   target: 'es2020',
   platform: 'browser',
@@ -94,7 +94,7 @@ if (watch) {
 } else {
   await Promise.all([
     esbuild.build(buildOptions),
-    esbuild.build({ ...buildOptions, outfile: 'script.min.js', minify: true }),
+    esbuild.build({ ...buildOptions, outfile: 'dist/script.min.js', minify: true }),
   ])
-  console.log('Built → script.js, script.min.js')
+  console.log('Built → dist/script.js, dist/script.min.js')
 }

@@ -25255,8 +25255,9 @@
   var tippy_default = '.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}';
 
   // src/script.js
-  var API_BASE = `${"https://occurring-attachment-monthly-sustainable.trycloudflare.com"}/api/v1/reference`;
+  var API_BASE = `${"https://knitcanvas.fun"}/api/v1/reference`;
   var CACHE_PREFIX = "libretexts-references:";
+  var DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
   var LIBRARY = extractLibrary(window.location.hostname);
   var BUNDLED_CSL_STYLES = {
     ieee: ieee_default,
@@ -25367,12 +25368,11 @@
     document.head.appendChild(style);
   })();
   document.addEventListener("DOMContentLoaded", async () => {
-    const pageID = (
-      /** @type {HTMLInputElement|null} */
-      document.getElementById("pageID")?.value
-    );
-    if (!pageID) {
-      console.error("pageID not found");
+    let pageID;
+    try {
+      pageID = await fetchCurrentPageId(LIBRARY);
+    } catch (err) {
+      console.error("pageID not found:", err);
       return;
     }
     try {
@@ -25384,7 +25384,6 @@
         lastUpdatedAt,
         format: format3,
         displayLocation,
-        pageTitle,
         backmatterPageID,
         backmatterReferenceList,
         selectedList
@@ -25435,6 +25434,23 @@
       console.error("Failed to load citations:", err);
     }
   });
+  async function fetchCurrentPageId(library) {
+    const tokenResponse = await fetch(DEKI_TOKEN_URL);
+    if (!tokenResponse.ok) throw new Error(`HTTP ${tokenResponse.status} for ${DEKI_TOKEN_URL}`);
+    const tokens = await tokenResponse.json();
+    const token = tokens[library];
+    if (!token) throw new Error(`No x-deki-token for library "${library}"`);
+    const path = window.location.pathname.replace(/^\//, "");
+    const encodedPath = encodeURIComponent(encodeURIComponent(path));
+    const url = `https://${library}.libretexts.org/@api/deki/pages/=${encodedPath}?dream.out.format=json`;
+    const response = await fetch(url, {
+      headers: { "x-deki-token": token, "x-requested-with": "XMLHttpRequest" }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
+    const data2 = await response.json();
+    if (!data2?.["@id"]) throw new Error("Deki pages response missing @id");
+    return String(data2["@id"]);
+  }
   async function fetchJSON(url) {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
