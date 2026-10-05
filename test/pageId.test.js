@@ -1,31 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { DEKI_TOKEN_URL, jsonResponse, runMain } from './helpers.js'
 
 const PAGE_ID = '10655'
 const LIBRARY = 'dev'
 const API_HOST = 'localhost:5000'
-const DEKI_TOKEN_URL = 'https://cdn.libretexts.net/authenBrowser.json'
-
-/** @param {unknown} body */
-const jsonResponse = (body, ok = true) =>
-  Promise.resolve({ ok, status: ok ? 200 : 500, json: () => Promise.resolve(body) })
-
-/**
- * Import the bundle fresh and run its DOMContentLoaded handler directly, so
- * handlers from earlier imports don't fire again.
- */
-async function runMain() {
-  /** @type {EventListener | undefined} */
-  let onReady
-  const add = document.addEventListener.bind(document)
-  vi.spyOn(document, 'addEventListener').mockImplementation((type, listener, opts) => {
-    if (type === 'DOMContentLoaded') onReady = /** @type {EventListener} */ (listener)
-    else add(type, listener, opts)
-  })
-  vi.resetModules()
-  await import('../src/script.js')
-  expect(onReady).toBeTypeOf('function')
-  await onReady?.(new Event('DOMContentLoaded'))
-}
 
 /** URLs fetch() was called with, in order. */
 const fetchedUrls = () => vi.mocked(fetch).mock.calls.map(([url]) => String(url))

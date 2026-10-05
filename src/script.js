@@ -4,6 +4,7 @@
  * @typedef {import('./types').ReferenceItem}     ReferenceItem
  * @typedef {import('./types').ProjectData}       ProjectData
  * @typedef {import('./types').TocNode}           TocNode
+ * @typedef {import('./types').ScopeGroup}        ScopeGroup
  * @typedef {import('./types').CachedProjectData} CachedProjectData
  * @typedef {import('./types').FormatConfig}      FormatConfig
  * @typedef {import('./types').CslAuthor}         CslAuthor
@@ -171,6 +172,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Bibliography containers carried in by transcluded pages belong to those
+  // pages, not this one.
+  removeForeignReferenceOutputs(pageID);
+
   try {
     const pageInfo = await fetchJSON(
       `${API_BASE}/page/${pageID}/library/${LIBRARY}`,
@@ -182,7 +187,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       displayLocation,
       backmatterPageID,
       backmatterReferenceList,
-      selectedList,
+      scope,
+      displayGroups,
     } = pageInfo;
     const { referenceItems, toc } = await getReferences(
       projectID,
@@ -202,14 +208,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     //
     //   endOfPage    → nothing to inject; the page's own visible \librecite
     //                  markers are exactly what belongs in its bibliography.
-    //   endOfChapter → every ref in the chapter subtree containing this page
-    //                  (chapter's own refs + siblings + all descendants).
+    //   endOfChapter → every ref on the pages of this page's group, in TOC
+    //                  DFS order.
     //   backmatter   → every ref in the book.
     const scopeRefs = collectScopeRefs(
       displayLocation,
       toc,
       pageID,
       backmatterReferenceList,
+      scope?.groups,
     );
     if (scopeRefs.length > 0) injectCitationMarkers(scopeRefs);
 
@@ -230,17 +237,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       bibHtmlByKey,
     );
     const refUsageMap = buildRefUsageMap(toc);
-    appendReferencesSection(
-      engine,
-      config,
-      shouldDisplayBibliography(
-        displayLocation,
-        pageID,
-        backmatterPageID,
-        selectedList,
-      ),
-      refUsageMap,
-    );
+    const render = (/** @type {HTMLElement} */ container) =>
+      appendReferencesSection(engine, config, container, refUsageMap);
+
+    switch (displayLocation) {
+      case "endOfPage":
+        render(getOrCreateReferenceOutput(pageID));
+        break;
+      case "endOfChapter":
+        // Only a group's target page shows the bibliography, once its
+        // container is in the DOM.
+        if (isGroupTarget(pageID, displayGroups, scope?.groups)) {
+          whenElementPresent(referenceOutputId(pageID), render);
+        }
+        break;
+      case "backmatter":
+        if (pageID === String(backmatterPageID)) {
+          render(getOrCreateReferenceOutput(pageID));
+        }
+        break;
+    }
   } catch (err) {
     console.error("Failed to load citations:", err);
   }
@@ -455,6 +471,7 @@ function parseCitationKeys(content) {
  * @param {TocNode|null|undefined} toc
  * @param {string} pageID
  * @param {string[]|null|undefined} backmatterReferenceList
+ * @param {ScopeGroup[]|null|undefined} groups
  * @returns {string[]}
  */
 function collectScopeRefs(
@@ -462,9 +479,12 @@ function collectScopeRefs(
   toc,
   pageID,
   backmatterReferenceList,
+  groups,
 ) {
   if (displayLocation === "endOfChapter") {
-    return collectChapterRefs(toc, pageID);
+    const group = groups?.find((g) => g.pageIds.map(String).includes(pageID));
+    // Without saved groups, fall back to the page's whole chapter subtree.
+    return group ? collectGroupRefs(toc, group.pageIds) : collectChapterRefs(toc, pageID);
   }
   if (displayLocation === "backmatter") {
     // The API normally supplies the book-wide list; fall back to walking the
@@ -522,6 +542,29 @@ function collectChapterRefs(toc, pageId) {
   }
 
   return subtreeRefs(node);
+}
+
+/**
+ * DFS (pre-order, i.e. reading order) over the TOC collecting the ref keys of
+ * the pages in a group, first-seen order.  Every page of the group gets the
+ * same key order, so numeric citation numbers match the group bibliography.
+ *
+ * @param {TocNode|null|undefined} toc
+ * @param {string[]} pageIds
+ * @returns {string[]}
+ */
+function collectGroupRefs(toc, pageIds) {
+  if (!toc) return [];
+  const members = new Set(pageIds.map(String));
+  /** @type {Set<string>} */
+  const refs = new Set();
+  (function visit(node) {
+    if (members.has(String(node.id))) {
+      for (const ref of node.refs ?? []) refs.add(ref);
+    }
+    for (const child of node.children ?? []) visit(child);
+  })(toc);
+  return [...refs];
 }
 
 /**
@@ -727,65 +770,103 @@ function replaceNodeCitations(
   textNode.parentNode.replaceChild(fragment, textNode);
 }
 
+// ─── Bibliography containers ────────────────────────────────────────────────
+// A page's bibliography renders into
+//   <div class="reference-output" id="reference-output-{pageID}">
+
+/** @param {string} pageID */
+function referenceOutputId(pageID) {
+  return `reference-output-${pageID}`;
+}
+
 /**
- * Whether this page is the one that renders the bibliography for its scope.
- *
- *   endOfPage    → every page shows its own bibliography
- *   endOfChapter → only the chapter's designated page (a selectedList member)
- *   backmatter   → only the designated backmatter page
- *
- * Non-display pages still build the bibliography — that is what assigns the
- * citation numbers — they just keep the container hidden.
- *
- * @param {string} displayLocation
+ * Remove every .reference-output that belongs to another page (carried in by
+ * transclusion).
  * @param {string} pageID
- * @param {string|null|undefined} backmatterPageID
- * @param {string[]|null|undefined} selectedList
+ */
+function removeForeignReferenceOutputs(pageID) {
+  const ownId = referenceOutputId(pageID);
+  for (const el of document.querySelectorAll(".reference-output")) {
+    if (el.id !== ownId) el.remove();
+  }
+}
+
+/**
+ * This page's container, or a new one appended as the last child of
+ * `#elm-main-content > section` when the page doesn't provide one.
+ * @param {string} pageID
+ * @returns {HTMLElement}
+ */
+function getOrCreateReferenceOutput(pageID) {
+  const id = referenceOutputId(pageID);
+  const existing = document.getElementById(id);
+  if (existing) return existing;
+
+  const container = document.createElement("div");
+  container.className = "reference-output";
+  container.id = id;
+  const parent =
+    document.querySelector("#elm-main-content > section") ??
+    document.querySelector("section.mt-content-container") ??
+    document.body;
+  parent.appendChild(container);
+  return container;
+}
+
+/**
+ * Whether this page is the target of a bibliography group.  `displayGroups`
+ * is the API's list of groups this page renders; `groups` is the full scope
+ * as a fallback.
+ * @param {string} pageID
+ * @param {ScopeGroup[]|null|undefined} displayGroups
+ * @param {ScopeGroup[]|null|undefined} groups
  * @returns {boolean}
  */
-function shouldDisplayBibliography(
-  displayLocation,
-  pageID,
-  backmatterPageID,
-  selectedList,
-) {
-  const isSelected =
-    Array.isArray(selectedList) && selectedList.includes(pageID);
+function isGroupTarget(pageID, displayGroups, groups) {
+  return [...(displayGroups ?? []), ...(groups ?? [])].some(
+    (g) => String(g.targetPageId) === pageID,
+  );
+}
 
-  switch (displayLocation) {
-    case "endOfPage":
-      return true;
-    case "endOfChapter":
-      return isSelected;
-    case "backmatter":
-      return pageID === backmatterPageID || isSelected;
-    default:
-      return false;
+/**
+ * Call `callback` with the element once it is in the DOM — now if it already
+ * is, otherwise as soon as it is added.
+ * @param {string} id
+ * @param {(el: HTMLElement) => void} callback
+ */
+function whenElementPresent(id, callback) {
+  const existing = document.getElementById(id);
+  if (existing) {
+    callback(existing);
+    return;
   }
+  const observer = new MutationObserver(() => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    observer.disconnect();
+    callback(el);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
 }
 
 /**
  * @param {CiteprocEngine} engine
  * @param {FormatConfig} config
- * @param {boolean} visible  whether this page renders the bibliography
+ * @param {HTMLElement} container  where the bibliography is rendered
  * @param {Map<string, {id: string, title: string}[]>} refUsageMap  citationKey → pages that cite it
  */
-function appendReferencesSection(engine, config, visible, refUsageMap) {
+function appendReferencesSection(engine, config, container, refUsageMap) {
   const [params, bibEntries] = engine.makeBibliography();
   if (!bibEntries?.length) return;
 
   // params.entry_ids is [[id1], [id2], ...] – one inner array per entry
   const entryIds = params.entry_ids ?? [];
 
-  const container = document.getElementById("reference-output");
-  if (!container) return;
-
   // Heading
   const heading = document.createElement("h2");
   heading.textContent = config.heading;
   container.appendChild(heading);
 
-  container.style.display = visible ? "block" : "none";
 
   const list = document.createElement(config.listType);
   list.className = "references-list";

@@ -18,6 +18,17 @@ export interface PageInfo {
   backmatterReferenceList: string[];
   /** Page IDs that belong to a group sharing a single bibliography. */
   selectedList: string[];
+  /** Every bibliography group in the book (endOfChapter). */
+  scope?: { mode: string; groups: ScopeGroup[] };
+  /** Groups whose bibliography this page renders (it is their target). */
+  displayGroups?: ScopeGroup[];
+}
+
+/** Pages sharing one bibliography, rendered on `targetPageId`. */
+export interface ScopeGroup {
+  groupID: string;
+  pageIds: string[];
+  targetPageId: string;
 }
 
 // ─── API – Project data ───────────────────────────────────────────────────────

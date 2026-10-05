@@ -25375,6 +25375,7 @@
       console.error("pageID not found:", err);
       return;
     }
+    removeForeignReferenceOutputs(pageID);
     try {
       const pageInfo = await fetchJSON(
         `${API_BASE}/page/${pageID}/library/${LIBRARY}`
@@ -25386,7 +25387,8 @@
         displayLocation,
         backmatterPageID,
         backmatterReferenceList,
-        selectedList
+        scope,
+        displayGroups
       } = pageInfo;
       const { referenceItems, toc } = await getReferences(
         projectID,
@@ -25400,7 +25402,8 @@
         displayLocation,
         toc,
         pageID,
-        backmatterReferenceList
+        backmatterReferenceList,
+        scope?.groups
       );
       if (scopeRefs.length > 0) injectCitationMarkers(scopeRefs);
       const { allInstances, nodeMap } = collectAllCitationInstances(
@@ -25419,17 +25422,22 @@
         bibHtmlByKey
       );
       const refUsageMap = buildRefUsageMap(toc);
-      appendReferencesSection(
-        engine,
-        config,
-        shouldDisplayBibliography(
-          displayLocation,
-          pageID,
-          backmatterPageID,
-          selectedList
-        ),
-        refUsageMap
-      );
+      const render2 = (container) => appendReferencesSection(engine, config, container, refUsageMap);
+      switch (displayLocation) {
+        case "endOfPage":
+          render2(getOrCreateReferenceOutput(pageID));
+          break;
+        case "endOfChapter":
+          if (isGroupTarget(pageID, displayGroups, scope?.groups)) {
+            whenElementPresent(referenceOutputId(pageID), render2);
+          }
+          break;
+        case "backmatter":
+          if (pageID === String(backmatterPageID)) {
+            render2(getOrCreateReferenceOutput(pageID));
+          }
+          break;
+      }
     } catch (err) {
       console.error("Failed to load citations:", err);
     }
@@ -25569,9 +25577,10 @@
   function parseCitationKeys(content) {
     return content.split(",").map((k) => k.trim()).filter(Boolean);
   }
-  function collectScopeRefs(displayLocation, toc, pageID, backmatterReferenceList) {
+  function collectScopeRefs(displayLocation, toc, pageID, backmatterReferenceList, groups) {
     if (displayLocation === "endOfChapter") {
-      return collectChapterRefs(toc, pageID);
+      const group = groups?.find((g) => g.pageIds.map(String).includes(pageID));
+      return group ? collectGroupRefs(toc, group.pageIds) : collectChapterRefs(toc, pageID);
     }
     if (displayLocation === "backmatter") {
       return backmatterReferenceList?.length ? [...backmatterReferenceList] : collectAllTocRefs(toc);
@@ -25596,6 +25605,18 @@
       node = parent;
     }
     return subtreeRefs(node);
+  }
+  function collectGroupRefs(toc, pageIds) {
+    if (!toc) return [];
+    const members = new Set(pageIds.map(String));
+    const refs = /* @__PURE__ */ new Set();
+    (function visit(node) {
+      if (members.has(String(node.id))) {
+        for (const ref2 of node.refs ?? []) refs.add(ref2);
+      }
+      for (const child of node.children ?? []) visit(child);
+    })(toc);
+    return [...refs];
   }
   function collectAllTocRefs(toc) {
     return toc ? subtreeRefs(toc) : [];
@@ -25719,29 +25740,52 @@
     }
     textNode.parentNode.replaceChild(fragment, textNode);
   }
-  function shouldDisplayBibliography(displayLocation, pageID, backmatterPageID, selectedList) {
-    const isSelected = Array.isArray(selectedList) && selectedList.includes(pageID);
-    switch (displayLocation) {
-      case "endOfPage":
-        return true;
-      case "endOfChapter":
-        return isSelected;
-      case "backmatter":
-        return pageID === backmatterPageID || isSelected;
-      default:
-        return false;
+  function referenceOutputId(pageID) {
+    return `reference-output-${pageID}`;
+  }
+  function removeForeignReferenceOutputs(pageID) {
+    const ownId = referenceOutputId(pageID);
+    for (const el of document.querySelectorAll(".reference-output")) {
+      if (el.id !== ownId) el.remove();
     }
   }
-  function appendReferencesSection(engine, config, visible, refUsageMap) {
+  function getOrCreateReferenceOutput(pageID) {
+    const id = referenceOutputId(pageID);
+    const existing = document.getElementById(id);
+    if (existing) return existing;
+    const container = document.createElement("div");
+    container.className = "reference-output";
+    container.id = id;
+    const parent = document.querySelector("#elm-main-content > section") ?? document.querySelector("section.mt-content-container") ?? document.body;
+    parent.appendChild(container);
+    return container;
+  }
+  function isGroupTarget(pageID, displayGroups, groups) {
+    return [...displayGroups ?? [], ...groups ?? []].some(
+      (g) => String(g.targetPageId) === pageID
+    );
+  }
+  function whenElementPresent(id, callback) {
+    const existing = document.getElementById(id);
+    if (existing) {
+      callback(existing);
+      return;
+    }
+    const observer = new MutationObserver(() => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      observer.disconnect();
+      callback(el);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+  function appendReferencesSection(engine, config, container, refUsageMap) {
     const [params, bibEntries] = engine.makeBibliography();
     if (!bibEntries?.length) return;
     const entryIds = params.entry_ids ?? [];
-    const container = document.getElementById("reference-output");
-    if (!container) return;
     const heading = document.createElement("h2");
     heading.textContent = config.heading;
     container.appendChild(heading);
-    container.style.display = visible ? "block" : "none";
     const list6 = document.createElement(config.listType);
     list6.className = "references-list";
     bibEntries.forEach((entryHtml, i) => {
