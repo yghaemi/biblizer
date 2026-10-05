@@ -25364,6 +25364,13 @@
   padding-top: .4em;
 }
 .tippy-box[data-theme~="librecite"] a { color: #0645ad; }
+
+/* Numeric styles (IEEE, AMA, \u2026) emit the label and the entry as two block
+   divs; lay them out on one line with the entry text hanging-indented. */
+.csl-flush { display: flex; gap: .5em; }
+.references-list li.csl-flush { list-style: none; }
+.csl-flush > .csl-left-margin { flex: none; min-width: 2.25em; }
+.csl-flush > .csl-right-inline { flex: 1; min-width: 0; }
 `;
     document.head.appendChild(style);
   })();
@@ -25704,7 +25711,10 @@
         }
       };
       elem.addEventListener("click", scrollToRef);
-      const tooltipHtml = keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map((html) => `<div class="bib-entry">${html}</div>`).join("");
+      const tooltipHtml = keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map((html) => {
+        const flush = html.includes("csl-left-margin") ? " csl-flush" : "";
+        return `<div class="bib-entry${flush}">${html}</div>`;
+      }).join("");
       const instance = tooltipHtml ? tippy_esm_default(elem, {
         content: tooltipHtml,
         allowHTML: true,
@@ -25796,6 +25806,7 @@
       temp.innerHTML = entryHtml;
       const cslEntry = temp.querySelector(".csl-entry");
       li.innerHTML = cslEntry ? cslEntry.innerHTML : entryHtml;
+      if (li.querySelector(":scope > .csl-left-margin")) li.classList.add("csl-flush");
       if (key && refUsageMap) {
         const pages = refUsageMap.get(key);
         if (pages && pages.length > 0) {

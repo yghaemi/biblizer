@@ -154,6 +154,13 @@ const ENTRY_TYPE_MAP = {
   padding-top: .4em;
 }
 .tippy-box[data-theme~="librecite"] a { color: #0645ad; }
+
+/* Numeric styles (IEEE, AMA, …) emit the label and the entry as two block
+   divs; lay them out on one line with the entry text hanging-indented. */
+.csl-flush { display: flex; gap: .5em; }
+.references-list li.csl-flush { list-style: none; }
+.csl-flush > .csl-left-margin { flex: none; min-width: 2.25em; }
+.csl-flush > .csl-right-inline { flex: 1; min-width: 0; }
 `;
   document.head.appendChild(style);
 })();
@@ -722,7 +729,10 @@ function replaceNodeCitations(
     const tooltipHtml = keys
       .map((k) => bibHtmlByKey?.get(k))
       .filter(Boolean)
-      .map((html) => `<div class="bib-entry">${html}</div>`)
+      .map((html) => {
+        const flush = html.includes("csl-left-margin") ? " csl-flush" : "";
+        return `<div class="bib-entry${flush}">${html}</div>`;
+      })
       .join("");
 
     // Create the tippy instance in manual+mouseenter mode so keyboard users
@@ -882,6 +892,7 @@ function appendReferencesSection(engine, config, container, refUsageMap) {
     temp.innerHTML = entryHtml;
     const cslEntry = temp.querySelector(".csl-entry");
     li.innerHTML = cslEntry ? cslEntry.innerHTML : entryHtml;
+    if (li.querySelector(":scope > .csl-left-margin")) li.classList.add("csl-flush");
 
     // Tooltip: list the TOC page titles (with links) that cite this reference.
     if (key && refUsageMap) {

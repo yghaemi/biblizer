@@ -129,6 +129,29 @@ describe('bibliography rendering', () => {
     })
   })
 
+  describe('entry layout', () => {
+    it('puts the number and the entry of numeric styles on one line', async () => {
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', format: 'IEEE' })
+
+      await runMain()
+
+      const li = document.getElementById('ref-A')
+      expect(li?.classList.contains('csl-flush')).toBe(true)
+      expect(li?.querySelector(':scope > .csl-left-margin')?.textContent).toBe('[1]')
+      expect(li?.querySelector(':scope > .csl-right-inline')?.textContent).toContain('Title A')
+    })
+
+    it('leaves author-date entries as plain text', async () => {
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', format: 'APA' })
+
+      await runMain()
+
+      expect(document.getElementById('ref-A')?.classList.contains('csl-flush')).toBe(false)
+    })
+  })
+
   describe('scenario 2: chapter group', () => {
     const chapterInfo = { displayLocation: 'endOfChapter', scope: { mode: 'CHAPTER', groups } }
 
