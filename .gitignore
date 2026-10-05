@@ -6,3 +6,7 @@ package-lock.json
 
 .cursor
 .vscode
+.claude/
+.claude/*
+
+*/CLAUDE.md
