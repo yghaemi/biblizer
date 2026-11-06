@@ -165,13 +165,32 @@ describe('bibliography rendering', () => {
       expect(citationTexts().at(-1)).toBe('[2]')
     })
 
-    it('does not render on a page that is not the group target', async () => {
+    it('renders the group on a non-target page that has its own container', async () => {
       setPage('<p>Text \\librecite{A}</p><div class="reference-output" id="reference-output-3"></div>')
       stubApi('3', { ...chapterInfo, displayGroups: [] })
 
       await runMain()
 
-      expect(entryIds(document.getElementById('reference-output-3'))).toEqual([])
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A', 'ref-B', 'ref-C'])
+    })
+
+    it('renders the group when no targetPageId is set but the container exists', async () => {
+      const untargeted = groups.map(({ targetPageId, ...g }) => g)
+      setPage('<p>Text \\librecite{A}</p><div class="reference-output" id="reference-output-3"></div>')
+      stubApi('3', { displayLocation: 'endOfChapter', scope: { mode: 'CHAPTER', groups: untargeted }, displayGroups: [] })
+
+      await runMain()
+
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A', 'ref-B', 'ref-C'])
+    })
+
+    it('does not create a container on a non-target page', async () => {
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', { ...chapterInfo, displayGroups: [] })
+
+      await runMain()
+
+      expect(document.querySelector('.reference-output')).toBeNull()
     })
 
     it('renders the whole group on the target page once its container appears', async () => {

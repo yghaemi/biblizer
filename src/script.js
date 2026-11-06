@@ -252,10 +252,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         render(getOrCreateReferenceOutput(pageID));
         break;
       case "endOfChapter":
-        // Only a group's target page shows the bibliography, once its
-        // container is in the DOM.
+        // A group's target page shows the bibliography once its container is
+        // in the DOM; any other page in the group shows it only if it already
+        // has its own container.
         if (isGroupTarget(pageID, displayGroups, scope?.groups)) {
           whenElementPresent(referenceOutputId(pageID), render);
+        } else {
+          const own = document.getElementById(referenceOutputId(pageID));
+          if (own) render(own);
         }
         break;
       case "backmatter":

@@ -25437,6 +25437,9 @@
         case "endOfChapter":
           if (isGroupTarget(pageID, displayGroups, scope?.groups)) {
             whenElementPresent(referenceOutputId(pageID), render2);
+          } else {
+            const own = document.getElementById(referenceOutputId(pageID));
+            if (own) render2(own);
           }
           break;
         case "backmatter":
