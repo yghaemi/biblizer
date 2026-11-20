@@ -73,7 +73,7 @@
         if (Array.isArray(arr)) return arr;
       }
       var punctutationMatcher = (string) => string.replace(/$|( )|(?!^)(?=[A-Z])/g, "\\.?$1");
-      var getListMatcher = (list6) => `(?:${list6.join("|")})\\b`;
+      var getListMatcher = (list11) => `(?:${list11.join("|")})\\b`;
       var getSplittingRegex = (matcher, flags) => new RegExp(`(?:^| )(${matcher}$)`, flags);
       var titles = ["mr", "mrs", "ms", "miss", "dr", "herr", "monsieur", "hr", "frau", "a v m", "admiraal", "admiral", "air cdre", "air commodore", "air marshal", "air vice marshal", "alderman", "alhaji", "ambassador", "baron", "barones", "brig", "brig gen", "brig general", "brigadier", "brigadier general", "brother", "canon", "capt", "captain", "cardinal", "cdr", "chief", "cik", "cmdr", "coach", "col", "col dr", "colonel", "commandant", "commander", "commissioner", "commodore", "comte", "comtessa", "congressman", "conseiller", "consul", "conte", "contessa", "corporal", "councillor", "count", "countess", "crown prince", "crown princess", "dame", "datin", "dato", "datuk", "datuk seri", "deacon", "deaconess", "dean", "dhr", "dipl ing", "doctor", "dott", "dott sa", "dr", "dr ing", "dra", "drs", "embajador", "embajadora", "en", "encik", "eng", "eur ing", "exma sra", "exmo sr", "f o", "father", "first lieutient", "first officer", "flt lieut", "flying officer", "fr", "frau", "fraulein", "fru", "gen", "generaal", "general", "governor", "graaf", "gravin", "group captain", "grp capt", "h e dr", "h h", "h m", "h r h", "hajah", "haji", "hajim", "her highness", "her majesty", "herr", "high chief", "his highness", "his holiness", "his majesty", "hon", "hr", "hra", "ing", "ir", "jonkheer", "judge", "justice", "khun ying", "kolonel", "lady", "lcda", "lic", "lieut", "lieut cdr", "lieut col", "lieut gen", "lord", "m", "m l", "m r", "madame", "mademoiselle", "maj gen", "major", "master", "mevrouw", "miss", "mlle", "mme", "monsieur", "monsignor", "mr", "mrs", "ms", "mstr", "nti", "pastor", "president", "prince", "princess", "princesse", "prinses", "prof", "prof dr", "prof sir", "professor", "puan", "puan sri", "rabbi", "rear admiral", "rev", "rev canon", "rev dr", "rev mother", "reverend", "rva", "senator", "sergeant", "sheikh", "sheikha", "sig", "sig na", "sig ra", "sir", "sister", "sqn ldr", "sr", "sr d", "sra", "srta", "sultan", "tan sri", "tan sri dato", "tengku", "teuku", "than puying", "the hon dr", "the hon justice", "the hon miss", "the hon mr", "the hon mrs", "the hon ms", "the hon sir", "the very rev", "toh puan", "tun", "vice admiral", "viscount", "viscountess", "wg cdr"];
       var suffixes = ["I", "II", "III", "IV", "V", "Senior", "Junior", "Jr", "Sr", "PhD", "Ph\\.D", "APR", "RPh", "PE", "MD", "MA", "DMD", "CME", "BVM", "CFRE", "CLU", "CPA", "CSC", "CSJ", "DC", "DD", "DDS", "DO", "DVM", "EdD", "Esq", "JD", "LLD", "OD", "OSB", "PC", "Ret", "RGS", "RN", "RNC", "SHCJ", "SJ", "SNJM", "SSMO", "USA", "USAF", "USAFR", "USAR", "USCG", "USMC", "USMCR", "USN", "USNR"];
@@ -85,7 +85,7 @@
       var suffixSplitter = getSplittingRegex(`(?:${suffixMatcher}, )*(?:${suffixMatcher})`, "i");
       var particleSplitter = getSplittingRegex(`${/(?:[A-Z\xC0-\xD6\xD8-\xDE\u0100\u0102\u0104\u0106\u0108\u010A\u010C\u010E\u0110\u0112\u0114\u0116\u0118\u011A\u011C\u011E\u0120\u0122\u0124\u0126\u0128\u012A\u012C\u012E\u0130\u0132\u0134\u0136\u0139\u013B\u013D\u013F\u0141\u0143\u0145\u0147\u014A\u014C\u014E\u0150\u0152\u0154\u0156\u0158\u015A\u015C\u015E\u0160\u0162\u0164\u0166\u0168\u016A\u016C\u016E\u0170\u0172\u0174\u0176\u0178\u0179\u017B\u017D\u0181\u0182\u0184\u0186\u0187\u0189-\u018B\u018E-\u0191\u0193\u0194\u0196-\u0198\u019C\u019D\u019F\u01A0\u01A2\u01A4\u01A6\u01A7\u01A9\u01AC\u01AE\u01AF\u01B1-\u01B3\u01B5\u01B7\u01B8\u01BC\u01C4\u01C7\u01CA\u01CD\u01CF\u01D1\u01D3\u01D5\u01D7\u01D9\u01DB\u01DE\u01E0\u01E2\u01E4\u01E6\u01E8\u01EA\u01EC\u01EE\u01F1\u01F4\u01F6-\u01F8\u01FA\u01FC\u01FE\u0200\u0202\u0204\u0206\u0208\u020A\u020C\u020E\u0210\u0212\u0214\u0216\u0218\u021A\u021C\u021E\u0220\u0222\u0224\u0226\u0228\u022A\u022C\u022E\u0230\u0232\u023A\u023B\u023D\u023E\u0241\u0243-\u0246\u0248\u024A\u024C\u024E\u0370\u0372\u0376\u037F\u0386\u0388-\u038A\u038C\u038E\u038F\u0391-\u03A1\u03A3-\u03AB\u03CF\u03D2-\u03D4\u03D8\u03DA\u03DC\u03DE\u03E0\u03E2\u03E4\u03E6\u03E8\u03EA\u03EC\u03EE\u03F4\u03F7\u03F9\u03FA\u03FD-\u042F\u0460\u0462\u0464\u0466\u0468\u046A\u046C\u046E\u0470\u0472\u0474\u0476\u0478\u047A\u047C\u047E\u0480\u048A\u048C\u048E\u0490\u0492\u0494\u0496\u0498\u049A\u049C\u049E\u04A0\u04A2\u04A4\u04A6\u04A8\u04AA\u04AC\u04AE\u04B0\u04B2\u04B4\u04B6\u04B8\u04BA\u04BC\u04BE\u04C0\u04C1\u04C3\u04C5\u04C7\u04C9\u04CB\u04CD\u04D0\u04D2\u04D4\u04D6\u04D8\u04DA\u04DC\u04DE\u04E0\u04E2\u04E4\u04E6\u04E8\u04EA\u04EC\u04EE\u04F0\u04F2\u04F4\u04F6\u04F8\u04FA\u04FC\u04FE\u0500\u0502\u0504\u0506\u0508\u050A\u050C\u050E\u0510\u0512\u0514\u0516\u0518\u051A\u051C\u051E\u0520\u0522\u0524\u0526\u0528\u052A\u052C\u052E\u0531-\u0556\u10A0-\u10C5\u10C7\u10CD\u13A0-\u13F5\u1C90-\u1CBA\u1CBD-\u1CBF\u1E00\u1E02\u1E04\u1E06\u1E08\u1E0A\u1E0C\u1E0E\u1E10\u1E12\u1E14\u1E16\u1E18\u1E1A\u1E1C\u1E1E\u1E20\u1E22\u1E24\u1E26\u1E28\u1E2A\u1E2C\u1E2E\u1E30\u1E32\u1E34\u1E36\u1E38\u1E3A\u1E3C\u1E3E\u1E40\u1E42\u1E44\u1E46\u1E48\u1E4A\u1E4C\u1E4E\u1E50\u1E52\u1E54\u1E56\u1E58\u1E5A\u1E5C\u1E5E\u1E60\u1E62\u1E64\u1E66\u1E68\u1E6A\u1E6C\u1E6E\u1E70\u1E72\u1E74\u1E76\u1E78\u1E7A\u1E7C\u1E7E\u1E80\u1E82\u1E84\u1E86\u1E88\u1E8A\u1E8C\u1E8E\u1E90\u1E92\u1E94\u1E9E\u1EA0\u1EA2\u1EA4\u1EA6\u1EA8\u1EAA\u1EAC\u1EAE\u1EB0\u1EB2\u1EB4\u1EB6\u1EB8\u1EBA\u1EBC\u1EBE\u1EC0\u1EC2\u1EC4\u1EC6\u1EC8\u1ECA\u1ECC\u1ECE\u1ED0\u1ED2\u1ED4\u1ED6\u1ED8\u1EDA\u1EDC\u1EDE\u1EE0\u1EE2\u1EE4\u1EE6\u1EE8\u1EEA\u1EEC\u1EEE\u1EF0\u1EF2\u1EF4\u1EF6\u1EF8\u1EFA\u1EFC\u1EFE\u1F08-\u1F0F\u1F18-\u1F1D\u1F28-\u1F2F\u1F38-\u1F3F\u1F48-\u1F4D\u1F59\u1F5B\u1F5D\u1F5F\u1F68-\u1F6F\u1FB8-\u1FBB\u1FC8-\u1FCB\u1FD8-\u1FDB\u1FE8-\u1FEC\u1FF8-\u1FFB\u2102\u2107\u210B-\u210D\u2110-\u2112\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u2130-\u2133\u213E\u213F\u2145\u2160-\u216F\u2183\u24B6-\u24CF\u2C00-\u2C2E\u2C60\u2C62-\u2C64\u2C67\u2C69\u2C6B\u2C6D-\u2C70\u2C72\u2C75\u2C7E-\u2C80\u2C82\u2C84\u2C86\u2C88\u2C8A\u2C8C\u2C8E\u2C90\u2C92\u2C94\u2C96\u2C98\u2C9A\u2C9C\u2C9E\u2CA0\u2CA2\u2CA4\u2CA6\u2CA8\u2CAA\u2CAC\u2CAE\u2CB0\u2CB2\u2CB4\u2CB6\u2CB8\u2CBA\u2CBC\u2CBE\u2CC0\u2CC2\u2CC4\u2CC6\u2CC8\u2CCA\u2CCC\u2CCE\u2CD0\u2CD2\u2CD4\u2CD6\u2CD8\u2CDA\u2CDC\u2CDE\u2CE0\u2CE2\u2CEB\u2CED\u2CF2\uA640\uA642\uA644\uA646\uA648\uA64A\uA64C\uA64E\uA650\uA652\uA654\uA656\uA658\uA65A\uA65C\uA65E\uA660\uA662\uA664\uA666\uA668\uA66A\uA66C\uA680\uA682\uA684\uA686\uA688\uA68A\uA68C\uA68E\uA690\uA692\uA694\uA696\uA698\uA69A\uA722\uA724\uA726\uA728\uA72A\uA72C\uA72E\uA732\uA734\uA736\uA738\uA73A\uA73C\uA73E\uA740\uA742\uA744\uA746\uA748\uA74A\uA74C\uA74E\uA750\uA752\uA754\uA756\uA758\uA75A\uA75C\uA75E\uA760\uA762\uA764\uA766\uA768\uA76A\uA76C\uA76E\uA779\uA77B\uA77D\uA77E\uA780\uA782\uA784\uA786\uA78B\uA78D\uA790\uA792\uA796\uA798\uA79A\uA79C\uA79E\uA7A0\uA7A2\uA7A4\uA7A6\uA7A8\uA7AA-\uA7AE\uA7B0-\uA7B4\uA7B6\uA7B8\uFF21-\uFF3A]|\uD801[\uDC00-\uDC27\uDCB0-\uDCD3]|\uD803[\uDC80-\uDCB2]|\uD806[\uDCA0-\uDCBF]|\uD81B[\uDE40-\uDE5F]|\uD835[\uDC00-\uDC19\uDC34-\uDC4D\uDC68-\uDC81\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB5\uDCD0-\uDCE9\uDD04\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD38\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD6C-\uDD85\uDDA0-\uDDB9\uDDD4-\uDDED\uDE08-\uDE21\uDE3C-\uDE55\uDE70-\uDE89\uDEA8-\uDEC0\uDEE2-\uDEFA\uDF1C-\uDF34\uDF56-\uDF6E\uDF90-\uDFA8\uDFCA]|\uD83A[\uDD00-\uDD21]|\uD83C[\uDD30-\uDD49\uDD50-\uDD69\uDD70-\uDD89])/.source}.*`);
       var endSplitter = getSplittingRegex(`(?:${/(?:[a-z\xAA\xB5\xBA\xDF-\xF6\xF8-\xFF\u0101\u0103\u0105\u0107\u0109\u010B\u010D\u010F\u0111\u0113\u0115\u0117\u0119\u011B\u011D\u011F\u0121\u0123\u0125\u0127\u0129\u012B\u012D\u012F\u0131\u0133\u0135\u0137\u0138\u013A\u013C\u013E\u0140\u0142\u0144\u0146\u0148\u0149\u014B\u014D\u014F\u0151\u0153\u0155\u0157\u0159\u015B\u015D\u015F\u0161\u0163\u0165\u0167\u0169\u016B\u016D\u016F\u0171\u0173\u0175\u0177\u017A\u017C\u017E-\u0180\u0183\u0185\u0188\u018C\u018D\u0192\u0195\u0199-\u019B\u019E\u01A1\u01A3\u01A5\u01A8\u01AA\u01AB\u01AD\u01B0\u01B4\u01B6\u01B9\u01BA\u01BD-\u01BF\u01C6\u01C9\u01CC\u01CE\u01D0\u01D2\u01D4\u01D6\u01D8\u01DA\u01DC\u01DD\u01DF\u01E1\u01E3\u01E5\u01E7\u01E9\u01EB\u01ED\u01EF\u01F0\u01F3\u01F5\u01F9\u01FB\u01FD\u01FF\u0201\u0203\u0205\u0207\u0209\u020B\u020D\u020F\u0211\u0213\u0215\u0217\u0219\u021B\u021D\u021F\u0221\u0223\u0225\u0227\u0229\u022B\u022D\u022F\u0231\u0233-\u0239\u023C\u023F\u0240\u0242\u0247\u0249\u024B\u024D\u024F-\u0293\u0295-\u02B8\u02C0\u02C1\u02E0-\u02E4\u0345\u0371\u0373\u0377\u037A-\u037D\u0390\u03AC-\u03CE\u03D0\u03D1\u03D5-\u03D7\u03D9\u03DB\u03DD\u03DF\u03E1\u03E3\u03E5\u03E7\u03E9\u03EB\u03ED\u03EF-\u03F3\u03F5\u03F8\u03FB\u03FC\u0430-\u045F\u0461\u0463\u0465\u0467\u0469\u046B\u046D\u046F\u0471\u0473\u0475\u0477\u0479\u047B\u047D\u047F\u0481\u048B\u048D\u048F\u0491\u0493\u0495\u0497\u0499\u049B\u049D\u049F\u04A1\u04A3\u04A5\u04A7\u04A9\u04AB\u04AD\u04AF\u04B1\u04B3\u04B5\u04B7\u04B9\u04BB\u04BD\u04BF\u04C2\u04C4\u04C6\u04C8\u04CA\u04CC\u04CE\u04CF\u04D1\u04D3\u04D5\u04D7\u04D9\u04DB\u04DD\u04DF\u04E1\u04E3\u04E5\u04E7\u04E9\u04EB\u04ED\u04EF\u04F1\u04F3\u04F5\u04F7\u04F9\u04FB\u04FD\u04FF\u0501\u0503\u0505\u0507\u0509\u050B\u050D\u050F\u0511\u0513\u0515\u0517\u0519\u051B\u051D\u051F\u0521\u0523\u0525\u0527\u0529\u052B\u052D\u052F\u0560-\u0588\u10D0-\u10FA\u10FD-\u10FF\u13F8-\u13FD\u1C80-\u1C88\u1D00-\u1DBF\u1E01\u1E03\u1E05\u1E07\u1E09\u1E0B\u1E0D\u1E0F\u1E11\u1E13\u1E15\u1E17\u1E19\u1E1B\u1E1D\u1E1F\u1E21\u1E23\u1E25\u1E27\u1E29\u1E2B\u1E2D\u1E2F\u1E31\u1E33\u1E35\u1E37\u1E39\u1E3B\u1E3D\u1E3F\u1E41\u1E43\u1E45\u1E47\u1E49\u1E4B\u1E4D\u1E4F\u1E51\u1E53\u1E55\u1E57\u1E59\u1E5B\u1E5D\u1E5F\u1E61\u1E63\u1E65\u1E67\u1E69\u1E6B\u1E6D\u1E6F\u1E71\u1E73\u1E75\u1E77\u1E79\u1E7B\u1E7D\u1E7F\u1E81\u1E83\u1E85\u1E87\u1E89\u1E8B\u1E8D\u1E8F\u1E91\u1E93\u1E95-\u1E9D\u1E9F\u1EA1\u1EA3\u1EA5\u1EA7\u1EA9\u1EAB\u1EAD\u1EAF\u1EB1\u1EB3\u1EB5\u1EB7\u1EB9\u1EBB\u1EBD\u1EBF\u1EC1\u1EC3\u1EC5\u1EC7\u1EC9\u1ECB\u1ECD\u1ECF\u1ED1\u1ED3\u1ED5\u1ED7\u1ED9\u1EDB\u1EDD\u1EDF\u1EE1\u1EE3\u1EE5\u1EE7\u1EE9\u1EEB\u1EED\u1EEF\u1EF1\u1EF3\u1EF5\u1EF7\u1EF9\u1EFB\u1EFD\u1EFF-\u1F07\u1F10-\u1F15\u1F20-\u1F27\u1F30-\u1F37\u1F40-\u1F45\u1F50-\u1F57\u1F60-\u1F67\u1F70-\u1F7D\u1F80-\u1F87\u1F90-\u1F97\u1FA0-\u1FA7\u1FB0-\u1FB4\u1FB6\u1FB7\u1FBE\u1FC2-\u1FC4\u1FC6\u1FC7\u1FD0-\u1FD3\u1FD6\u1FD7\u1FE0-\u1FE7\u1FF2-\u1FF4\u1FF6\u1FF7\u2071\u207F\u2090-\u209C\u210A\u210E\u210F\u2113\u212F\u2134\u2139\u213C\u213D\u2146-\u2149\u214E\u2170-\u217F\u2184\u24D0-\u24E9\u2C30-\u2C5E\u2C61\u2C65\u2C66\u2C68\u2C6A\u2C6C\u2C71\u2C73\u2C74\u2C76-\u2C7D\u2C81\u2C83\u2C85\u2C87\u2C89\u2C8B\u2C8D\u2C8F\u2C91\u2C93\u2C95\u2C97\u2C99\u2C9B\u2C9D\u2C9F\u2CA1\u2CA3\u2CA5\u2CA7\u2CA9\u2CAB\u2CAD\u2CAF\u2CB1\u2CB3\u2CB5\u2CB7\u2CB9\u2CBB\u2CBD\u2CBF\u2CC1\u2CC3\u2CC5\u2CC7\u2CC9\u2CCB\u2CCD\u2CCF\u2CD1\u2CD3\u2CD5\u2CD7\u2CD9\u2CDB\u2CDD\u2CDF\u2CE1\u2CE3\u2CE4\u2CEC\u2CEE\u2CF3\u2D00-\u2D25\u2D27\u2D2D\uA641\uA643\uA645\uA647\uA649\uA64B\uA64D\uA64F\uA651\uA653\uA655\uA657\uA659\uA65B\uA65D\uA65F\uA661\uA663\uA665\uA667\uA669\uA66B\uA66D\uA681\uA683\uA685\uA687\uA689\uA68B\uA68D\uA68F\uA691\uA693\uA695\uA697\uA699\uA69B-\uA69D\uA723\uA725\uA727\uA729\uA72B\uA72D\uA72F-\uA731\uA733\uA735\uA737\uA739\uA73B\uA73D\uA73F\uA741\uA743\uA745\uA747\uA749\uA74B\uA74D\uA74F\uA751\uA753\uA755\uA757\uA759\uA75B\uA75D\uA75F\uA761\uA763\uA765\uA767\uA769\uA76B\uA76D\uA76F-\uA778\uA77A\uA77C\uA77F\uA781\uA783\uA785\uA787\uA78C\uA78E\uA791\uA793-\uA795\uA797\uA799\uA79B\uA79D\uA79F\uA7A1\uA7A3\uA7A5\uA7A7\uA7A9\uA7AF\uA7B5\uA7B7\uA7B9\uA7F8-\uA7FA\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABBF\uFB00-\uFB06\uFB13-\uFB17\uFF41-\uFF5A]|\uD801[\uDC28-\uDC4F\uDCD8-\uDCFB]|\uD803[\uDCC0-\uDCF2]|\uD806[\uDCC0-\uDCDF]|\uD81B[\uDE60-\uDE7F]|\uD835[\uDC1A-\uDC33\uDC4E-\uDC54\uDC56-\uDC67\uDC82-\uDC9B\uDCB6-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDCCF\uDCEA-\uDD03\uDD1E-\uDD37\uDD52-\uDD6B\uDD86-\uDD9F\uDDBA-\uDDD3\uDDEE-\uDE07\uDE22-\uDE3B\uDE56-\uDE6F\uDE8A-\uDEA5\uDEC2-\uDEDA\uDEDC-\uDEE1\uDEFC-\uDF14\uDF16-\uDF1B\uDF36-\uDF4E\uDF50-\uDF55\uDF70-\uDF88\uDF8A-\uDF8F\uDFAA-\uDFC2\uDFC4-\uDFC9\uDFCB]|\uD83A[\uDD22-\uDD43])/.source}.*|${particleMatcher}.*|\\S*)`);
-      var parseName2 = function parseName3(name = "") {
+      var parseName3 = function parseName4(name = "") {
         if (typeof name !== "string") {
           name = name + "";
         }
@@ -134,11 +134,11 @@
           };
         }
       };
-      exports.default = exports.parse = parseName2;
+      exports.default = exports.parse = parseName3;
       var scope = "@name";
       exports.scope = scope;
-      var types3 = "@name";
-      exports.types = types3;
+      var types5 = "@name";
+      exports.types = types5;
     }
   });
 
@@ -153,19 +153,19 @@
       var startParts = ["dropping-particle", "given"];
       var suffixParts = ["suffix"];
       var endParts = ["non-dropping-particle", "family"];
-      var getName2 = function getName3(name, reversed = false) {
-        const get5 = (parts) => parts.map((entry) => name[entry] || "").filter(Boolean).join(" ");
+      var getName3 = function getName4(name, reversed = false) {
+        const get9 = (parts) => parts.map((entry) => name[entry] || "").filter(Boolean).join(" ");
         if (name.literal) {
           return name.literal;
         } else if (reversed) {
-          const suffixPart = get5(suffixParts) ? `, ${get5(suffixParts)}` : "";
-          const startPart = get5(startParts) ? `, ${get5(startParts)}` : "";
-          return get5(endParts) + suffixPart + startPart;
+          const suffixPart = get9(suffixParts) ? `, ${get9(suffixParts)}` : "";
+          const startPart = get9(startParts) ? `, ${get9(startParts)}` : "";
+          return get9(endParts) + suffixPart + startPart;
         } else {
-          return `${get5([...startParts, ...suffixParts, ...endParts])}`;
+          return `${get9([...startParts, ...suffixParts, ...endParts])}`;
         }
       };
-      var _default = getName2;
+      var _default = getName3;
       exports.default = _default;
     }
   });
@@ -179,13 +179,13 @@
       });
       Object.defineProperty(exports, "parse", {
         enumerable: true,
-        get: function get5() {
+        get: function get9() {
           return _input.default;
         }
       });
       Object.defineProperty(exports, "format", {
         enumerable: true,
-        get: function get5() {
+        get: function get9() {
           return _output.default;
         }
       });
@@ -202,8 +202,8 @@
     "node_modules/sync-fetch/browser.js"(exports, module) {
       var textEncoder = new TextEncoder();
       var textDecoder = new TextDecoder();
-      function syncFetch2(...args) {
-        const request = new syncFetch2.Request(...args);
+      function syncFetch3(...args) {
+        const request = new syncFetch3.Request(...args);
         const xhr = new XMLHttpRequest();
         xhr.withCredentials = request.credentials === "include";
         xhr.timeout = request[INTERNALS].timeout;
@@ -229,7 +229,7 @@
           }
           body = buffer;
         }
-        const response = new syncFetch2.Response(body, {
+        const response = new syncFetch3.Response(body, {
           headers,
           status: xhr.status,
           statusText: xhr.statusText
@@ -295,7 +295,7 @@
           }
           this[INTERNALS] = {
             method: init.method || "GET",
-            headers: new syncFetch2.Headers(init.headers),
+            headers: new syncFetch3.Headers(init.headers),
             body: parseBody(init.body),
             credentials: init.credentials || "omit",
             // Non-spec
@@ -367,7 +367,7 @@
           this[INTERNALS] = {
             body: parseBody(body),
             bodyUsed: false,
-            headers: new syncFetch2.Headers(init.headers),
+            headers: new syncFetch3.Headers(init.headers),
             status: init.status,
             statusText: init.statusText
           };
@@ -430,8 +430,8 @@
           return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
         }
         blob() {
-          const type2 = this.headers && this.headers.get("content-type");
-          return new Blob([consumeBody(this)], type2 && { type: type2 });
+          const type3 = this.headers && this.headers.get("content-type");
+          return new Blob([consumeBody(this)], type3 && { type: type3 });
         }
         text() {
           return textDecoder.decode(consumeBody(this));
@@ -467,7 +467,7 @@
       Body.mixin(SyncResponse.prototype);
       var Headers3 = class {
         constructor(headers) {
-          if (headers instanceof syncFetch2.Headers) {
+          if (headers instanceof syncFetch3.Headers) {
             this[INTERNALS] = { ...headers[INTERNALS] };
           } else {
             this[INTERNALS] = {};
@@ -533,16 +533,523 @@
           }
         }
       };
-      syncFetch2.Headers = Headers3;
-      syncFetch2.Request = SyncRequest;
-      syncFetch2.Response = SyncResponse;
-      module.exports = syncFetch2;
+      syncFetch3.Headers = Headers3;
+      syncFetch3.Request = SyncRequest;
+      syncFetch3.Response = SyncResponse;
+      module.exports = syncFetch3;
     }
   });
 
-  // node_modules/citeproc/citeproc_commonjs.js
+  // node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/input.js
+  var require_input2 = __commonJS({
+    "node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/input.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = exports.parse = exports.types = exports.scope = void 0;
+      function _slicedToArray(arr, i) {
+        return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+      }
+      function _nonIterableRest() {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+      function _iterableToArrayLimit(arr, i) {
+        var _arr = [];
+        var _n = true;
+        var _d = false;
+        var _e = void 0;
+        try {
+          for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+          }
+        } catch (err) {
+          _d = true;
+          _e = err;
+        } finally {
+          try {
+            if (!_n && _i["return"] != null) _i["return"]();
+          } finally {
+            if (_d) throw _e;
+          }
+        }
+        return _arr;
+      }
+      function _arrayWithHoles(arr) {
+        if (Array.isArray(arr)) return arr;
+      }
+      var punctutationMatcher = (string) => string.replace(/$|( )|(?!^)(?=[A-Z])/g, "\\.?$1");
+      var getListMatcher = (list11) => `(?:${list11.join("|")})\\b`;
+      var getSplittingRegex = (matcher, flags) => new RegExp(`(?:^| )(${matcher}$)`, flags);
+      var titles = ["mr", "mrs", "ms", "miss", "dr", "herr", "monsieur", "hr", "frau", "a v m", "admiraal", "admiral", "air cdre", "air commodore", "air marshal", "air vice marshal", "alderman", "alhaji", "ambassador", "baron", "barones", "brig", "brig gen", "brig general", "brigadier", "brigadier general", "brother", "canon", "capt", "captain", "cardinal", "cdr", "chief", "cik", "cmdr", "coach", "col", "col dr", "colonel", "commandant", "commander", "commissioner", "commodore", "comte", "comtessa", "congressman", "conseiller", "consul", "conte", "contessa", "corporal", "councillor", "count", "countess", "crown prince", "crown princess", "dame", "datin", "dato", "datuk", "datuk seri", "deacon", "deaconess", "dean", "dhr", "dipl ing", "doctor", "dott", "dott sa", "dr", "dr ing", "dra", "drs", "embajador", "embajadora", "en", "encik", "eng", "eur ing", "exma sra", "exmo sr", "f o", "father", "first lieutient", "first officer", "flt lieut", "flying officer", "fr", "frau", "fraulein", "fru", "gen", "generaal", "general", "governor", "graaf", "gravin", "group captain", "grp capt", "h e dr", "h h", "h m", "h r h", "hajah", "haji", "hajim", "her highness", "her majesty", "herr", "high chief", "his highness", "his holiness", "his majesty", "hon", "hr", "hra", "ing", "ir", "jonkheer", "judge", "justice", "khun ying", "kolonel", "lady", "lcda", "lic", "lieut", "lieut cdr", "lieut col", "lieut gen", "lord", "m", "m l", "m r", "madame", "mademoiselle", "maj gen", "major", "master", "mevrouw", "miss", "mlle", "mme", "monsieur", "monsignor", "mr", "mrs", "ms", "mstr", "nti", "pastor", "president", "prince", "princess", "princesse", "prinses", "prof", "prof dr", "prof sir", "professor", "puan", "puan sri", "rabbi", "rear admiral", "rev", "rev canon", "rev dr", "rev mother", "reverend", "rva", "senator", "sergeant", "sheikh", "sheikha", "sig", "sig na", "sig ra", "sir", "sister", "sqn ldr", "sr", "sr d", "sra", "srta", "sultan", "tan sri", "tan sri dato", "tengku", "teuku", "than puying", "the hon dr", "the hon justice", "the hon miss", "the hon mr", "the hon mrs", "the hon ms", "the hon sir", "the very rev", "toh puan", "tun", "vice admiral", "viscount", "viscountess", "wg cdr"];
+      var suffixes = ["I", "II", "III", "IV", "V", "Senior", "Junior", "Jr", "Sr", "PhD", "Ph\\.D", "APR", "RPh", "PE", "MD", "MA", "DMD", "CME", "BVM", "CFRE", "CLU", "CPA", "CSC", "CSJ", "DC", "DD", "DDS", "DO", "DVM", "EdD", "Esq", "JD", "LLD", "OD", "OSB", "PC", "Ret", "RGS", "RN", "RNC", "SHCJ", "SJ", "SNJM", "SSMO", "USA", "USAF", "USAFR", "USAR", "USCG", "USMC", "USMCR", "USN", "USNR"];
+      var particles = ["Vere", "Von", "Van", "De", "Del", "Della", "Di", "Da", "Pietro", "Vanden", "Du", "St.", "St", "La", "Lo", "Ter", "O", "O'", "Mac", "Fitz"];
+      var titleMatcher = getListMatcher(titles.map(punctutationMatcher));
+      var suffixMatcher = getListMatcher(suffixes.map(punctutationMatcher));
+      var particleMatcher = getListMatcher(particles);
+      var titleSplitter = new RegExp(`^((?:${titleMatcher} )*)(.*)$`, "i");
+      var suffixSplitter = getSplittingRegex(`(?:${suffixMatcher}, )*(?:${suffixMatcher})`, "i");
+      var particleSplitter = getSplittingRegex(`${/(?:[A-Z\xC0-\xD6\xD8-\xDE\u0100\u0102\u0104\u0106\u0108\u010A\u010C\u010E\u0110\u0112\u0114\u0116\u0118\u011A\u011C\u011E\u0120\u0122\u0124\u0126\u0128\u012A\u012C\u012E\u0130\u0132\u0134\u0136\u0139\u013B\u013D\u013F\u0141\u0143\u0145\u0147\u014A\u014C\u014E\u0150\u0152\u0154\u0156\u0158\u015A\u015C\u015E\u0160\u0162\u0164\u0166\u0168\u016A\u016C\u016E\u0170\u0172\u0174\u0176\u0178\u0179\u017B\u017D\u0181\u0182\u0184\u0186\u0187\u0189-\u018B\u018E-\u0191\u0193\u0194\u0196-\u0198\u019C\u019D\u019F\u01A0\u01A2\u01A4\u01A6\u01A7\u01A9\u01AC\u01AE\u01AF\u01B1-\u01B3\u01B5\u01B7\u01B8\u01BC\u01C4\u01C7\u01CA\u01CD\u01CF\u01D1\u01D3\u01D5\u01D7\u01D9\u01DB\u01DE\u01E0\u01E2\u01E4\u01E6\u01E8\u01EA\u01EC\u01EE\u01F1\u01F4\u01F6-\u01F8\u01FA\u01FC\u01FE\u0200\u0202\u0204\u0206\u0208\u020A\u020C\u020E\u0210\u0212\u0214\u0216\u0218\u021A\u021C\u021E\u0220\u0222\u0224\u0226\u0228\u022A\u022C\u022E\u0230\u0232\u023A\u023B\u023D\u023E\u0241\u0243-\u0246\u0248\u024A\u024C\u024E\u0370\u0372\u0376\u037F\u0386\u0388-\u038A\u038C\u038E\u038F\u0391-\u03A1\u03A3-\u03AB\u03CF\u03D2-\u03D4\u03D8\u03DA\u03DC\u03DE\u03E0\u03E2\u03E4\u03E6\u03E8\u03EA\u03EC\u03EE\u03F4\u03F7\u03F9\u03FA\u03FD-\u042F\u0460\u0462\u0464\u0466\u0468\u046A\u046C\u046E\u0470\u0472\u0474\u0476\u0478\u047A\u047C\u047E\u0480\u048A\u048C\u048E\u0490\u0492\u0494\u0496\u0498\u049A\u049C\u049E\u04A0\u04A2\u04A4\u04A6\u04A8\u04AA\u04AC\u04AE\u04B0\u04B2\u04B4\u04B6\u04B8\u04BA\u04BC\u04BE\u04C0\u04C1\u04C3\u04C5\u04C7\u04C9\u04CB\u04CD\u04D0\u04D2\u04D4\u04D6\u04D8\u04DA\u04DC\u04DE\u04E0\u04E2\u04E4\u04E6\u04E8\u04EA\u04EC\u04EE\u04F0\u04F2\u04F4\u04F6\u04F8\u04FA\u04FC\u04FE\u0500\u0502\u0504\u0506\u0508\u050A\u050C\u050E\u0510\u0512\u0514\u0516\u0518\u051A\u051C\u051E\u0520\u0522\u0524\u0526\u0528\u052A\u052C\u052E\u0531-\u0556\u10A0-\u10C5\u10C7\u10CD\u13A0-\u13F5\u1C90-\u1CBA\u1CBD-\u1CBF\u1E00\u1E02\u1E04\u1E06\u1E08\u1E0A\u1E0C\u1E0E\u1E10\u1E12\u1E14\u1E16\u1E18\u1E1A\u1E1C\u1E1E\u1E20\u1E22\u1E24\u1E26\u1E28\u1E2A\u1E2C\u1E2E\u1E30\u1E32\u1E34\u1E36\u1E38\u1E3A\u1E3C\u1E3E\u1E40\u1E42\u1E44\u1E46\u1E48\u1E4A\u1E4C\u1E4E\u1E50\u1E52\u1E54\u1E56\u1E58\u1E5A\u1E5C\u1E5E\u1E60\u1E62\u1E64\u1E66\u1E68\u1E6A\u1E6C\u1E6E\u1E70\u1E72\u1E74\u1E76\u1E78\u1E7A\u1E7C\u1E7E\u1E80\u1E82\u1E84\u1E86\u1E88\u1E8A\u1E8C\u1E8E\u1E90\u1E92\u1E94\u1E9E\u1EA0\u1EA2\u1EA4\u1EA6\u1EA8\u1EAA\u1EAC\u1EAE\u1EB0\u1EB2\u1EB4\u1EB6\u1EB8\u1EBA\u1EBC\u1EBE\u1EC0\u1EC2\u1EC4\u1EC6\u1EC8\u1ECA\u1ECC\u1ECE\u1ED0\u1ED2\u1ED4\u1ED6\u1ED8\u1EDA\u1EDC\u1EDE\u1EE0\u1EE2\u1EE4\u1EE6\u1EE8\u1EEA\u1EEC\u1EEE\u1EF0\u1EF2\u1EF4\u1EF6\u1EF8\u1EFA\u1EFC\u1EFE\u1F08-\u1F0F\u1F18-\u1F1D\u1F28-\u1F2F\u1F38-\u1F3F\u1F48-\u1F4D\u1F59\u1F5B\u1F5D\u1F5F\u1F68-\u1F6F\u1FB8-\u1FBB\u1FC8-\u1FCB\u1FD8-\u1FDB\u1FE8-\u1FEC\u1FF8-\u1FFB\u2102\u2107\u210B-\u210D\u2110-\u2112\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u2130-\u2133\u213E\u213F\u2145\u2160-\u216F\u2183\u24B6-\u24CF\u2C00-\u2C2E\u2C60\u2C62-\u2C64\u2C67\u2C69\u2C6B\u2C6D-\u2C70\u2C72\u2C75\u2C7E-\u2C80\u2C82\u2C84\u2C86\u2C88\u2C8A\u2C8C\u2C8E\u2C90\u2C92\u2C94\u2C96\u2C98\u2C9A\u2C9C\u2C9E\u2CA0\u2CA2\u2CA4\u2CA6\u2CA8\u2CAA\u2CAC\u2CAE\u2CB0\u2CB2\u2CB4\u2CB6\u2CB8\u2CBA\u2CBC\u2CBE\u2CC0\u2CC2\u2CC4\u2CC6\u2CC8\u2CCA\u2CCC\u2CCE\u2CD0\u2CD2\u2CD4\u2CD6\u2CD8\u2CDA\u2CDC\u2CDE\u2CE0\u2CE2\u2CEB\u2CED\u2CF2\uA640\uA642\uA644\uA646\uA648\uA64A\uA64C\uA64E\uA650\uA652\uA654\uA656\uA658\uA65A\uA65C\uA65E\uA660\uA662\uA664\uA666\uA668\uA66A\uA66C\uA680\uA682\uA684\uA686\uA688\uA68A\uA68C\uA68E\uA690\uA692\uA694\uA696\uA698\uA69A\uA722\uA724\uA726\uA728\uA72A\uA72C\uA72E\uA732\uA734\uA736\uA738\uA73A\uA73C\uA73E\uA740\uA742\uA744\uA746\uA748\uA74A\uA74C\uA74E\uA750\uA752\uA754\uA756\uA758\uA75A\uA75C\uA75E\uA760\uA762\uA764\uA766\uA768\uA76A\uA76C\uA76E\uA779\uA77B\uA77D\uA77E\uA780\uA782\uA784\uA786\uA78B\uA78D\uA790\uA792\uA796\uA798\uA79A\uA79C\uA79E\uA7A0\uA7A2\uA7A4\uA7A6\uA7A8\uA7AA-\uA7AE\uA7B0-\uA7B4\uA7B6\uA7B8\uFF21-\uFF3A]|\uD801[\uDC00-\uDC27\uDCB0-\uDCD3]|\uD803[\uDC80-\uDCB2]|\uD806[\uDCA0-\uDCBF]|\uD81B[\uDE40-\uDE5F]|\uD835[\uDC00-\uDC19\uDC34-\uDC4D\uDC68-\uDC81\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB5\uDCD0-\uDCE9\uDD04\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD38\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD6C-\uDD85\uDDA0-\uDDB9\uDDD4-\uDDED\uDE08-\uDE21\uDE3C-\uDE55\uDE70-\uDE89\uDEA8-\uDEC0\uDEE2-\uDEFA\uDF1C-\uDF34\uDF56-\uDF6E\uDF90-\uDFA8\uDFCA]|\uD83A[\uDD00-\uDD21]|\uD83C[\uDD30-\uDD49\uDD50-\uDD69\uDD70-\uDD89])/.source}.*`);
+      var endSplitter = getSplittingRegex(`(?:${/(?:[a-z\xAA\xB5\xBA\xDF-\xF6\xF8-\xFF\u0101\u0103\u0105\u0107\u0109\u010B\u010D\u010F\u0111\u0113\u0115\u0117\u0119\u011B\u011D\u011F\u0121\u0123\u0125\u0127\u0129\u012B\u012D\u012F\u0131\u0133\u0135\u0137\u0138\u013A\u013C\u013E\u0140\u0142\u0144\u0146\u0148\u0149\u014B\u014D\u014F\u0151\u0153\u0155\u0157\u0159\u015B\u015D\u015F\u0161\u0163\u0165\u0167\u0169\u016B\u016D\u016F\u0171\u0173\u0175\u0177\u017A\u017C\u017E-\u0180\u0183\u0185\u0188\u018C\u018D\u0192\u0195\u0199-\u019B\u019E\u01A1\u01A3\u01A5\u01A8\u01AA\u01AB\u01AD\u01B0\u01B4\u01B6\u01B9\u01BA\u01BD-\u01BF\u01C6\u01C9\u01CC\u01CE\u01D0\u01D2\u01D4\u01D6\u01D8\u01DA\u01DC\u01DD\u01DF\u01E1\u01E3\u01E5\u01E7\u01E9\u01EB\u01ED\u01EF\u01F0\u01F3\u01F5\u01F9\u01FB\u01FD\u01FF\u0201\u0203\u0205\u0207\u0209\u020B\u020D\u020F\u0211\u0213\u0215\u0217\u0219\u021B\u021D\u021F\u0221\u0223\u0225\u0227\u0229\u022B\u022D\u022F\u0231\u0233-\u0239\u023C\u023F\u0240\u0242\u0247\u0249\u024B\u024D\u024F-\u0293\u0295-\u02B8\u02C0\u02C1\u02E0-\u02E4\u0345\u0371\u0373\u0377\u037A-\u037D\u0390\u03AC-\u03CE\u03D0\u03D1\u03D5-\u03D7\u03D9\u03DB\u03DD\u03DF\u03E1\u03E3\u03E5\u03E7\u03E9\u03EB\u03ED\u03EF-\u03F3\u03F5\u03F8\u03FB\u03FC\u0430-\u045F\u0461\u0463\u0465\u0467\u0469\u046B\u046D\u046F\u0471\u0473\u0475\u0477\u0479\u047B\u047D\u047F\u0481\u048B\u048D\u048F\u0491\u0493\u0495\u0497\u0499\u049B\u049D\u049F\u04A1\u04A3\u04A5\u04A7\u04A9\u04AB\u04AD\u04AF\u04B1\u04B3\u04B5\u04B7\u04B9\u04BB\u04BD\u04BF\u04C2\u04C4\u04C6\u04C8\u04CA\u04CC\u04CE\u04CF\u04D1\u04D3\u04D5\u04D7\u04D9\u04DB\u04DD\u04DF\u04E1\u04E3\u04E5\u04E7\u04E9\u04EB\u04ED\u04EF\u04F1\u04F3\u04F5\u04F7\u04F9\u04FB\u04FD\u04FF\u0501\u0503\u0505\u0507\u0509\u050B\u050D\u050F\u0511\u0513\u0515\u0517\u0519\u051B\u051D\u051F\u0521\u0523\u0525\u0527\u0529\u052B\u052D\u052F\u0560-\u0588\u10D0-\u10FA\u10FD-\u10FF\u13F8-\u13FD\u1C80-\u1C88\u1D00-\u1DBF\u1E01\u1E03\u1E05\u1E07\u1E09\u1E0B\u1E0D\u1E0F\u1E11\u1E13\u1E15\u1E17\u1E19\u1E1B\u1E1D\u1E1F\u1E21\u1E23\u1E25\u1E27\u1E29\u1E2B\u1E2D\u1E2F\u1E31\u1E33\u1E35\u1E37\u1E39\u1E3B\u1E3D\u1E3F\u1E41\u1E43\u1E45\u1E47\u1E49\u1E4B\u1E4D\u1E4F\u1E51\u1E53\u1E55\u1E57\u1E59\u1E5B\u1E5D\u1E5F\u1E61\u1E63\u1E65\u1E67\u1E69\u1E6B\u1E6D\u1E6F\u1E71\u1E73\u1E75\u1E77\u1E79\u1E7B\u1E7D\u1E7F\u1E81\u1E83\u1E85\u1E87\u1E89\u1E8B\u1E8D\u1E8F\u1E91\u1E93\u1E95-\u1E9D\u1E9F\u1EA1\u1EA3\u1EA5\u1EA7\u1EA9\u1EAB\u1EAD\u1EAF\u1EB1\u1EB3\u1EB5\u1EB7\u1EB9\u1EBB\u1EBD\u1EBF\u1EC1\u1EC3\u1EC5\u1EC7\u1EC9\u1ECB\u1ECD\u1ECF\u1ED1\u1ED3\u1ED5\u1ED7\u1ED9\u1EDB\u1EDD\u1EDF\u1EE1\u1EE3\u1EE5\u1EE7\u1EE9\u1EEB\u1EED\u1EEF\u1EF1\u1EF3\u1EF5\u1EF7\u1EF9\u1EFB\u1EFD\u1EFF-\u1F07\u1F10-\u1F15\u1F20-\u1F27\u1F30-\u1F37\u1F40-\u1F45\u1F50-\u1F57\u1F60-\u1F67\u1F70-\u1F7D\u1F80-\u1F87\u1F90-\u1F97\u1FA0-\u1FA7\u1FB0-\u1FB4\u1FB6\u1FB7\u1FBE\u1FC2-\u1FC4\u1FC6\u1FC7\u1FD0-\u1FD3\u1FD6\u1FD7\u1FE0-\u1FE7\u1FF2-\u1FF4\u1FF6\u1FF7\u2071\u207F\u2090-\u209C\u210A\u210E\u210F\u2113\u212F\u2134\u2139\u213C\u213D\u2146-\u2149\u214E\u2170-\u217F\u2184\u24D0-\u24E9\u2C30-\u2C5E\u2C61\u2C65\u2C66\u2C68\u2C6A\u2C6C\u2C71\u2C73\u2C74\u2C76-\u2C7D\u2C81\u2C83\u2C85\u2C87\u2C89\u2C8B\u2C8D\u2C8F\u2C91\u2C93\u2C95\u2C97\u2C99\u2C9B\u2C9D\u2C9F\u2CA1\u2CA3\u2CA5\u2CA7\u2CA9\u2CAB\u2CAD\u2CAF\u2CB1\u2CB3\u2CB5\u2CB7\u2CB9\u2CBB\u2CBD\u2CBF\u2CC1\u2CC3\u2CC5\u2CC7\u2CC9\u2CCB\u2CCD\u2CCF\u2CD1\u2CD3\u2CD5\u2CD7\u2CD9\u2CDB\u2CDD\u2CDF\u2CE1\u2CE3\u2CE4\u2CEC\u2CEE\u2CF3\u2D00-\u2D25\u2D27\u2D2D\uA641\uA643\uA645\uA647\uA649\uA64B\uA64D\uA64F\uA651\uA653\uA655\uA657\uA659\uA65B\uA65D\uA65F\uA661\uA663\uA665\uA667\uA669\uA66B\uA66D\uA681\uA683\uA685\uA687\uA689\uA68B\uA68D\uA68F\uA691\uA693\uA695\uA697\uA699\uA69B-\uA69D\uA723\uA725\uA727\uA729\uA72B\uA72D\uA72F-\uA731\uA733\uA735\uA737\uA739\uA73B\uA73D\uA73F\uA741\uA743\uA745\uA747\uA749\uA74B\uA74D\uA74F\uA751\uA753\uA755\uA757\uA759\uA75B\uA75D\uA75F\uA761\uA763\uA765\uA767\uA769\uA76B\uA76D\uA76F-\uA778\uA77A\uA77C\uA77F\uA781\uA783\uA785\uA787\uA78C\uA78E\uA791\uA793-\uA795\uA797\uA799\uA79B\uA79D\uA79F\uA7A1\uA7A3\uA7A5\uA7A7\uA7A9\uA7AF\uA7B5\uA7B7\uA7B9\uA7F8-\uA7FA\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABBF\uFB00-\uFB06\uFB13-\uFB17\uFF41-\uFF5A]|\uD801[\uDC28-\uDC4F\uDCD8-\uDCFB]|\uD803[\uDCC0-\uDCF2]|\uD806[\uDCC0-\uDCDF]|\uD81B[\uDE60-\uDE7F]|\uD835[\uDC1A-\uDC33\uDC4E-\uDC54\uDC56-\uDC67\uDC82-\uDC9B\uDCB6-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDCCF\uDCEA-\uDD03\uDD1E-\uDD37\uDD52-\uDD6B\uDD86-\uDD9F\uDDBA-\uDDD3\uDDEE-\uDE07\uDE22-\uDE3B\uDE56-\uDE6F\uDE8A-\uDEA5\uDEC2-\uDEDA\uDEDC-\uDEE1\uDEFC-\uDF14\uDF16-\uDF1B\uDF36-\uDF4E\uDF50-\uDF55\uDF70-\uDF88\uDF8A-\uDF8F\uDFAA-\uDFC2\uDFC4-\uDFC9\uDFCB]|\uD83A[\uDD22-\uDD43])/.source}.*|${particleMatcher}.*|\\S*)`);
+      var parseName3 = function parseName4(name = "") {
+        if (typeof name !== "string") {
+          name = name + "";
+        }
+        let start2 = "";
+        let mid = "";
+        let end2 = "";
+        if (/[^.], /.test(name)) {
+          const parts = name.split(", ");
+          end2 = parts.shift();
+          const suffixMatch = RegExp(suffixMatcher).exec(parts.join(", "));
+          start2 = parts.splice(suffixMatch && suffixMatch.index !== 0 ? 0 : -1, 1)[0];
+          mid = parts.join(", ");
+        } else {
+          const parts = name.split(suffixSplitter, 2);
+          const main2 = parts.shift().split(endSplitter, 2);
+          start2 = main2[0];
+          end2 = main2[1];
+          mid = parts.pop();
+        }
+        const _start$match = start2.match(titleSplitter), _start$match2 = _slicedToArray(_start$match, 3), droppingParticle = _start$match2[1], given = _start$match2[2];
+        const suffix = mid;
+        const _end$split$reverse = end2.split(particleSplitter, 2).reverse(), _end$split$reverse2 = _slicedToArray(_end$split$reverse, 2), family = _end$split$reverse2[0], nonDroppingParticle = _end$split$reverse2[1];
+        if (!given && family) {
+          return family.includes(" ") ? {
+            literal: family
+          } : {
+            family
+          };
+        } else if (family) {
+          const nameObject = {
+            "dropping-particle": droppingParticle,
+            given,
+            suffix,
+            "non-dropping-particle": nonDroppingParticle,
+            family
+          };
+          Object.keys(nameObject).forEach((key) => {
+            if (!nameObject[key]) {
+              delete nameObject[key];
+            }
+          });
+          return nameObject;
+        } else {
+          return {
+            literal: name
+          };
+        }
+      };
+      exports.default = exports.parse = parseName3;
+      var scope = "@name";
+      exports.scope = scope;
+      var types5 = "@name";
+      exports.types = types5;
+    }
+  });
+
+  // node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/output.js
+  var require_output2 = __commonJS({
+    "node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/output.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var startParts = ["dropping-particle", "given"];
+      var suffixParts = ["suffix"];
+      var endParts = ["non-dropping-particle", "family"];
+      var getName3 = function getName4(name, reversed = false) {
+        const get9 = (parts) => parts.map((entry) => name[entry] || "").filter(Boolean).join(" ");
+        if (name.literal) {
+          return name.literal;
+        } else if (reversed) {
+          const suffixPart = get9(suffixParts) ? `, ${get9(suffixParts)}` : "";
+          const startPart = get9(startParts) ? `, ${get9(startParts)}` : "";
+          return get9(endParts) + suffixPart + startPart;
+        } else {
+          return `${get9([...startParts, ...suffixParts, ...endParts])}`;
+        }
+      };
+      var _default = getName3;
+      exports.default = _default;
+    }
+  });
+
+  // node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/index.js
+  var require_lib2 = __commonJS({
+    "node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      Object.defineProperty(exports, "parse", {
+        enumerable: true,
+        get: function get9() {
+          return _input.default;
+        }
+      });
+      Object.defineProperty(exports, "format", {
+        enumerable: true,
+        get: function get9() {
+          return _output.default;
+        }
+      });
+      var _input = _interopRequireDefault(require_input2());
+      var _output = _interopRequireDefault(require_output2());
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+      }
+    }
+  });
+
+  // node_modules/.pnpm/sync-fetch@0.6.0/node_modules/sync-fetch/browser.js
+  var require_browser2 = __commonJS({
+    "node_modules/.pnpm/sync-fetch@0.6.0/node_modules/sync-fetch/browser.js"(exports, module) {
+      var textEncoder = new TextEncoder();
+      var textDecoder = new TextDecoder();
+      function syncFetch3(...args) {
+        const request = new syncFetch3.Request(...args);
+        const xhr = new XMLHttpRequest();
+        xhr.withCredentials = request.credentials === "include";
+        xhr.timeout = request[INTERNALS].timeout;
+        xhr.open(request.method, request.url, false);
+        let useBinaryEncoding = false;
+        try {
+          xhr.responseType = "arraybuffer";
+        } catch (e) {
+          xhr.overrideMimeType("text/plain; charset=x-user-defined");
+          useBinaryEncoding = true;
+        }
+        for (const header of request.headers) {
+          xhr.setRequestHeader(...header);
+        }
+        xhr.send(request[INTERNALS].body || null);
+        let headers = xhr.getAllResponseHeaders();
+        headers = headers && headers.split("\r\n").filter(Boolean).map((header) => header.split(": ", 2));
+        let body = xhr.response;
+        if (useBinaryEncoding) {
+          const buffer = new Uint8Array(body.length);
+          for (let i = 0; i < body.length; i++) {
+            buffer[i] = body.charCodeAt(i) & 255;
+          }
+          body = buffer;
+        }
+        const response = new syncFetch3.Response(body, {
+          headers,
+          status: xhr.status,
+          statusText: xhr.statusText
+        });
+        response[INTERNALS].url = xhr.responseURL;
+        response[INTERNALS].redirected = xhr.responseURL !== request.url;
+        return response;
+      }
+      var INTERNALS = /* @__PURE__ */ Symbol("SyncFetch Internals");
+      var REQ_UNSUPPORTED = ["mode", "cache", "redirect", "referrer", "integrity"];
+      var HTTP_STATUS = {
+        100: "Continue",
+        101: "Switching Protocols",
+        200: "OK",
+        201: "Created",
+        202: "Accepted",
+        203: "Non-Authoritative Information",
+        204: "No Content",
+        205: "Reset Content",
+        206: "Partial Content",
+        300: "Multiple Choices",
+        301: "Moved Permanently",
+        302: "Found",
+        303: "See Other",
+        304: "Not Modified",
+        305: "Use Proxy",
+        307: "Temporary Redirect",
+        400: "Bad Request",
+        401: "Unauthorized",
+        402: "Payment Required",
+        403: "Forbidden",
+        404: "Not Found",
+        405: "Method Not Allowed",
+        406: "Not Acceptable",
+        407: "Proxy Authentication Required",
+        408: "Request Timeout",
+        409: "Conflict",
+        410: "Gone",
+        411: "Length Required",
+        412: "Precondition Failed",
+        413: "Payload Too Large",
+        414: "URI Too Long",
+        415: "Unsupported Media Type",
+        416: "Range Not Satisfiable",
+        417: "Expectation Failed",
+        426: "Upgrade Required",
+        500: "Internal Server Error",
+        501: "Not Implemented",
+        502: "Bad Gateway",
+        503: "Service Unavailable",
+        504: "Gateway Timeout",
+        505: "HTTP Version Not Supported"
+      };
+      var SyncRequest = class _SyncRequest {
+        constructor(resource, init = {}) {
+          for (const option of REQ_UNSUPPORTED) {
+            if (option in init) {
+              throw new TypeError(`option ${option} not supported`);
+            }
+          }
+          if (init.credentials === "same-origin") {
+            throw new TypeError("option credentials with value 'same-origin' not supported");
+          }
+          this[INTERNALS] = {
+            method: init.method || "GET",
+            headers: new syncFetch3.Headers(init.headers),
+            body: parseBody(init.body),
+            credentials: init.credentials || "omit",
+            // Non-spec
+            timeout: init.timeout || 0
+          };
+          if (typeof resource === "string") {
+            this[INTERNALS].url = resource;
+          } else if (resource instanceof _SyncRequest) {
+            this[INTERNALS].url = resource.url;
+            if (!init.method) {
+              this[INTERNALS].method = resource.method;
+            }
+            if (!init.headers) {
+              this[INTERNALS].headers = resource.headers;
+            }
+            if (!init.body) {
+              this[INTERNALS].body = resource[INTERNALS].body;
+            }
+            if (!init.credentials) {
+              this[INTERNALS].credentials = resource.credentials;
+            }
+          } else {
+            throw new TypeError("Request input should be a URL string or a Request object");
+          }
+        }
+        get cache() {
+          return "default";
+        }
+        get credentials() {
+          return this[INTERNALS].credentials;
+        }
+        get destination() {
+          return "";
+        }
+        get headers() {
+          return this[INTERNALS].headers;
+        }
+        get integrity() {
+          return "";
+        }
+        get method() {
+          return this[INTERNALS].method;
+        }
+        get mode() {
+          return "cors";
+        }
+        get priority() {
+          return "auto";
+        }
+        get redirect() {
+          return "follow";
+        }
+        get referrer() {
+          return "about:client";
+        }
+        get referrerPolicy() {
+          return "";
+        }
+        get url() {
+          return this[INTERNALS].url;
+        }
+        clone() {
+          checkBody(this);
+          return new _SyncRequest(this.url, this[INTERNALS]);
+        }
+      };
+      var SyncResponse = class _SyncResponse {
+        constructor(body, init = {}) {
+          this[INTERNALS] = {
+            body: parseBody(body),
+            bodyUsed: false,
+            headers: new syncFetch3.Headers(init.headers),
+            status: init.status,
+            statusText: init.statusText
+          };
+        }
+        get headers() {
+          return this[INTERNALS].headers;
+        }
+        get ok() {
+          const status = this[INTERNALS].status;
+          return status >= 200 && status < 300;
+        }
+        get redirected() {
+          return this[INTERNALS].redirected;
+        }
+        get status() {
+          return this[INTERNALS].status;
+        }
+        get statusText() {
+          return this[INTERNALS].statusText;
+        }
+        get url() {
+          return this[INTERNALS].url;
+        }
+        clone() {
+          return this.redirect(this[INTERNALS].url, this[INTERNALS].status);
+        }
+        redirect(url, status) {
+          checkBody(this);
+          const response = new _SyncResponse(this[INTERNALS].body, {
+            headers: this[INTERNALS].headers,
+            status: status || this[INTERNALS].status,
+            statusText: HTTP_STATUS[status] || this[INTERNALS].statusText
+          });
+          response[INTERNALS].url = url || this[INTERNALS].url;
+          response[INTERNALS].redirected = this[INTERNALS].redirected;
+          return response;
+        }
+      };
+      var Body = class _Body {
+        constructor(body) {
+          this[INTERNALS] = {
+            body: parseBody(body),
+            bodyUsed: false
+          };
+        }
+        get bodyUsed() {
+          return this[INTERNALS].bodyUsed;
+        }
+        static mixin(prototype) {
+          for (const name of Object.getOwnPropertyNames(_Body.prototype)) {
+            if (name === "constructor") {
+              continue;
+            }
+            const desc = Object.getOwnPropertyDescriptor(_Body.prototype, name);
+            Object.defineProperty(prototype, name, { ...desc, enumerable: true });
+          }
+        }
+        arrayBuffer() {
+          const buffer = consumeBody(this);
+          return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+        }
+        blob() {
+          const type3 = this.headers && this.headers.get("content-type");
+          return new Blob([consumeBody(this)], type3 && { type: type3 });
+        }
+        text() {
+          return textDecoder.decode(consumeBody(this));
+        }
+        json() {
+          try {
+            return JSON.parse(this.text());
+          } catch (err) {
+            throw new TypeError(`invalid json response body at ${this.url} reason: ${err.message}`, "invalid-json");
+          }
+        }
+      };
+      function checkBody(body) {
+        if (body.bodyUsed) {
+          throw new TypeError(`body used already for: ${body.url}`);
+        }
+      }
+      function consumeBody(body) {
+        checkBody(body);
+        body[INTERNALS].bodyUsed = true;
+        return body[INTERNALS].body || new Uint8Array();
+      }
+      function parseBody(body) {
+        if (typeof body === "string") {
+          return textEncoder.encode(body);
+        } else if (body) {
+          return body;
+        } else {
+          return null;
+        }
+      }
+      Body.mixin(SyncRequest.prototype);
+      Body.mixin(SyncResponse.prototype);
+      var Headers3 = class {
+        constructor(headers) {
+          if (headers instanceof syncFetch3.Headers) {
+            this[INTERNALS] = { ...headers[INTERNALS] };
+          } else {
+            this[INTERNALS] = {};
+            if (Array.isArray(headers)) {
+              for (const [name, value] of headers) {
+                this.append(name, value);
+              }
+            } else if (typeof headers === "object") {
+              for (const name in headers) {
+                this.set(name, headers[name]);
+              }
+            }
+          }
+        }
+        // modification
+        append(name, value) {
+          name = name.toLowerCase();
+          if (!this[INTERNALS][name]) {
+            this[INTERNALS][name] = [];
+          }
+          this[INTERNALS][name].push(value);
+        }
+        delete(name) {
+          delete this[INTERNALS][name.toLowerCase()];
+        }
+        set(name, value) {
+          this[INTERNALS][name.toLowerCase()] = [value];
+        }
+        // access
+        entries() {
+          const pairs = [];
+          for (const name in this[INTERNALS]) {
+            for (const value of this[INTERNALS][name]) {
+              pairs.push([name, value]);
+            }
+          }
+          return pairs;
+        }
+        get(name) {
+          name = name.toLowerCase();
+          return name in this[INTERNALS] ? this[INTERNALS][name].join(", ") : null;
+        }
+        keys() {
+          return Object.keys(this[INTERNALS]);
+        }
+        has(name) {
+          return name.toLowerCase() in this[INTERNALS];
+        }
+        values() {
+          const values = [];
+          for (const name in this[INTERNALS]) {
+            for (const value of this[INTERNALS][name]) {
+              values.push(value);
+            }
+          }
+          return values;
+        }
+        *[Symbol.iterator]() {
+          for (const name in this[INTERNALS]) {
+            for (const value of this[INTERNALS][name]) {
+              yield [name, value];
+            }
+          }
+        }
+      };
+      syncFetch3.Headers = Headers3;
+      syncFetch3.Request = SyncRequest;
+      syncFetch3.Response = SyncResponse;
+      module.exports = syncFetch3;
+    }
+  });
+
+  // node_modules/.pnpm/citeproc@2.4.63/node_modules/citeproc/citeproc_commonjs.js
   var require_citeproc_commonjs = __commonJS({
-    "node_modules/citeproc/citeproc_commonjs.js"(exports, module) {
+    "node_modules/.pnpm/citeproc@2.4.63/node_modules/citeproc/citeproc_commonjs.js"(exports, module) {
       "use strict";
       var CSL2 = {
         PROCESSOR_VERSION: "1.4.61",
@@ -4257,22 +4764,22 @@
         }
       };
       CSL2.substituteOne = function(template) {
-        return function(state, list6) {
-          if (!list6) {
+        return function(state, list11) {
+          if (!list11) {
             return "";
           } else {
-            return template.replace("%%STRING%%", list6);
+            return template.replace("%%STRING%%", list11);
           }
         };
       };
       CSL2.substituteTwo = function(template) {
         return function(param) {
           var template2 = template.replace("%%PARAM%%", param);
-          return function(state, list6) {
-            if (!list6) {
+          return function(state, list11) {
+            if (!list11) {
               return "";
             } else {
-              return template2.replace("%%STRING%%", list6);
+              return template2.replace("%%STRING%%", list11);
             }
           };
         };
@@ -6743,11 +7250,11 @@
           var lastID = false;
           var lst = [];
           for (var i = 0, ilen = inputList.length; i < ilen; i += 1) {
-            var type2 = inputList[i][0].type;
+            var type3 = inputList[i][0].type;
             var title = inputList[i][0].title;
             var position = inputList[i][1].position;
             var id = inputList[i][0].id;
-            if (title && type2 === "legal_case" && id !== lastID && position) {
+            if (title && type3 === "legal_case" && id !== lastID && position) {
               if (title !== lastTitle || parasets.length === 0) {
                 lst = [];
                 parasets.push(lst);
@@ -7810,9 +8317,9 @@
         nodes = myxml.getNodesByName(locale, "type");
         for (i = 0, ilen = myxml.numberofnodes(nodes); i < ilen; i += 1) {
           var typenode = nodes[i];
-          var type2 = myxml.getAttributeValue(typenode, "name");
+          var type3 = myxml.getAttributeValue(typenode, "name");
           var gender = myxml.getAttributeValue(typenode, "gender");
-          this.opt.gender[type2] = gender;
+          this.opt.gender[type3] = gender;
         }
         var hasCslOrdinals101 = myxml.getNodesByName(locale, "term", "ordinal").length;
         if (hasCslOrdinals101) {
@@ -10639,34 +11146,34 @@
           }
         }
       };
-      CSL2.NameOutput.prototype._setEtAlParameter = function(type2, v, j) {
+      CSL2.NameOutput.prototype._setEtAlParameter = function(type3, v, j) {
         var lst, count;
-        if (type2 === "persons") {
+        if (type3 === "persons") {
           lst = this.persons[v][j];
           count = this.persons_count[v][j];
         } else {
-          lst = this[type2][v];
-          count = this[type2 + "_count"][v];
+          lst = this[type3][v];
+          count = this[type3 + "_count"][v];
         }
         if (lst.length < count && !this.state.tmp.sort_key_flag) {
           if (this.etal_use_last) {
-            if (type2 === "persons") {
+            if (type3 === "persons") {
               this.etal_spec[v].persons[j] = 2;
             } else {
-              this.etal_spec[v][type2] = 2;
+              this.etal_spec[v][type3] = 2;
             }
           } else {
-            if (type2 === "persons") {
+            if (type3 === "persons") {
               this.etal_spec[v].persons[j] = 1;
             } else {
-              this.etal_spec[v][type2] = 1;
+              this.etal_spec[v][type3] = 1;
             }
           }
         } else {
-          if (type2 === "persons") {
+          if (type3 === "persons") {
             this.etal_spec[v].persons[j] = 0;
           } else {
-            this.etal_spec[v][type2] = 0;
+            this.etal_spec[v][type3] = 0;
           }
         }
       };
@@ -12727,7 +13234,7 @@
           this.tests = [];
         }
         ;
-        var types3 = arg.split(/\s+/);
+        var types5 = arg.split(/\s+/);
         var maketest = function(mytype) {
           return function(Item) {
             var ret = Item.type === mytype;
@@ -12739,8 +13246,8 @@
           };
         };
         var tests = [];
-        for (var i = 0, ilen = types3.length; i < ilen; i += 1) {
-          tests.push(maketest(types3[i]));
+        for (var i = 0, ilen = types5.length; i < ilen; i += 1) {
+          tests.push(maketest(types5[i]));
         }
         this.tests.push(state.fun.match.any(this, state, tests));
       };
@@ -18674,20 +19181,20 @@
           this.lists = this.lists.slice(1);
         }
       };
-      CSL2.Disambiguation.prototype.scanItems = function(list6) {
+      CSL2.Disambiguation.prototype.scanItems = function(list11) {
         var pos, len, otherItem;
         if (this.debug) {
           this.state.sys.print("[2] === scanItems() ===");
         }
-        this.Item = list6[1][0];
+        this.Item = list11[1][0];
         this.ItemCite = CSL2.getAmbiguousCite.call(this.state, this.Item, this.base, true);
-        this.scanlist = list6[1];
+        this.scanlist = list11[1];
         this.partners = [];
         this.partners.push(this.Item);
         this.nonpartners = [];
         var clashes = 0;
-        for (var pos = 1, len = list6[1].length; pos < len; pos += 1) {
-          otherItem = list6[1][pos];
+        for (var pos = 1, len = list11[1].length; pos < len; pos += 1) {
+          otherItem = list11[1][pos];
           var otherItemCite = CSL2.getAmbiguousCite.call(this.state, otherItem, this.base, true);
           if (this.debug) {
             if (pos > 1) {
@@ -19520,8 +20027,8 @@
     if (versnum <= 0 || versnum > this.currentVersion()) {
       return null;
     } else {
-      const [data2, options2] = this.log[versnum - 1];
-      const image = new this.constructor(JSON.parse(data2), JSON.parse(options2));
+      const [data3, options3] = this.log[versnum - 1];
+      const image = new this.constructor(JSON.parse(data3), JSON.parse(options3));
       image.log = this.log.slice(0, versnum);
       return image;
     }
@@ -19549,22 +20056,22 @@
   var types = ["json", "html", "string", "rtf"];
   var styles = ["csl", "bibtex", "bibtxt", "citation-*", "ris", "ndjson"];
   var wrapperTypes = ["string", "function"];
-  function validateOutputOptions(options2) {
-    if (typeof options2 !== "object") {
+  function validateOutputOptions(options3) {
+    if (typeof options3 !== "object") {
       throw new TypeError("Options not an object!");
     }
     const {
-      format: format3,
-      type: type2,
+      format: format5,
+      type: type3,
       style,
       lang,
       append,
       prepend
-    } = options2;
-    if (format3 && !formats.includes(format3)) {
-      throw new TypeError(`Option format ("${format3}") should be one of: ${formats}`);
-    } else if (type2 && !types.includes(type2)) {
-      throw new TypeError(`Option type ("${type2}") should be one of: ${types}`);
+    } = options3;
+    if (format5 && !formats.includes(format5)) {
+      throw new TypeError(`Option format ("${format5}") should be one of: ${formats}`);
+    } else if (type3 && !types.includes(type3)) {
+      throw new TypeError(`Option type ("${type3}") should be one of: ${types}`);
     } else if (style && !styles.includes(style) && !/^citation/.test(style)) {
       throw new TypeError(`Option style ("${style}") should be one of: ${styles}`);
     } else if (lang && typeof lang !== "string") {
@@ -19574,26 +20081,26 @@
     } else if (append && !wrapperTypes.includes(typeof append)) {
       throw new TypeError(`Option append should be a string or a function, but is a ${typeof append}`);
     }
-    if (/^citation/.test(style) && type2 === "json") {
-      throw new Error(`Combination type/style of json/citation-* is not valid: ${type2}/${style}`);
+    if (/^citation/.test(style) && type3 === "json") {
+      throw new Error(`Combination type/style of json/citation-* is not valid: ${type3}/${style}`);
     }
     return true;
   }
-  function validateOptions(options2) {
-    if (typeof options2 !== "object") {
+  function validateOptions(options3) {
+    if (typeof options3 !== "object") {
       throw new TypeError("Options should be an object");
     }
-    if (options2.output) {
-      validateOutputOptions(options2.output);
-    } else if (options2.maxChainLength && typeof options2.maxChainLength !== "number") {
+    if (options3.output) {
+      validateOutputOptions(options3.output);
+    } else if (options3.maxChainLength && typeof options3.maxChainLength !== "number") {
       throw new TypeError("Option maxChainLength should be a number");
-    } else if (options2.forceType && typeof options2.forceType !== "string") {
+    } else if (options3.forceType && typeof options3.forceType !== "string") {
       throw new TypeError("Option forceType should be a string");
-    } else if (options2.generateGraph != null && typeof options2.generateGraph !== "boolean") {
+    } else if (options3.generateGraph != null && typeof options3.generateGraph !== "boolean") {
       throw new TypeError("Option generateGraph should be a boolean");
-    } else if (options2.strict != null && typeof options2.strict !== "boolean") {
+    } else if (options3.strict != null && typeof options3.strict !== "boolean") {
       throw new TypeError("Option strict should be a boolean");
-    } else if (options2.target != null && typeof options2.target !== "string") {
+    } else if (options3.target != null && typeof options3.target !== "string") {
       throw new TypeError("Option target should be a boolean");
     }
     return true;
@@ -19606,12 +20113,12 @@
     style: "csl",
     lang: "en-US"
   };
-  function options(options2, log) {
-    validateOutputOptions(options2);
+  function options(options3, log) {
+    validateOutputOptions(options3);
     if (log) {
       this.save();
     }
-    Object.assign(this._options, options2);
+    Object.assign(this._options, options3);
     return this;
   }
 
@@ -19695,8 +20202,8 @@
   function applyGraph(entry, graph) {
     if (entry._graph) {
       const index = graph.findIndex(({
-        type: type2
-      }) => type2 === "@else/list+object");
+        type: type3
+      }) => type3 === "@else/list+object");
       if (index !== -1) {
         graph.splice(index + 1, 0, ...entry._graph.slice(0, -1));
       }
@@ -19760,10 +20267,10 @@
         return "@invalid";
     }
   }
-  function matchType(typeList = [], data2) {
-    for (const type2 of typeList) {
-      if (types2[type2].predicate(data2)) {
-        return matchType(types2[type2].extensions, data2) || type2;
+  function matchType(typeList = [], data3) {
+    for (const type3 of typeList) {
+      if (types2[type3].predicate(data3)) {
+        return matchType(types2[type3].extensions, data3) || type3;
       }
     }
   }
@@ -19775,46 +20282,46 @@
     const match = matchType(dataTypes[dataType], input);
     return match || parseNativeTypes(input, dataType);
   }
-  function addTypeParser(format3, {
+  function addTypeParser(format5, {
     dataType,
     predicate,
     extends: extend
   }) {
     let extensions = [];
-    if (format3 in unregExts) {
-      extensions = unregExts[format3];
-      delete unregExts[format3];
-      logger_default.debug("[core]", `Subclasses "${extensions}" finally registered to parent type "${format3}"`);
+    if (format5 in unregExts) {
+      extensions = unregExts[format5];
+      delete unregExts[format5];
+      logger_default.debug("[core]", `Subclasses "${extensions}" finally registered to parent type "${format5}"`);
     }
     const object = {
       predicate,
       extensions
     };
-    types2[format3] = object;
+    types2[format5] = object;
     if (extend) {
       const parentTypeParser = types2[extend];
       if (parentTypeParser) {
-        parentTypeParser.extensions.push(format3);
+        parentTypeParser.extensions.push(format5);
       } else {
         if (!unregExts[extend]) {
           unregExts[extend] = [];
         }
-        unregExts[extend].push(format3);
-        logger_default.debug("[core]", `Subclass "${format3}" is waiting on parent type "${extend}"`);
+        unregExts[extend].push(format5);
+        logger_default.debug("[core]", `Subclass "${format5}" is waiting on parent type "${extend}"`);
       }
     } else {
       const typeList = dataTypes[dataType] || (dataTypes[dataType] = []);
-      typeList.push(format3);
+      typeList.push(format5);
     }
   }
-  function hasTypeParser(type2) {
-    return Object.prototype.hasOwnProperty.call(types2, type2);
+  function hasTypeParser(type3) {
+    return Object.prototype.hasOwnProperty.call(types2, type3);
   }
-  function removeTypeParser(type2) {
-    delete types2[type2];
-    const typeLists = [...Object.keys(dataTypes).map((key) => dataTypes[key]), ...Object.keys(types2).map((type3) => types2[type3].extensions).filter((list6) => list6.length > 0)];
+  function removeTypeParser(type3) {
+    delete types2[type3];
+    const typeLists = [...Object.keys(dataTypes).map((key) => dataTypes[key]), ...Object.keys(types2).map((type4) => types2[type4].extensions).filter((list11) => list11.length > 0)];
     typeLists.forEach((typeList) => {
-      const index = typeList.indexOf(type2);
+      const index = typeList.indexOf(type3);
       if (index > -1) {
         typeList.splice(index, 1);
       }
@@ -19857,9 +20364,9 @@
     return ("string" === r ? String : Number)(t);
   }
   var TypeParser = class {
-    constructor(data2) {
+    constructor(data3) {
       _defineProperty(this, "validDataTypes", ["String", "Array", "SimpleObject", "ComplexObject", "Primitive"]);
-      this.data = data2;
+      this.data = data3;
     }
     validateDataType() {
       const dataType = this.data.dataType;
@@ -19996,10 +20503,10 @@
   };
   var DataParser = class {
     constructor(parser, {
-      async: async2
+      async: async3
     } = {}) {
       this.parser = parser;
-      this.async = async2;
+      this.async = async3;
     }
     validate() {
       const parser = this.parser;
@@ -20009,26 +20516,26 @@
     }
   };
   var FormatParser = class {
-    constructor(format3, parsers2 = {}) {
-      this.format = format3;
-      if (parsers2.parseType) {
-        this.typeParser = new TypeParser(parsers2.parseType);
+    constructor(format5, parsers3 = {}) {
+      this.format = format5;
+      if (parsers3.parseType) {
+        this.typeParser = new TypeParser(parsers3.parseType);
       }
-      if (parsers2.parse) {
-        this.dataParser = new DataParser(parsers2.parse, {
+      if (parsers3.parse) {
+        this.dataParser = new DataParser(parsers3.parse, {
           async: false
         });
       }
-      if (parsers2.parseAsync) {
-        this.asyncDataParser = new DataParser(parsers2.parseAsync, {
+      if (parsers3.parseAsync) {
+        this.asyncDataParser = new DataParser(parsers3.parseAsync, {
           async: true
         });
       }
     }
     validateFormat() {
-      const format3 = this.format;
-      if (!typeMatcher.test(format3)) {
-        throw new TypeError(`format name was "${format3}"; didn't match expected pattern`);
+      const format5 = this.format;
+      if (!typeMatcher.test(format5)) {
+        throw new TypeError(`format name was "${format5}"; didn't match expected pattern`);
       }
     }
     validate() {
@@ -20306,16 +20813,16 @@
       return date;
     }
   }
-  function correctType(type2, bestGuessConversions) {
-    type2 = correctField("language", type2, bestGuessConversions);
-    if (entryTypes[type2] === true) {
-      return type2;
+  function correctType(type3, bestGuessConversions) {
+    type3 = correctField("language", type3, bestGuessConversions);
+    if (entryTypes[type3] === true) {
+      return type3;
     }
     if (bestGuessConversions) {
-      if (type2 in entryTypes) {
-        return entryTypes[type2];
-      } else if (typeof type2 === "string" && type2.toLowerCase() !== type2) {
-        return correctType(type2.toLowerCase(), bestGuessConversions);
+      if (type3 in entryTypes) {
+        return entryTypes[type3];
+      } else if (typeof type3 === "string" && type3.toLowerCase() !== type3) {
+        return correctType(type3.toLowerCase(), bestGuessConversions);
       }
     }
     return void 0;
@@ -20345,8 +20852,8 @@
       return value;
     }
   }
-  function parseCsl(data2, bestGuessConversions = true) {
-    return data2.map(function(entry) {
+  function parseCsl(data3, bestGuessConversions = true) {
+    return data3.map(function(entry) {
       const clean2 = {};
       for (const field in entry) {
         const correction = correctField(field, entry[field], bestGuessConversions);
@@ -20365,8 +20872,8 @@
     "@csl/object": (input) => [input],
     "@csl/list+object": (input) => input,
     "@else/list+object": (input) => input.map((item) => {
-      const type2 = type(item);
-      return data(item, type2);
+      const type3 = type(item);
+      return data(item, type3);
     }).flat(),
     "@invalid": () => {
       throw new Error("This format is not supported or recognized");
@@ -20374,113 +20881,97 @@
   };
   var nativeAsyncParsers = {
     "@else/list+object": (input) => Promise.all(input.map((item) => {
-      const type2 = type(item);
-      return dataAsync(item, type2);
+      const type3 = type(item);
+      return dataAsync(item, type3);
     })).then((input2) => input2.flat())
   };
-  function data(input, type2) {
-    if (typeof parsers[type2] === "function") {
-      return parsers[type2](input);
-    } else if (typeof nativeParsers[type2] === "function") {
-      return nativeParsers[type2](input);
+  function data(input, type3) {
+    if (typeof parsers[type3] === "function") {
+      return parsers[type3](input);
+    } else if (typeof nativeParsers[type3] === "function") {
+      return nativeParsers[type3](input);
     } else {
-      throw new TypeError(`No synchronous parser found for ${type2}`);
+      throw new TypeError(`No synchronous parser found for ${type3}`);
     }
   }
-  async function dataAsync(input, type2) {
-    if (typeof asyncParsers[type2] === "function") {
-      return asyncParsers[type2](input);
-    } else if (typeof nativeAsyncParsers[type2] === "function") {
-      return nativeAsyncParsers[type2](input);
-    } else if (hasDataParser(type2, false)) {
-      return data(input, type2);
+  async function dataAsync(input, type3) {
+    if (typeof asyncParsers[type3] === "function") {
+      return asyncParsers[type3](input);
+    } else if (typeof nativeAsyncParsers[type3] === "function") {
+      return nativeAsyncParsers[type3](input);
+    } else if (hasDataParser(type3, false)) {
+      return data(input, type3);
     } else {
-      throw new TypeError(`No parser found for ${type2}`);
+      throw new TypeError(`No parser found for ${type3}`);
     }
   }
-  function addDataParser(format3, {
+  function addDataParser(format5, {
     parser,
-    async: async2
+    async: async3
   }) {
-    if (async2) {
-      asyncParsers[format3] = parser;
+    if (async3) {
+      asyncParsers[format5] = parser;
     } else {
-      parsers[format3] = parser;
+      parsers[format5] = parser;
     }
   }
-  function hasDataParser(type2, async2) {
-    return async2 ? asyncParsers[type2] || nativeAsyncParsers[type2] : parsers[type2] || nativeParsers[type2];
+  function hasDataParser(type3, async3) {
+    return async3 ? asyncParsers[type3] || nativeAsyncParsers[type3] : parsers[type3] || nativeParsers[type3];
   }
-  function removeDataParser(type2, async2) {
-    delete (async2 ? asyncParsers : parsers)[type2];
+  function removeDataParser(type3, async3) {
+    delete (async3 ? asyncParsers : parsers)[type3];
   }
-  function listDataParser(async2) {
-    return Object.keys(async2 ? asyncParsers : parsers);
+  function listDataParser(async3) {
+    return Object.keys(async3 ? asyncParsers : parsers);
   }
 
   // node_modules/@citation-js/core/lib-mjs/plugins/input/register.js
   var formats2 = {};
-  function add(format3, parsers2) {
-    const formatParser = new FormatParser(format3, parsers2);
+  function add(format5, parsers3) {
+    const formatParser = new FormatParser(format5, parsers3);
     formatParser.validate();
-    const index = formats2[format3] || (formats2[format3] = {});
+    const index = formats2[format5] || (formats2[format5] = {});
     if (formatParser.typeParser) {
-      addTypeParser(format3, formatParser.typeParser);
+      addTypeParser(format5, formatParser.typeParser);
       index.type = true;
     }
     if (formatParser.dataParser) {
-      addDataParser(format3, formatParser.dataParser);
+      addDataParser(format5, formatParser.dataParser);
       index.data = true;
     }
     if (formatParser.asyncDataParser) {
-      addDataParser(format3, formatParser.asyncDataParser);
+      addDataParser(format5, formatParser.asyncDataParser);
       index.asyncData = true;
     }
-    if (parsers2.outputs) {
-      index.outputs = parsers2.outputs;
+    if (parsers3.outputs) {
+      index.outputs = parsers3.outputs;
     }
   }
-  function get(format3) {
-    return formats2[format3];
+  function get(format5) {
+    return formats2[format5];
   }
-  function remove(format3) {
-    const index = formats2[format3];
+  function remove(format5) {
+    const index = formats2[format5];
     if (!index) {
       return;
     }
     if (index.type) {
-      removeTypeParser(format3);
+      removeTypeParser(format5);
     }
     if (index.data) {
-      removeDataParser(format3);
+      removeDataParser(format5);
     }
     if (index.asyncData) {
-      removeDataParser(format3, true);
+      removeDataParser(format5, true);
     }
-    delete formats2[format3];
+    delete formats2[format5];
   }
-  function has(format3) {
-    return format3 in formats2;
+  function has(format5) {
+    return format5 in formats2;
   }
   function list() {
     return Object.keys(formats2);
   }
-
-  // node_modules/@citation-js/core/lib-mjs/util/index.js
-  var util_exports = {};
-  __export(util_exports, {
-    Grammar: () => Grammar,
-    Register: () => register_default,
-    TokenStack: () => stack_default,
-    Translator: () => Translator,
-    deepCopy: () => deepCopy_default,
-    downgradeCsl: () => downgradeCsl,
-    fetchFile: () => fetchFile,
-    fetchFileAsync: () => fetchFileAsync,
-    fetchId: () => fetchId_default,
-    setUserAgent: () => setUserAgent,
-    upgradeCsl: () => upgradeCsl
-  });
 
   // node_modules/@citation-js/core/lib-mjs/util/csl.js
   function ownKeys2(e, r) {
@@ -20635,202 +21126,25 @@
   };
 
   // node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
-  var isBrowser = typeof location !== "undefined" && typeof navigator !== "undefined";
-  var asyncFetch = isBrowser ? fetch : node_fetch_default;
-  var asyncHeaders = isBrowser ? Headers : Headers2;
   var userAgent = `Citation.js/${package_default.version}`;
   if (typeof process !== "undefined" && process && process.release && process.release.name === "node" && process.version) {
     userAgent += ` Node.js/${process.version}`;
   }
-  function normaliseHeaders(headers) {
-    const result = {};
-    const entries = headers instanceof asyncHeaders || headers instanceof import_sync_fetch.default.Headers ? Array.from(headers) : Object.entries(headers);
-    for (const [name, header] of entries) {
-      result[name.toLowerCase()] = header.toString();
-    }
-    return result;
-  }
-  function parseOpts(opts = {}) {
-    const reqOpts = {
-      headers: {
-        accept: "*/*"
-      },
-      method: "GET",
-      checkContentType: opts.checkContentType
-    };
-    if (userAgent && !isBrowser) {
-      reqOpts.headers["user-agent"] = userAgent;
-    }
-    if (opts.body) {
-      reqOpts.method = "POST";
-      const isJson = typeof opts.body !== "string";
-      reqOpts.body = isJson ? JSON.stringify(opts.body) : opts.body;
-      reqOpts.headers["content-type"] = isJson ? "application/json" : "text/plain";
-    }
-    if (opts.headers) {
-      Object.assign(reqOpts.headers, normaliseHeaders(opts.headers));
-    }
-    return reqOpts;
-  }
-  function sameType(request, response) {
-    if (!request.accept || request.accept === "*/*" || !response["content-type"]) {
-      return true;
-    }
-    const [a, b] = response["content-type"].split(";")[0].trim().split("/");
-    return request.accept.split(",").map((type2) => type2.split(";")[0].trim().split("/")).some(([c, d]) => (c === a || c === "*") && (d === b || d === "*"));
-  }
-  function checkResponse(response, opts) {
-    const {
-      status,
-      headers
-    } = response;
-    let error;
-    if (status >= 400) {
-      error = new Error(`Server responded with status code ${status}`);
-    } else if (opts.checkContentType === true && !sameType(opts.headers, normaliseHeaders(headers))) {
-      error = new Error(`Server responded with content-type ${headers.get("content-type")}`);
-    }
-    if (error) {
-      error.status = status;
-      error.headers = headers;
-      error.body = response.body;
-      throw error;
-    }
-    return response;
-  }
-  function fetchFile(url, opts) {
-    const reqOpts = parseOpts(opts);
-    logger_default.http("[core]", reqOpts.method, url, reqOpts);
-    const response = checkResponse((0, import_sync_fetch.default)(url, reqOpts), reqOpts);
-    return response.text();
-  }
-  async function fetchFileAsync(url, opts) {
-    const reqOpts = parseOpts(opts);
-    logger_default.http("[core]", reqOpts.method, url, reqOpts);
-    return asyncFetch(url, reqOpts).then((response) => checkResponse(response, reqOpts)).then((response) => response.text());
-  }
-  function setUserAgent(newUserAgent) {
-    userAgent = newUserAgent;
-  }
 
   // node_modules/@citation-js/core/lib-mjs/util/fetchId.js
-  function fetchId(list6, prefix) {
+  function fetchId(list11, prefix) {
     let id;
-    while (id === void 0 || list6.includes(id)) {
+    while (id === void 0 || list11.includes(id)) {
       id = `${prefix}${Math.random().toString().slice(2)}`;
     }
     return id;
   }
   var fetchId_default = fetchId;
 
-  // node_modules/@citation-js/core/lib-mjs/util/stack.js
-  var TokenStack = class _TokenStack {
-    constructor(array) {
-      this.stack = array;
-      this.index = 0;
-      this.current = this.stack[this.index];
-    }
-    static getPatternText(pattern) {
-      return `"${pattern instanceof RegExp ? pattern.source : pattern}"`;
-    }
-    static getMatchCallback(pattern) {
-      if (Array.isArray(pattern)) {
-        const matches = pattern.map(_TokenStack.getMatchCallback);
-        return (token) => matches.some((matchCallback) => matchCallback(token));
-      } else if (pattern instanceof Function) {
-        return pattern;
-      } else if (pattern instanceof RegExp) {
-        return (token) => pattern.test(token);
-      } else {
-        return (token) => pattern === token;
-      }
-    }
-    tokensLeft() {
-      return this.stack.length - this.index;
-    }
-    matches(pattern) {
-      return _TokenStack.getMatchCallback(pattern)(this.current, this.index, this.stack);
-    }
-    matchesSequence(sequence) {
-      const part = this.stack.slice(this.index, this.index + sequence.length).join("");
-      return typeof sequence === "string" ? part === sequence : sequence.every((pattern, index) => _TokenStack.getMatchCallback(pattern)(part[index]));
-    }
-    consumeToken(pattern = /^[\s\S]$/, {
-      inverse = false,
-      spaced = true
-    } = {}) {
-      if (spaced) {
-        this.consumeWhitespace();
-      }
-      const token = this.current;
-      const match = _TokenStack.getMatchCallback(pattern)(token, this.index, this.stack);
-      if (match) {
-        this.current = this.stack[++this.index];
-      } else {
-        throw new SyntaxError(`Unexpected token at index ${this.index}: Expected ${_TokenStack.getPatternText(pattern)}, got "${token}"`);
-      }
-      if (spaced) {
-        this.consumeWhitespace();
-      }
-      return token;
-    }
-    consumeWhitespace(pattern = /^\s$/, {
-      optional = true
-    } = {}) {
-      return this.consume(pattern, {
-        min: +!optional
-      });
-    }
-    consumeN(length) {
-      if (this.tokensLeft() < length) {
-        throw new SyntaxError("Not enough tokens left");
-      }
-      const start2 = this.index;
-      while (length--) {
-        this.current = this.stack[++this.index];
-      }
-      return this.stack.slice(start2, this.index).join("");
-    }
-    consumeSequence(sequence) {
-      if (this.matchesSequence(sequence)) {
-        return this.consumeN(sequence.length);
-      } else {
-        throw new SyntaxError(`Expected "${sequence}", got "${this.consumeN(sequence.length)}"`);
-      }
-    }
-    consume(pattern = /^[\s\S]$/, {
-      min: min2 = 0,
-      max: max2 = Infinity,
-      inverse = false,
-      tokenMap,
-      tokenFilter
-    } = {}) {
-      const start2 = this.index;
-      const match = _TokenStack.getMatchCallback(pattern);
-      while (match(this.current, this.index, this.stack) !== inverse) {
-        this.current = this.stack[++this.index];
-      }
-      let consumed = this.stack.slice(start2, this.index);
-      if (consumed.length < min2) {
-        throw new SyntaxError(`Not enough ${_TokenStack.getPatternText(pattern)}`);
-      } else if (consumed.length > max2) {
-        throw new SyntaxError(`Too many ${_TokenStack.getPatternText(pattern)}`);
-      }
-      if (tokenMap) {
-        consumed = consumed.map(tokenMap);
-      }
-      if (tokenFilter) {
-        consumed = consumed.filter(tokenFilter);
-      }
-      return consumed.join("");
-    }
-  };
-  var stack_default = TokenStack;
-
   // node_modules/@citation-js/core/lib-mjs/util/register.js
   var Register = class {
-    constructor(data2 = {}) {
-      this.data = data2;
+    constructor(data3 = {}) {
+      this.data = data3;
     }
     set(key, value) {
       this.data[key] = value;
@@ -20857,49 +21171,6 @@
     }
   };
   var register_default = Register;
-
-  // node_modules/@citation-js/core/lib-mjs/util/grammar.js
-  var Grammar = class {
-    constructor(rules, state) {
-      this.rules = rules;
-      this.defaultState = state;
-      this.mainRule = Object.keys(rules)[0];
-      this.log = [];
-    }
-    parse(iterator, mainRule) {
-      this.lexer = iterator;
-      this.token = this.lexer.next();
-      this.state = deepCopy(this.defaultState);
-      this.log = [];
-      return this.consumeRule(mainRule || this.mainRule);
-    }
-    matchEndOfFile() {
-      return !this.token;
-    }
-    matchToken(type2) {
-      return this.token && type2 === this.token.type;
-    }
-    consumeToken(type2, optional) {
-      const token = this.token;
-      if (!type2 || token && token.type === type2) {
-        this.token = this.lexer.next();
-        return token;
-      } else if (optional) {
-        return void 0;
-      } else {
-        const got = token ? `"${token.type}"` : "EOF";
-        const error = new SyntaxError(this.lexer.formatError(token, `expected "${type2}", got ${got}`));
-        error.message += ` (${this.log.join("->")})`;
-        throw error;
-      }
-    }
-    consumeRule(rule) {
-      this.log.push(rule);
-      const result = this.rules[rule].call(this);
-      this.log.pop();
-      return result;
-    }
-  };
 
   // node_modules/@citation-js/core/lib-mjs/util/translator.js
   function createConditionEval(condition) {
@@ -21015,14 +21286,14 @@
     }, []).map((element) => (element.count > 1 ? element.count + "x " : "") + element.type).join(" -> ");
   }
   var ChainParser = class {
-    constructor(input, options2 = {}) {
+    constructor(input, options3 = {}) {
       this.options = Object.assign({
         generateGraph: true,
         forceType: type(input),
         maxChainLength: 10,
         strict: true,
         target: "@csl/list+object"
-      }, options2);
+      }, options3);
       this.type = this.options.forceType;
       this.data = typeof input === "object" ? deepCopy_default(input) : input;
       this.graph = [{
@@ -21069,73 +21340,73 @@
     }
   };
   var chain = (...args) => {
-    const chain2 = new ChainParser(...args);
-    while (chain2.iterate()) {
+    const chain3 = new ChainParser(...args);
+    while (chain3.iterate()) {
       try {
-        chain2.data = data(chain2.data, chain2.type);
+        chain3.data = data(chain3.data, chain3.type);
       } catch (e) {
-        chain2.error = e;
+        chain3.error = e;
       }
     }
-    return chain2.end();
+    return chain3.end();
   };
   var chainLink = (input) => {
-    const type2 = type(input);
-    const output = type2.match(/array|object/) ? deepCopy_default(input) : input;
-    return data(output, type2);
+    const type3 = type(input);
+    const output = type3.match(/array|object/) ? deepCopy_default(input) : input;
+    return data(output, type3);
   };
   var chainAsync = async (...args) => {
-    const chain2 = new ChainParser(...args);
-    while (chain2.iterate()) {
-      chain2.data = await dataAsync(chain2.data, chain2.type).catch((e) => {
-        chain2.error = e;
+    const chain3 = new ChainParser(...args);
+    while (chain3.iterate()) {
+      chain3.data = await dataAsync(chain3.data, chain3.type).catch((e) => {
+        chain3.error = e;
       });
     }
-    return chain2.end();
+    return chain3.end();
   };
   var chainLinkAsync = async (input) => {
-    const type2 = type(input);
-    const output = type2.match(/array|object/) ? deepCopy_default(input) : input;
-    return dataAsync(output, type2);
+    const type3 = type(input);
+    const output = type3.match(/array|object/) ? deepCopy_default(input) : input;
+    return dataAsync(output, type3);
   };
 
   // node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
   var util = Object.assign({}, dataType_exports, graph_exports, parser_exports, csl_exports);
 
   // node_modules/@citation-js/core/lib-mjs/Cite/set.js
-  function add2(data2, options2 = {}, log = false) {
-    if (options2 === true || log === true) {
+  function add2(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
       this.save();
     }
-    this.data.push(...chain(data2, options2));
+    this.data.push(...chain(data3, options3));
     this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
       entry.id = fetchId_default(this.getIds(), "temp_id_");
     });
     return this;
   }
-  async function addAsync(data2, options2 = {}, log = false) {
-    if (options2 === true || log === true) {
+  async function addAsync(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
       this.save();
     }
-    this.data.push(...await chainAsync(data2, options2));
+    this.data.push(...await chainAsync(data3, options3));
     this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
       entry.id = fetchId_default(this.getIds(), "temp_id_");
     });
     return this;
   }
-  function set(data2, options2 = {}, log = false) {
-    if (options2 === true || log === true) {
+  function set(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
       this.save();
     }
     this.data = [];
-    return typeof options2 !== "boolean" ? this.add(data2, options2) : this.add(data2);
+    return typeof options3 !== "boolean" ? this.add(data3, options3) : this.add(data3);
   }
-  async function setAsync(data2, options2 = {}, log = false) {
-    if (options2 === true || log === true) {
+  async function setAsync(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
       this.save();
     }
     this.data = [];
-    return typeof options2 !== "boolean" ? this.addAsync(data2, options2) : this.addAsync(data2);
+    return typeof options3 !== "boolean" ? this.addAsync(data3, options3) : this.addAsync(data3);
   }
   function reset(log) {
     if (log) {
@@ -21172,8 +21443,8 @@
     return res;
   }
   var label_default = {
-    label(data2) {
-      return data2.reduce((object, entry) => {
+    label(data3) {
+      return data3.reduce((object, entry) => {
         object[entry.id] = getLabel(entry);
         return object;
       }, {});
@@ -21265,30 +21536,30 @@
   function list2() {
     return register.list();
   }
-  function format(name, data2, ...options2) {
+  function format(name, data3, ...options3) {
     if (!register.has(name)) {
       throw new Error(`Output format "${name}" unavailable`);
     }
-    return register.get(name)(data2, ...options2);
+    return register.get(name)(data3, ...options3);
   }
 
   // node_modules/@citation-js/core/lib-mjs/Cite/get.js
   function getIds() {
     return this.data.map((entry) => entry.id);
   }
-  function format2(format3, ...options2) {
-    return format(format3, parseCsl(this.data), ...options2);
+  function format2(format5, ...options3) {
+    return format(format5, parseCsl(this.data), ...options3);
   }
-  function get2(options2 = {}) {
-    validateOutputOptions(options2);
-    const parsedOptions = Object.assign({}, this.defaultOptions, this._options.output, options2);
+  function get2(options3 = {}) {
+    validateOutputOptions(options3);
+    const parsedOptions = Object.assign({}, this.defaultOptions, this._options.output, options3);
     const {
-      type: type2,
+      type: type3,
       style
     } = parsedOptions;
     const [styleType, styleFormat] = style.split("-");
     const newStyle = styleType === "citation" ? "bibliography" : styleType === "csl" ? "data" : styleType;
-    const newType = type2 === "string" ? "text" : type2 === "json" ? "object" : type2;
+    const newType = type3 === "string" ? "text" : type3 === "json" ? "object" : type3;
     let formatOptions;
     switch (newStyle) {
       case "bibliography": {
@@ -21318,15 +21589,15 @@
       default:
         throw new Error(`Invalid style "${newStyle}"`);
     }
-    const result = this.format(newStyle, Object.assign(formatOptions, options2._newOptions));
+    const result = this.format(newStyle, Object.assign(formatOptions, options3._newOptions));
     const {
-      format: format3
+      format: format5
     } = parsedOptions;
-    if (format3 === "real" && newType === "html" && typeof document !== "undefined" && typeof document.createElement === "function") {
+    if (format5 === "real" && newType === "html" && typeof document !== "undefined" && typeof document.createElement === "function") {
       const tmp = document.createElement("div");
       tmp.innerHTML = result;
       return tmp.firstChild;
-    } else if (format3 === "string" && typeof result === "object") {
+    } else if (format5 === "string" && typeof result === "object") {
       return JSON.stringify(result);
     } else {
       return result;
@@ -21342,12 +21613,12 @@
   });
 
   // node_modules/@citation-js/core/lib-mjs/Cite/async.js
-  function async(data2, options2, callback) {
-    if (typeof options2 === "function" && !callback) {
-      callback = options2;
-      options2 = void 0;
+  function async(data3, options3, callback) {
+    if (typeof options3 === "function" && !callback) {
+      callback = options3;
+      options3 = void 0;
     }
-    const promise = new this().setAsync(data2, options2);
+    const promise = new this().setAsync(data3, options3);
     if (typeof callback === "function") {
       promise.then(callback);
       return void 0;
@@ -21358,15 +21629,15 @@
   var async_default = async;
 
   // node_modules/@citation-js/core/lib-mjs/Cite/index.js
-  function Cite(data2, options2 = {}) {
+  function Cite(data3, options3 = {}) {
     if (!(this instanceof Cite)) {
-      return new Cite(data2, options2);
+      return new Cite(data3, options3);
     }
-    this._options = options2;
+    this._options = options3;
     this.log = [];
     this.data = [];
-    this.set(data2, options2);
-    this.options(options2);
+    this.set(data3, options3);
+    this.options(options3);
     return this;
   }
   Object.assign(Cite.prototype, log_exports, options_exports, set_exports, sort_exports, get_exports);
@@ -21455,17 +21726,17 @@
     remove: () => remove4
   });
   var configs = {};
-  function add5(ref2, config) {
-    configs[ref2] = config;
+  function add5(ref3, config) {
+    configs[ref3] = config;
   }
-  function get4(ref2) {
-    return configs[ref2];
+  function get4(ref3) {
+    return configs[ref3];
   }
-  function has4(ref2) {
-    return Object.prototype.hasOwnProperty.call(configs, ref2);
+  function has4(ref3) {
+    return Object.prototype.hasOwnProperty.call(configs, ref3);
   }
-  function remove4(ref2) {
-    delete configs[ref2];
+  function remove4(ref3) {
+    delete configs[ref3];
   }
   function list4() {
     return Object.keys(configs);
@@ -21479,37 +21750,37 @@
     config: config_exports
   };
   var indices = {};
-  function add6(ref2, plugins = {}) {
-    const mainIndex = indices[ref2] = {};
-    for (const type2 in plugins) {
-      if (type2 === "config") {
+  function add6(ref3, plugins = {}) {
+    const mainIndex = indices[ref3] = {};
+    for (const type3 in plugins) {
+      if (type3 === "config") {
         mainIndex.config = {
-          [ref2]: plugins.config
+          [ref3]: plugins.config
         };
-        registers.config.add(ref2, plugins.config);
+        registers.config.add(ref3, plugins.config);
         continue;
       }
-      const typeIndex = mainIndex[type2] = {};
-      const typePlugins = plugins[type2];
+      const typeIndex = mainIndex[type3] = {};
+      const typePlugins = plugins[type3];
       for (const name in typePlugins) {
         const typePlugin = typePlugins[name];
         typeIndex[name] = true;
-        registers[type2].add(name, typePlugin);
+        registers[type3].add(name, typePlugin);
       }
     }
   }
-  function remove5(ref2) {
-    const mainIndex = indices[ref2];
-    for (const type2 in mainIndex) {
-      const typeIndex = mainIndex[type2];
+  function remove5(ref3) {
+    const mainIndex = indices[ref3];
+    for (const type3 in mainIndex) {
+      const typeIndex = mainIndex[type3];
       for (const name in typeIndex) {
-        registers[type2].remove(name);
+        registers[type3].remove(name);
       }
     }
-    delete indices[ref2];
+    delete indices[ref3];
   }
-  function has5(ref2) {
-    return ref2 in indices;
+  function has5(ref3) {
+    return ref3 in indices;
   }
   function list5() {
     return Object.keys(indices);
@@ -21640,30 +21911,30 @@
     return dict.bibliographyContainer.join(`[${entries}]`);
   }
   var json_default = {
-    data(data2, {
-      type: type2,
-      format: format3 = type2 || "text",
-      version: version2 = "1.0.2"
+    data(data3, {
+      type: type3,
+      format: format5 = type3 || "text",
+      version: version3 = "1.0.2"
     } = {}) {
-      if (version2 < "1.0.2") {
-        data2 = downgradeCsl(data2);
+      if (version3 < "1.0.2") {
+        data3 = downgradeCsl(data3);
       }
-      if (format3 === "object") {
-        return deepCopy_default(data2);
-      } else if (format3 === "text") {
-        return JSON.stringify(data2, null, 2);
+      if (format5 === "object") {
+        return deepCopy_default(data3);
+      } else if (format5 === "text") {
+        return JSON.stringify(data3, null, 2);
       } else {
         logger_default.warn("[core]", "This feature (JSON output with special formatting) is unstable. See https://github.com/larsgw/citation.js/issues/144");
-        return getJson(data2, dict_exports.get(format3));
+        return getJson(data3, dict_exports.get(format5));
       }
     },
-    ndjson(data2, {
-      version: version2 = "1.0.2"
+    ndjson(data3, {
+      version: version3 = "1.0.2"
     } = {}) {
-      if (version2 < "1.0.2") {
-        data2 = downgradeCsl(data2);
+      if (version3 < "1.0.2") {
+        data3 = downgradeCsl(data3);
       }
-      return data2.map((entry) => JSON.stringify(entry)).join("\n");
+      return data3.map((entry) => JSON.stringify(entry)).join("\n");
     }
   };
 
@@ -21679,7 +21950,2173 @@
   // node_modules/@citation-js/core/lib-mjs/index.js
   var version = package_default.version;
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/locales.json
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/log.js
+  var log_exports2 = {};
+  __export(log_exports2, {
+    currentVersion: () => currentVersion2,
+    retrieveLastVersion: () => retrieveLastVersion2,
+    retrieveVersion: () => retrieveVersion2,
+    save: () => save2,
+    undo: () => undo2
+  });
+  function currentVersion2() {
+    return this.log.length;
+  }
+  function retrieveVersion2(versnum = 1) {
+    if (versnum <= 0 || versnum > this.currentVersion()) {
+      return null;
+    } else {
+      const [data3, options3] = this.log[versnum - 1];
+      const image = new this.constructor(JSON.parse(data3), JSON.parse(options3));
+      image.log = this.log.slice(0, versnum);
+      return image;
+    }
+  }
+  function undo2(number = 1) {
+    return this.retrieveVersion(this.currentVersion() - number);
+  }
+  function retrieveLastVersion2() {
+    return this.retrieveVersion(this.currentVersion());
+  }
+  function save2() {
+    this.log.push([JSON.stringify(this.data), JSON.stringify(this._options)]);
+    return this;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/options.js
+  var options_exports2 = {};
+  __export(options_exports2, {
+    defaultOptions: () => defaultOptions2,
+    options: () => options2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/validate.js
+  var formats4 = ["real", "string"];
+  var types3 = ["json", "html", "string", "rtf"];
+  var styles2 = ["csl", "bibtex", "bibtxt", "citation-*", "ris", "ndjson"];
+  var wrapperTypes2 = ["string", "function"];
+  function validateOutputOptions2(options3) {
+    if (typeof options3 !== "object") {
+      throw new TypeError("Options not an object!");
+    }
+    const {
+      format: format5,
+      type: type3,
+      style,
+      lang,
+      append,
+      prepend
+    } = options3;
+    if (format5 && !formats4.includes(format5)) {
+      throw new TypeError(`Option format ("${format5}") should be one of: ${formats4}`);
+    } else if (type3 && !types3.includes(type3)) {
+      throw new TypeError(`Option type ("${type3}") should be one of: ${types3}`);
+    } else if (style && !styles2.includes(style) && !/^citation/.test(style)) {
+      throw new TypeError(`Option style ("${style}") should be one of: ${styles2}`);
+    } else if (lang && typeof lang !== "string") {
+      throw new TypeError(`Option lang should be a string, but is a ${typeof lang}`);
+    } else if (prepend && !wrapperTypes2.includes(typeof prepend)) {
+      throw new TypeError(`Option prepend should be a string or a function, but is a ${typeof prepend}`);
+    } else if (append && !wrapperTypes2.includes(typeof append)) {
+      throw new TypeError(`Option append should be a string or a function, but is a ${typeof append}`);
+    }
+    if (/^citation/.test(style) && type3 === "json") {
+      throw new Error(`Combination type/style of json/citation-* is not valid: ${type3}/${style}`);
+    }
+    return true;
+  }
+  function validateOptions2(options3) {
+    if (typeof options3 !== "object") {
+      throw new TypeError("Options should be an object");
+    }
+    if (options3.output) {
+      validateOutputOptions2(options3.output);
+    } else if (options3.maxChainLength && typeof options3.maxChainLength !== "number") {
+      throw new TypeError("Option maxChainLength should be a number");
+    } else if (options3.forceType && typeof options3.forceType !== "string") {
+      throw new TypeError("Option forceType should be a string");
+    } else if (options3.generateGraph != null && typeof options3.generateGraph !== "boolean") {
+      throw new TypeError("Option generateGraph should be a boolean");
+    } else if (options3.strict != null && typeof options3.strict !== "boolean") {
+      throw new TypeError("Option strict should be a boolean");
+    } else if (options3.target != null && typeof options3.target !== "string") {
+      throw new TypeError("Option target should be a boolean");
+    }
+    return true;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/options.js
+  var defaultOptions2 = {
+    format: "real",
+    type: "json",
+    style: "csl",
+    lang: "en-US"
+  };
+  function options2(options3, log) {
+    validateOutputOptions2(options3);
+    if (log) {
+      this.save();
+    }
+    Object.assign(this._options, options3);
+    return this;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/set.js
+  var set_exports2 = {};
+  __export(set_exports2, {
+    add: () => add8,
+    addAsync: () => addAsync2,
+    reset: () => reset2,
+    set: () => set2,
+    setAsync: () => setAsync2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
+  var input_exports2 = {};
+  __export(input_exports2, {
+    add: () => add7,
+    addDataParser: () => addDataParser2,
+    addTypeParser: () => addTypeParser2,
+    chain: () => chain2,
+    chainAsync: () => chainAsync2,
+    chainLink: () => chainLink2,
+    chainLinkAsync: () => chainLinkAsync2,
+    data: () => data2,
+    dataAsync: () => dataAsync2,
+    get: () => get5,
+    has: () => has6,
+    hasDataParser: () => hasDataParser2,
+    hasTypeParser: () => hasTypeParser2,
+    list: () => list6,
+    listDataParser: () => listDataParser2,
+    listTypeParser: () => listTypeParser2,
+    remove: () => remove6,
+    removeDataParser: () => removeDataParser2,
+    removeTypeParser: () => removeTypeParser2,
+    treeTypeParser: () => treeTypeParser2,
+    type: () => type2,
+    typeMatcher: () => typeMatcher2,
+    util: () => util2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/dataType.js
+  var dataType_exports2 = {};
+  __export(dataType_exports2, {
+    dataTypeOf: () => dataTypeOf2,
+    typeOf: () => typeOf2
+  });
+  function typeOf2(thing) {
+    switch (thing) {
+      case void 0:
+        return "Undefined";
+      case null:
+        return "Null";
+      default:
+        return thing.constructor.name;
+    }
+  }
+  function dataTypeOf2(thing) {
+    switch (typeof thing) {
+      case "string":
+        return "String";
+      case "object":
+        if (Array.isArray(thing)) {
+          return "Array";
+        } else if (typeOf2(thing) === "Object") {
+          return "SimpleObject";
+        } else if (typeOf2(thing) !== "Null") {
+          return "ComplexObject";
+        }
+      default:
+        return "Primitive";
+    }
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/graph.js
+  var graph_exports2 = {};
+  __export(graph_exports2, {
+    applyGraph: () => applyGraph2,
+    removeGraph: () => removeGraph2
+  });
+  function applyGraph2(entry, graph) {
+    if (entry._graph) {
+      const index = graph.findIndex(({
+        type: type3
+      }) => type3 === "@else/list+object");
+      if (index !== -1) {
+        graph.splice(index + 1, 0, ...entry._graph.slice(0, -1));
+      }
+    }
+    entry._graph = graph;
+    return entry;
+  }
+  function removeGraph2(entry) {
+    delete entry._graph;
+    return entry;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
+  var parser_exports2 = {};
+  __export(parser_exports2, {
+    DataParser: () => DataParser2,
+    FormatParser: () => FormatParser2,
+    TypeParser: () => TypeParser2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/logger.js
+  var logger2 = {
+    _output(level, scope, msg) {
+      this._log.push(scope, msg);
+      if (this._levels.indexOf(level) < this._levels.indexOf(this.level)) {
+        return;
+      }
+      this._console.log(scope, ...msg);
+    },
+    _console: null,
+    _log: [],
+    _levels: ["http", "debug", "unmapped", "info", "warn", "error", "silent"],
+    level: "silent"
+  };
+  for (const level of logger2._levels) {
+    logger2[level] = (scope, ...msg) => logger2._output(level, scope, msg);
+  }
+  if (typeof console.Console === "function") {
+    logger2._console = new console.Console(process.stderr);
+  } else {
+    logger2._console = console;
+  }
+  var logger_default2 = logger2;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/type.js
+  var types4 = {};
+  var dataTypes2 = {};
+  var unregExts2 = {};
+  function parseNativeTypes2(input, dataType) {
+    switch (dataType) {
+      case "Array":
+        if (input.length === 0 || input.every((entry) => type2(entry) === "@csl/object")) {
+          return "@csl/list+object";
+        } else {
+          return "@else/list+object";
+        }
+      case "SimpleObject":
+      case "ComplexObject":
+        return "@csl/object";
+      default:
+        return "@invalid";
+    }
+  }
+  function matchType2(typeList = [], data3) {
+    for (const type3 of typeList) {
+      if (types4[type3].predicate(data3)) {
+        return matchType2(types4[type3].extensions, data3) || type3;
+      }
+    }
+  }
+  function type2(input) {
+    const dataType = dataTypeOf2(input);
+    if (dataType === "Array" && input.length === 0) {
+      return parseNativeTypes2(input, dataType);
+    }
+    const match = matchType2(dataTypes2[dataType], input);
+    return match || parseNativeTypes2(input, dataType);
+  }
+  function addTypeParser2(format5, {
+    dataType,
+    predicate,
+    extends: extend
+  }) {
+    let extensions = [];
+    if (format5 in unregExts2) {
+      extensions = unregExts2[format5];
+      delete unregExts2[format5];
+      logger_default2.debug("[core]", `Subclasses "${extensions}" finally registered to parent type "${format5}"`);
+    }
+    const object = {
+      predicate,
+      extensions
+    };
+    types4[format5] = object;
+    if (extend) {
+      const parentTypeParser = types4[extend];
+      if (parentTypeParser) {
+        parentTypeParser.extensions.push(format5);
+      } else {
+        if (!unregExts2[extend]) {
+          unregExts2[extend] = [];
+        }
+        unregExts2[extend].push(format5);
+        logger_default2.debug("[core]", `Subclass "${format5}" is waiting on parent type "${extend}"`);
+      }
+    } else {
+      const typeList = dataTypes2[dataType] || (dataTypes2[dataType] = []);
+      typeList.push(format5);
+    }
+  }
+  function hasTypeParser2(type3) {
+    return Object.prototype.hasOwnProperty.call(types4, type3);
+  }
+  function removeTypeParser2(type3) {
+    delete types4[type3];
+    const typeLists = [...Object.keys(dataTypes2).map((key) => dataTypes2[key]), ...Object.keys(types4).map((type4) => types4[type4].extensions).filter((list11) => list11.length > 0)];
+    typeLists.forEach((typeList) => {
+      const index = typeList.indexOf(type3);
+      if (index > -1) {
+        typeList.splice(index, 1);
+      }
+    });
+  }
+  function listTypeParser2() {
+    return Object.keys(types4);
+  }
+  function treeTypeParser2() {
+    const attachNode = (name) => ({
+      name,
+      children: types4[name].extensions.map(attachNode)
+    });
+    return {
+      name: "Type tree",
+      children: Object.keys(dataTypes2).map((name) => ({
+        name,
+        children: dataTypes2[name].map(attachNode)
+      }))
+    };
+  }
+  var typeMatcher2 = /^(?:@(.+?))(?:\/(?:(.+?)\+)?(?:(.+)))?$/;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
+  function _defineProperty4(e, r, t) {
+    return (r = _toPropertyKey4(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
+  }
+  function _toPropertyKey4(t) {
+    var i = _toPrimitive4(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+  }
+  function _toPrimitive4(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r || "default");
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  var TypeParser2 = class {
+    constructor(data3) {
+      _defineProperty4(this, "validDataTypes", ["String", "Array", "SimpleObject", "ComplexObject", "Primitive"]);
+      this.data = data3;
+    }
+    validateDataType() {
+      const dataType = this.data.dataType;
+      if (dataType && !this.validDataTypes.includes(dataType)) {
+        throw new RangeError(`dataType was ${dataType}; expected one of ${this.validDataTypes}`);
+      }
+    }
+    validateParseType() {
+      const predicate = this.data.predicate;
+      if (predicate && !(predicate instanceof RegExp || typeof predicate === "function")) {
+        throw new TypeError(`predicate was ${typeof predicate}; expected RegExp or function`);
+      }
+    }
+    validateTokenList() {
+      const tokenList = this.data.tokenList;
+      if (tokenList && typeof tokenList !== "object") {
+        throw new TypeError(`tokenList was ${typeof tokenList}; expected object or RegExp`);
+      }
+    }
+    validatePropertyConstraint() {
+      const propertyConstraint = this.data.propertyConstraint;
+      if (propertyConstraint && typeof propertyConstraint !== "object") {
+        throw new TypeError(`propertyConstraint was ${typeof propertyConstraint}; expected array or object`);
+      }
+    }
+    validateElementConstraint() {
+      const elementConstraint = this.data.elementConstraint;
+      if (elementConstraint && typeof elementConstraint !== "string") {
+        throw new TypeError(`elementConstraint was ${typeof elementConstraint}; expected string`);
+      }
+    }
+    validateExtends() {
+      const extend = this.data.extends;
+      if (extend && typeof extend !== "string") {
+        throw new TypeError(`extends was ${typeof extend}; expected string`);
+      }
+    }
+    validate() {
+      if (this.data === null || typeof this.data !== "object") {
+        throw new TypeError(`typeParser was ${typeof this.data}; expected object`);
+      }
+      this.validateDataType();
+      this.validateParseType();
+      this.validateTokenList();
+      this.validatePropertyConstraint();
+      this.validateElementConstraint();
+      this.validateExtends();
+    }
+    parseTokenList() {
+      let tokenList = this.data.tokenList;
+      if (!tokenList) {
+        return [];
+      } else if (tokenList instanceof RegExp) {
+        tokenList = {
+          token: tokenList
+        };
+      }
+      const {
+        token,
+        split = /\s+/,
+        trim = true,
+        every = true
+      } = tokenList;
+      const trimInput = (input) => trim ? input.trim() : input;
+      const testTokens = every ? "every" : "some";
+      const predicate = (input) => trimInput(input).split(split)[testTokens]((part) => token.test(part));
+      return [predicate];
+    }
+    parsePropertyConstraint() {
+      const constraints = [].concat(this.data.propertyConstraint || []);
+      return constraints.map(({
+        props,
+        match,
+        value
+      }) => {
+        props = [].concat(props);
+        switch (match) {
+          case "any":
+          case "some":
+            return (input) => props.some((prop) => prop in input && (!value || value(input[prop])));
+          case "none":
+            return (input) => !props.some((prop) => prop in input && (!value || value(input[prop])));
+          case "every":
+          default:
+            return (input) => props.every((prop) => prop in input && (!value || value(input[prop])));
+        }
+      });
+    }
+    parseElementConstraint() {
+      const constraint = this.data.elementConstraint;
+      return !constraint ? [] : [(input) => input.every((entry) => type2(entry) === constraint)];
+    }
+    parsePredicate() {
+      if (this.data.predicate instanceof RegExp) {
+        return [this.data.predicate.test.bind(this.data.predicate)];
+      } else if (this.data.predicate) {
+        return [this.data.predicate];
+      } else {
+        return [];
+      }
+    }
+    getCombinedPredicate() {
+      const predicates = [...this.parsePredicate(), ...this.parseTokenList(), ...this.parsePropertyConstraint(), ...this.parseElementConstraint()];
+      if (predicates.length === 0) {
+        return () => true;
+      } else if (predicates.length === 1) {
+        return predicates[0];
+      } else {
+        return (input) => predicates.every((predicate) => predicate(input));
+      }
+    }
+    getDataType() {
+      if (this.data.dataType) {
+        return this.data.dataType;
+      } else if (this.data.predicate instanceof RegExp) {
+        return "String";
+      } else if (this.data.tokenList) {
+        return "String";
+      } else if (this.data.elementConstraint) {
+        return "Array";
+      } else {
+        return "Primitive";
+      }
+    }
+    get dataType() {
+      return this.getDataType();
+    }
+    get predicate() {
+      return this.getCombinedPredicate();
+    }
+    get extends() {
+      return this.data.extends;
+    }
+  };
+  var DataParser2 = class {
+    constructor(parser, {
+      async: async3
+    } = {}) {
+      this.parser = parser;
+      this.async = async3;
+    }
+    validate() {
+      const parser = this.parser;
+      if (typeof parser !== "function") {
+        throw new TypeError(`parser was ${typeof parser}; expected function`);
+      }
+    }
+  };
+  var FormatParser2 = class {
+    constructor(format5, parsers3 = {}) {
+      this.format = format5;
+      if (parsers3.parseType) {
+        this.typeParser = new TypeParser2(parsers3.parseType);
+      }
+      if (parsers3.parse) {
+        this.dataParser = new DataParser2(parsers3.parse, {
+          async: false
+        });
+      }
+      if (parsers3.parseAsync) {
+        this.asyncDataParser = new DataParser2(parsers3.parseAsync, {
+          async: true
+        });
+      }
+    }
+    validateFormat() {
+      const format5 = this.format;
+      if (!typeMatcher2.test(format5)) {
+        throw new TypeError(`format name was "${format5}"; didn't match expected pattern`);
+      }
+    }
+    validate() {
+      this.validateFormat();
+      if (this.typeParser) {
+        this.typeParser.validate();
+      }
+      if (this.dataParser) {
+        this.dataParser.validate();
+      }
+      if (this.asyncDataParser) {
+        this.asyncDataParser.validate();
+      }
+    }
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/csl.js
+  var csl_exports2 = {};
+  __export(csl_exports2, {
+    clean: () => parseCsl2
+  });
+  var import_name3 = __toESM(require_lib2());
+  function ownKeys3(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+      var o = Object.getOwnPropertySymbols(e);
+      r && (o = o.filter(function(r2) {
+        return Object.getOwnPropertyDescriptor(e, r2).enumerable;
+      })), t.push.apply(t, o);
+    }
+    return t;
+  }
+  function _objectSpread3(e) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys3(Object(t), true).forEach(function(r2) {
+        _defineProperty5(e, r2, t[r2]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys3(Object(t)).forEach(function(r2) {
+        Object.defineProperty(e, r2, Object.getOwnPropertyDescriptor(t, r2));
+      });
+    }
+    return e;
+  }
+  function _defineProperty5(e, r, t) {
+    return (r = _toPropertyKey5(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
+  }
+  function _toPropertyKey5(t) {
+    var i = _toPrimitive5(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+  }
+  function _toPrimitive5(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r || "default");
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  var NAME2 = 1;
+  var NAME_LIST2 = 2;
+  var DATE2 = 3;
+  var TYPE2 = 4;
+  var entryTypes2 = {
+    article: true,
+    "article-journal": true,
+    "article-magazine": true,
+    "article-newspaper": true,
+    bill: true,
+    book: true,
+    broadcast: true,
+    chapter: true,
+    classic: true,
+    collection: true,
+    dataset: true,
+    document: true,
+    entry: true,
+    "entry-dictionary": true,
+    "entry-encyclopedia": true,
+    event: true,
+    figure: true,
+    graphic: true,
+    hearing: true,
+    interview: true,
+    legal_case: true,
+    legislation: true,
+    manuscript: true,
+    map: true,
+    motion_picture: true,
+    musical_score: true,
+    pamphlet: true,
+    "paper-conference": true,
+    patent: true,
+    performance: true,
+    periodical: true,
+    personal_communication: true,
+    post: true,
+    "post-weblog": true,
+    regulation: true,
+    report: true,
+    review: true,
+    "review-book": true,
+    software: true,
+    song: true,
+    speech: true,
+    standard: true,
+    thesis: true,
+    treaty: true,
+    webpage: true,
+    "journal-article": "article-journal",
+    "book-chapter": "chapter",
+    "posted-content": "manuscript",
+    "proceedings-article": "paper-conference",
+    dissertation: "thesis"
+  };
+  var fieldTypes2 = {
+    author: NAME_LIST2,
+    chair: NAME_LIST2,
+    "collection-editor": NAME_LIST2,
+    compiler: NAME_LIST2,
+    composer: NAME_LIST2,
+    "container-author": NAME_LIST2,
+    contributor: NAME_LIST2,
+    curator: NAME_LIST2,
+    director: NAME_LIST2,
+    editor: NAME_LIST2,
+    "editorial-director": NAME_LIST2,
+    "executive-producer": NAME_LIST2,
+    guest: NAME_LIST2,
+    host: NAME_LIST2,
+    interviewer: NAME_LIST2,
+    illustrator: NAME_LIST2,
+    narrator: NAME_LIST2,
+    organizer: NAME_LIST2,
+    "original-author": NAME_LIST2,
+    performer: NAME_LIST2,
+    producer: NAME_LIST2,
+    "reviewed-author": NAME_LIST2,
+    recipient: NAME_LIST2,
+    "script-writer": NAME_LIST2,
+    "series-creator": NAME_LIST2,
+    translator: NAME_LIST2,
+    accessed: DATE2,
+    "available-date": DATE2,
+    container: DATE2,
+    "event-date": DATE2,
+    issued: DATE2,
+    "original-date": DATE2,
+    submitted: DATE2,
+    type: TYPE2,
+    categories: "object",
+    custom: "object",
+    id: ["string", "number"],
+    language: "string",
+    journalAbbreviation: "string",
+    shortTitle: "string",
+    abstract: "string",
+    annote: "string",
+    archive: "string",
+    archive_collection: "string",
+    archive_location: "string",
+    "archive-place": "string",
+    authority: "string",
+    "call-number": "string",
+    "chapter-number": "string",
+    "citation-number": "string",
+    "citation-key": "string",
+    "citation-label": "string",
+    "collection-number": "string",
+    "collection-title": "string",
+    "container-title": "string",
+    "container-title-short": "string",
+    dimensions: "string",
+    division: "string",
+    DOI: "string",
+    edition: ["string", "number"],
+    event: "string",
+    "event-title": "string",
+    "event-place": "string",
+    "first-reference-note-number": "string",
+    genre: "string",
+    ISBN: "string",
+    ISSN: "string",
+    issue: ["string", "number"],
+    jurisdiction: "string",
+    keyword: "string",
+    locator: "string",
+    medium: "string",
+    note: "string",
+    number: ["string", "number"],
+    "number-of-pages": "string",
+    "number-of-volumes": ["string", "number"],
+    "original-publisher": "string",
+    "original-publisher-place": "string",
+    "original-title": "string",
+    page: "string",
+    "page-first": "string",
+    "part-number": ["string", "number"],
+    "part-title": "string",
+    PMCID: "string",
+    PMID: "string",
+    printing: "string",
+    publisher: "string",
+    "publisher-place": "string",
+    references: "string",
+    "reviewed-title": "string",
+    "reviewed-genre": "string",
+    scale: "string",
+    section: "string",
+    source: "string",
+    status: "string",
+    supplement: ["string", "number"],
+    title: "string",
+    "title-short": "string",
+    URL: "string",
+    version: "string",
+    volume: ["string", "number"],
+    "volume-title": "string",
+    "volume-title-short": "string",
+    "year-suffix": "string"
+  };
+  function correctName2(name, bestGuessConversions) {
+    if (typeof name === "object" && name !== null && (name.literal || name.given || name.family)) {
+      if (name.ORCID || name.orcid || name._ORCID) {
+        name = _objectSpread3({
+          _orcid: name.ORCID || name.orcid || name._ORCID
+        }, name);
+        delete name.ORCID;
+        delete name.orcid;
+        delete name._ORCID;
+      }
+      return name;
+    } else if (!bestGuessConversions) {
+      return void 0;
+    } else if (typeof name === "string") {
+      return (0, import_name3.parse)(name);
+    }
+  }
+  function correctNameList2(nameList, bestGuessConversions) {
+    if (nameList instanceof Array) {
+      const names = nameList.map((name) => correctName2(name, bestGuessConversions)).filter(Boolean);
+      return names.length ? names : void 0;
+    }
+  }
+  function correctDateParts2(dateParts, bestGuessConversions) {
+    if (dateParts.every((part) => typeof part === "number")) {
+      return dateParts;
+    } else if (!bestGuessConversions || dateParts.some((part) => isNaN(parseInt(part)))) {
+      return void 0;
+    } else {
+      return dateParts.map((part) => parseInt(part));
+    }
+  }
+  function correctDate2(date, bestGuessConversions) {
+    const dp = "date-parts";
+    if (typeof date !== "object" || date === null) {
+      return void 0;
+    } else if (date[dp] instanceof Array && date[dp].every((part) => part instanceof Array)) {
+      const range = date[dp].map((dateParts) => correctDateParts2(dateParts, bestGuessConversions)).filter(Boolean);
+      return range.length ? _objectSpread3(_objectSpread3({}, date), {}, {
+        "date-parts": range
+      }) : void 0;
+    } else if (date instanceof Array && date.every((part) => part[dp] instanceof Array)) {
+      const range = date.map((dateParts) => correctDateParts2(dateParts[dp], bestGuessConversions)).filter(Boolean);
+      return range.length ? {
+        "date-parts": range
+      } : void 0;
+    } else if (date[dp] instanceof Array) {
+      const dateParts = correctDateParts2(date[dp], bestGuessConversions);
+      return dateParts && {
+        "date-parts": [dateParts]
+      };
+    } else if ("literal" in date || "raw" in date) {
+      return date;
+    }
+  }
+  function correctType2(type3, bestGuessConversions) {
+    type3 = correctField2("language", type3, bestGuessConversions);
+    if (entryTypes2[type3] === true) {
+      return type3;
+    }
+    if (bestGuessConversions) {
+      if (type3 in entryTypes2) {
+        return entryTypes2[type3];
+      } else if (typeof type3 === "string" && type3.toLowerCase() !== type3) {
+        return correctType2(type3.toLowerCase(), bestGuessConversions);
+      }
+    }
+    return void 0;
+  }
+  function correctField2(fieldName, value, bestGuessConversions) {
+    const fieldType = [].concat(fieldTypes2[fieldName]);
+    switch (fieldTypes2[fieldName]) {
+      case NAME2:
+        return correctName2(value, bestGuessConversions);
+      case NAME_LIST2:
+        return correctNameList2(value, bestGuessConversions);
+      case DATE2:
+        return correctDate2(value, bestGuessConversions);
+      case TYPE2:
+        return correctType2(value, bestGuessConversions);
+    }
+    if (bestGuessConversions) {
+      if (typeof value === "string" && fieldType.includes("number") && !fieldType.includes("string") && !isNaN(+value)) {
+        return parseFloat(value);
+      } else if (typeof value === "number" && fieldType.includes("string") && !fieldType.includes("number")) {
+        return value.toString();
+      } else if (Array.isArray(value) && value.length) {
+        return correctField2(fieldName, value[0], bestGuessConversions);
+      }
+    }
+    if (fieldType.includes(typeof value)) {
+      return value;
+    }
+  }
+  function parseCsl2(data3, bestGuessConversions = true) {
+    return data3.map(function(entry) {
+      const clean2 = {};
+      for (const field in entry) {
+        const correction = correctField2(field, entry[field], bestGuessConversions);
+        if (correction !== void 0) {
+          clean2[field] = correction;
+        }
+      }
+      return clean2;
+    });
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/data.js
+  var parsers2 = {};
+  var asyncParsers2 = {};
+  var nativeParsers2 = {
+    "@csl/object": (input) => [input],
+    "@csl/list+object": (input) => input,
+    "@else/list+object": (input) => input.map((item) => {
+      const type3 = type2(item);
+      return data2(item, type3);
+    }).flat(),
+    "@invalid": () => {
+      throw new Error("This format is not supported or recognized");
+    }
+  };
+  var nativeAsyncParsers2 = {
+    "@else/list+object": (input) => Promise.all(input.map((item) => {
+      const type3 = type2(item);
+      return dataAsync2(item, type3);
+    })).then((input2) => input2.flat())
+  };
+  function data2(input, type3) {
+    if (typeof parsers2[type3] === "function") {
+      return parsers2[type3](input);
+    } else if (typeof nativeParsers2[type3] === "function") {
+      return nativeParsers2[type3](input);
+    } else {
+      throw new TypeError(`No synchronous parser found for ${type3}`);
+    }
+  }
+  async function dataAsync2(input, type3) {
+    if (typeof asyncParsers2[type3] === "function") {
+      return asyncParsers2[type3](input);
+    } else if (typeof nativeAsyncParsers2[type3] === "function") {
+      return nativeAsyncParsers2[type3](input);
+    } else if (hasDataParser2(type3, false)) {
+      return data2(input, type3);
+    } else {
+      throw new TypeError(`No parser found for ${type3}`);
+    }
+  }
+  function addDataParser2(format5, {
+    parser,
+    async: async3
+  }) {
+    if (async3) {
+      asyncParsers2[format5] = parser;
+    } else {
+      parsers2[format5] = parser;
+    }
+  }
+  function hasDataParser2(type3, async3) {
+    return async3 ? asyncParsers2[type3] || nativeAsyncParsers2[type3] : parsers2[type3] || nativeParsers2[type3];
+  }
+  function removeDataParser2(type3, async3) {
+    delete (async3 ? asyncParsers2 : parsers2)[type3];
+  }
+  function listDataParser2(async3) {
+    return Object.keys(async3 ? asyncParsers2 : parsers2);
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/register.js
+  var formats5 = {};
+  function add7(format5, parsers3) {
+    const formatParser = new FormatParser2(format5, parsers3);
+    formatParser.validate();
+    const index = formats5[format5] || (formats5[format5] = {});
+    if (formatParser.typeParser) {
+      addTypeParser2(format5, formatParser.typeParser);
+      index.type = true;
+    }
+    if (formatParser.dataParser) {
+      addDataParser2(format5, formatParser.dataParser);
+      index.data = true;
+    }
+    if (formatParser.asyncDataParser) {
+      addDataParser2(format5, formatParser.asyncDataParser);
+      index.asyncData = true;
+    }
+    if (parsers3.outputs) {
+      index.outputs = parsers3.outputs;
+    }
+  }
+  function get5(format5) {
+    return formats5[format5];
+  }
+  function remove6(format5) {
+    const index = formats5[format5];
+    if (!index) {
+      return;
+    }
+    if (index.type) {
+      removeTypeParser2(format5);
+    }
+    if (index.data) {
+      removeDataParser2(format5);
+    }
+    if (index.asyncData) {
+      removeDataParser2(format5, true);
+    }
+    delete formats5[format5];
+  }
+  function has6(format5) {
+    return format5 in formats5;
+  }
+  function list6() {
+    return Object.keys(formats5);
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/index.js
+  var util_exports2 = {};
+  __export(util_exports2, {
+    Grammar: () => Grammar2,
+    Register: () => register_default2,
+    TokenStack: () => stack_default2,
+    Translator: () => Translator2,
+    deepCopy: () => deepCopy_default2,
+    downgradeCsl: () => downgradeCsl2,
+    fetchFile: () => fetchFile2,
+    fetchFileAsync: () => fetchFileAsync2,
+    fetchId: () => fetchId_default2,
+    setUserAgent: () => setUserAgent2,
+    upgradeCsl: () => upgradeCsl2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/csl.js
+  function ownKeys4(e, r) {
+    var t = Object.keys(e);
+    if (Object.getOwnPropertySymbols) {
+      var o = Object.getOwnPropertySymbols(e);
+      r && (o = o.filter(function(r2) {
+        return Object.getOwnPropertyDescriptor(e, r2).enumerable;
+      })), t.push.apply(t, o);
+    }
+    return t;
+  }
+  function _objectSpread4(e) {
+    for (var r = 1; r < arguments.length; r++) {
+      var t = null != arguments[r] ? arguments[r] : {};
+      r % 2 ? ownKeys4(Object(t), true).forEach(function(r2) {
+        _defineProperty6(e, r2, t[r2]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys4(Object(t)).forEach(function(r2) {
+        Object.defineProperty(e, r2, Object.getOwnPropertyDescriptor(t, r2));
+      });
+    }
+    return e;
+  }
+  function _defineProperty6(e, r, t) {
+    return (r = _toPropertyKey6(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
+  }
+  function _toPropertyKey6(t) {
+    var i = _toPrimitive6(t, "string");
+    return "symbol" == typeof i ? i : i + "";
+  }
+  function _toPrimitive6(t, r) {
+    if ("object" != typeof t || !t) return t;
+    var e = t[Symbol.toPrimitive];
+    if (void 0 !== e) {
+      var i = e.call(t, r || "default");
+      if ("object" != typeof i) return i;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+    return ("string" === r ? String : Number)(t);
+  }
+  function upgradeCsl2(item) {
+    if (Array.isArray(item)) {
+      return item.map(upgradeCsl2);
+    }
+    item = _objectSpread4({}, item);
+    if ("event" in item) {
+      item["event-title"] = item.event;
+      delete item.event;
+    }
+    if (item.type === "book" && "version" in item) {
+      item.type = "software";
+    }
+    return item;
+  }
+  function downgradeCsl2(item) {
+    if (Array.isArray(item)) {
+      return item.map(downgradeCsl2);
+    }
+    item = _objectSpread4({}, item);
+    if ("event-title" in item) {
+      item.event = item["event-title"];
+      delete item["event-title"];
+    }
+    if (item.type === "software") {
+      item.type = "book";
+    }
+    return item;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/deepCopy.js
+  function deepCopy2(value, seen = /* @__PURE__ */ new Set()) {
+    if (typeof value !== "object" || value === null || value.constructor !== Object && value.constructor !== Array) {
+      return value;
+    }
+    if (seen.has(value)) {
+      throw new TypeError("Recursively copying circular structure");
+    }
+    seen.add(value);
+    let copy;
+    if (value.constructor === Array) {
+      copy = value.map((value2) => deepCopy2(value2, seen));
+    } else {
+      const object = {};
+      for (const key in value) {
+        object[key] = deepCopy2(value[key], seen);
+      }
+      copy = object;
+    }
+    seen.delete(value);
+    return copy;
+  }
+  var deepCopy_default2 = deepCopy2;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
+  var import_sync_fetch2 = __toESM(require_browser2());
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/package.json
+  var package_default2 = {
+    name: "@citation-js/core",
+    version: "0.8.2",
+    description: "Convert different bibliographic metadata sources",
+    keywords: [
+      "citation-js",
+      "citation",
+      "bibliography"
+    ],
+    author: "Lars Willighagen <lars.willighagen@gmail.com>",
+    license: "MIT",
+    main: "lib/index.js",
+    module: "lib-mjs/index.js",
+    directories: {
+      lib: "src",
+      test: "__tests__"
+    },
+    homepage: "https://citation.js.org/",
+    repository: {
+      type: "git",
+      url: "https://github.com/citation-js/citation-js.git",
+      directory: "packages/core"
+    },
+    bugs: {
+      url: "https://github.com/citation-js/citation-js/issues"
+    },
+    engines: {
+      node: ">=20.19.0"
+    },
+    files: [
+      "lib",
+      "lib-mjs"
+    ],
+    scripts: {
+      test: "mocha -c -R dot -r @babel/register test/*.spec.js",
+      "test:live": "TEST_MOCK_HTTP=false npm test",
+      coverage: "NODE_ENV=coverage nyc npm test -- -c && nyc report --reporter=text-lcov > coverage.lcov"
+    },
+    dependencies: {
+      "@citation-js/date": "^0.5.0",
+      "@citation-js/name": "^0.4.2",
+      "node-fetch": "^3.3.2",
+      "sync-fetch": "^0.6.0"
+    },
+    gitHead: "28ce00a6a5dd967baeb7f128f3f6b4a7217e5d46"
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
+  var isBrowser = typeof location !== "undefined" && typeof navigator !== "undefined";
+  var asyncFetch = isBrowser ? fetch : node_fetch_default;
+  var asyncHeaders = isBrowser ? Headers : Headers2;
+  var userAgent2 = `Citation.js/${package_default2.version}`;
+  if (typeof process !== "undefined" && process && process.release && process.release.name === "node" && process.version) {
+    userAgent2 += ` Node.js/${process.version}`;
+  }
+  function normaliseHeaders(headers) {
+    const result = {};
+    const entries = headers instanceof asyncHeaders || headers instanceof import_sync_fetch2.default.Headers ? Array.from(headers) : Object.entries(headers);
+    for (const [name, header] of entries) {
+      result[name.toLowerCase()] = header.toString();
+    }
+    return result;
+  }
+  function parseOpts(opts = {}) {
+    const reqOpts = {
+      headers: {
+        accept: "*/*"
+      },
+      method: "GET",
+      checkContentType: opts.checkContentType
+    };
+    if (userAgent2 && !isBrowser) {
+      reqOpts.headers["user-agent"] = userAgent2;
+    }
+    if (opts.body) {
+      reqOpts.method = "POST";
+      const isJson = typeof opts.body !== "string";
+      reqOpts.body = isJson ? JSON.stringify(opts.body) : opts.body;
+      reqOpts.headers["content-type"] = isJson ? "application/json" : "text/plain";
+    }
+    if (opts.headers) {
+      Object.assign(reqOpts.headers, normaliseHeaders(opts.headers));
+    }
+    return reqOpts;
+  }
+  function sameType(request, response) {
+    if (!request.accept || request.accept === "*/*" || !response["content-type"]) {
+      return true;
+    }
+    const [a, b] = response["content-type"].split(";")[0].trim().split("/");
+    return request.accept.split(",").map((type3) => type3.split(";")[0].trim().split("/")).some(([c, d]) => (c === a || c === "*") && (d === b || d === "*"));
+  }
+  function checkResponse(response, opts) {
+    const {
+      status,
+      headers
+    } = response;
+    let error;
+    if (status >= 400) {
+      error = new Error(`Server responded with status code ${status}`);
+    } else if (opts.checkContentType === true && !sameType(opts.headers, normaliseHeaders(headers))) {
+      error = new Error(`Server responded with content-type ${headers.get("content-type")}`);
+    }
+    if (error) {
+      error.status = status;
+      error.headers = headers;
+      error.body = response.body;
+      throw error;
+    }
+    return response;
+  }
+  function fetchFile2(url, opts) {
+    const reqOpts = parseOpts(opts);
+    logger_default2.http("[core]", reqOpts.method, url, reqOpts);
+    const response = checkResponse((0, import_sync_fetch2.default)(url, reqOpts), reqOpts);
+    return response.text();
+  }
+  async function fetchFileAsync2(url, opts) {
+    const reqOpts = parseOpts(opts);
+    logger_default2.http("[core]", reqOpts.method, url, reqOpts);
+    return asyncFetch(url, reqOpts).then((response) => checkResponse(response, reqOpts)).then((response) => response.text());
+  }
+  function setUserAgent2(newUserAgent) {
+    userAgent2 = newUserAgent;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/fetchId.js
+  function fetchId2(list11, prefix) {
+    let id;
+    while (id === void 0 || list11.includes(id)) {
+      id = `${prefix}${Math.random().toString().slice(2)}`;
+    }
+    return id;
+  }
+  var fetchId_default2 = fetchId2;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/stack.js
+  var TokenStack = class _TokenStack {
+    constructor(array) {
+      this.stack = array;
+      this.index = 0;
+      this.current = this.stack[this.index];
+    }
+    static getPatternText(pattern) {
+      return `"${pattern instanceof RegExp ? pattern.source : pattern}"`;
+    }
+    static getMatchCallback(pattern) {
+      if (Array.isArray(pattern)) {
+        const matches = pattern.map(_TokenStack.getMatchCallback);
+        return (token) => matches.some((matchCallback) => matchCallback(token));
+      } else if (pattern instanceof Function) {
+        return pattern;
+      } else if (pattern instanceof RegExp) {
+        return (token) => pattern.test(token);
+      } else {
+        return (token) => pattern === token;
+      }
+    }
+    tokensLeft() {
+      return this.stack.length - this.index;
+    }
+    matches(pattern) {
+      return _TokenStack.getMatchCallback(pattern)(this.current, this.index, this.stack);
+    }
+    matchesSequence(sequence) {
+      const part = this.stack.slice(this.index, this.index + sequence.length).join("");
+      return typeof sequence === "string" ? part === sequence : sequence.every((pattern, index) => _TokenStack.getMatchCallback(pattern)(part[index]));
+    }
+    consumeToken(pattern = /^[\s\S]$/, {
+      inverse = false,
+      spaced = true
+    } = {}) {
+      if (spaced) {
+        this.consumeWhitespace();
+      }
+      const token = this.current;
+      const match = _TokenStack.getMatchCallback(pattern)(token, this.index, this.stack);
+      if (match) {
+        this.current = this.stack[++this.index];
+      } else {
+        throw new SyntaxError(`Unexpected token at index ${this.index}: Expected ${_TokenStack.getPatternText(pattern)}, got "${token}"`);
+      }
+      if (spaced) {
+        this.consumeWhitespace();
+      }
+      return token;
+    }
+    consumeWhitespace(pattern = /^\s$/, {
+      optional = true
+    } = {}) {
+      return this.consume(pattern, {
+        min: +!optional
+      });
+    }
+    consumeN(length) {
+      if (this.tokensLeft() < length) {
+        throw new SyntaxError("Not enough tokens left");
+      }
+      const start2 = this.index;
+      while (length--) {
+        this.current = this.stack[++this.index];
+      }
+      return this.stack.slice(start2, this.index).join("");
+    }
+    consumeSequence(sequence) {
+      if (this.matchesSequence(sequence)) {
+        return this.consumeN(sequence.length);
+      } else {
+        throw new SyntaxError(`Expected "${sequence}", got "${this.consumeN(sequence.length)}"`);
+      }
+    }
+    consume(pattern = /^[\s\S]$/, {
+      min: min2 = 0,
+      max: max2 = Infinity,
+      inverse = false,
+      tokenMap,
+      tokenFilter
+    } = {}) {
+      const start2 = this.index;
+      const match = _TokenStack.getMatchCallback(pattern);
+      while (match(this.current, this.index, this.stack) !== inverse) {
+        this.current = this.stack[++this.index];
+      }
+      let consumed = this.stack.slice(start2, this.index);
+      if (consumed.length < min2) {
+        throw new SyntaxError(`Not enough ${_TokenStack.getPatternText(pattern)}`);
+      } else if (consumed.length > max2) {
+        throw new SyntaxError(`Too many ${_TokenStack.getPatternText(pattern)}`);
+      }
+      if (tokenMap) {
+        consumed = consumed.map(tokenMap);
+      }
+      if (tokenFilter) {
+        consumed = consumed.filter(tokenFilter);
+      }
+      return consumed.join("");
+    }
+  };
+  var stack_default2 = TokenStack;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/register.js
+  var Register2 = class {
+    constructor(data3 = {}) {
+      this.data = data3;
+    }
+    set(key, value) {
+      this.data[key] = value;
+      return this;
+    }
+    add(...args) {
+      return this.set(...args);
+    }
+    delete(key) {
+      delete this.data[key];
+      return this;
+    }
+    remove(...args) {
+      return this.delete(...args);
+    }
+    get(key) {
+      return this.data[key];
+    }
+    has(key) {
+      return Object.prototype.hasOwnProperty.call(this.data, key);
+    }
+    list() {
+      return Object.keys(this.data);
+    }
+  };
+  var register_default2 = Register2;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/grammar.js
+  var Grammar2 = class {
+    constructor(rules, state) {
+      this.rules = rules;
+      this.defaultState = state;
+      this.mainRule = Object.keys(rules)[0];
+      this.log = [];
+    }
+    parse(iterator, mainRule) {
+      this.lexer = iterator;
+      this.token = this.lexer.next();
+      this.state = deepCopy2(this.defaultState);
+      this.log = [];
+      return this.consumeRule(mainRule || this.mainRule);
+    }
+    matchEndOfFile() {
+      return !this.token;
+    }
+    matchToken(type3) {
+      return this.token && type3 === this.token.type;
+    }
+    consumeToken(type3, optional) {
+      const token = this.token;
+      if (!type3 || token && token.type === type3) {
+        this.token = this.lexer.next();
+        return token;
+      } else if (optional) {
+        return void 0;
+      } else {
+        const got = token ? `"${token.type}"` : "EOF";
+        const error = new SyntaxError(this.lexer.formatError(token, `expected "${type3}", got ${got}`));
+        error.message += ` (${this.log.join("->")})`;
+        throw error;
+      }
+    }
+    consumeRule(rule) {
+      this.log.push(rule);
+      const result = this.rules[rule].call(this);
+      this.log.pop();
+      return result;
+    }
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/translator.js
+  function createConditionEval2(condition) {
+    return function conditionEval(input) {
+      if (typeof condition === "boolean") {
+        return condition;
+      }
+      return Object.keys(condition).every((prop) => {
+        const value = condition[prop];
+        if (value === true) {
+          return prop in input;
+        } else if (value === false) {
+          return !(prop in input);
+        } else if (typeof value === "function") {
+          return value(input[prop]);
+        } else if (Array.isArray(value)) {
+          return value.includes(input[prop]);
+        } else {
+          return input[prop] === value;
+        }
+      });
+    };
+  }
+  function parsePropStatement2(prop, toSource) {
+    let inputProp;
+    let outputProp;
+    let convert;
+    let condition;
+    if (typeof prop === "string") {
+      inputProp = outputProp = prop;
+    } else if (prop) {
+      inputProp = toSource ? prop.target : prop.source;
+      outputProp = toSource ? prop.source : prop.target;
+      if (prop.convert) {
+        convert = toSource ? prop.convert.toSource : prop.convert.toTarget;
+      }
+      if (prop.when) {
+        condition = toSource ? prop.when.target : prop.when.source;
+        if (condition != null) {
+          condition = createConditionEval2(condition);
+        }
+      }
+    } else {
+      return null;
+    }
+    inputProp = [].concat(inputProp).filter(Boolean);
+    outputProp = [].concat(outputProp).filter(Boolean);
+    return {
+      inputProp,
+      outputProp,
+      convert,
+      condition
+    };
+  }
+  function createConverter2(props, toSource) {
+    toSource = toSource === Translator2.CONVERT_TO_SOURCE;
+    props = props.map((prop) => parsePropStatement2(prop, toSource)).filter(Boolean);
+    return function converter(input) {
+      const output = {};
+      for (const {
+        inputProp,
+        outputProp,
+        convert,
+        condition
+      } of props) {
+        if (outputProp.length === 0) {
+          continue;
+        } else if (condition && !condition(input)) {
+          continue;
+        } else if (inputProp.length !== 0 && inputProp.every((prop) => !(prop in input))) {
+          continue;
+        }
+        let outputData = inputProp.map((prop) => input[prop]);
+        if (convert) {
+          try {
+            const converted = convert.apply(input, outputData);
+            outputData = outputProp.length === 1 ? [converted] : converted;
+          } catch (cause) {
+            throw new Error(`Failed to convert ${inputProp} to ${outputProp}`, {
+              cause
+            });
+          }
+        }
+        outputProp.forEach((prop, index) => {
+          const value = outputData[index];
+          if (value !== void 0) {
+            output[prop] = value;
+          }
+        });
+      }
+      return output;
+    };
+  }
+  var Translator2 = class _Translator {
+    constructor(props) {
+      this.convertToSource = createConverter2(props, _Translator.CONVERT_TO_SOURCE);
+      this.convertToTarget = createConverter2(props, _Translator.CONVERT_TO_TARGET);
+    }
+  };
+  Translator2.CONVERT_TO_SOURCE = /* @__PURE__ */ Symbol("convert to source");
+  Translator2.CONVERT_TO_TARGET = /* @__PURE__ */ Symbol("convert to target");
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/chain.js
+  function prepareParseGraph2(graph) {
+    return graph.reduce((array, next) => {
+      const last = array[array.length - 1];
+      if (last && last.type === next.type) {
+        last.count = last.count + 1 || 2;
+      } else {
+        array.push(next);
+      }
+      return array;
+    }, []).map((element) => (element.count > 1 ? element.count + "x " : "") + element.type).join(" -> ");
+  }
+  var ChainParser2 = class {
+    constructor(input, options3 = {}) {
+      this.options = Object.assign({
+        generateGraph: true,
+        forceType: type2(input),
+        maxChainLength: 10,
+        strict: true,
+        target: "@csl/list+object"
+      }, options3);
+      this.type = this.options.forceType;
+      this.data = typeof input === "object" ? deepCopy_default2(input) : input;
+      this.graph = [{
+        type: this.type,
+        data: input
+      }];
+      this.iteration = 0;
+    }
+    iterate() {
+      if (this.iteration !== 0) {
+        const typeInfo = get5(this.type);
+        if (typeInfo && typeInfo.outputs) {
+          this.type = typeInfo.outputs;
+        } else {
+          this.type = type2(this.data);
+        }
+        this.graph.push({
+          type: this.type
+        });
+      }
+      if (this.error || this.type === this.options.target) {
+        return false;
+      } else if (this.iteration >= this.options.maxChainLength) {
+        this.error = new RangeError(`Max. number of parsing iterations reached (${prepareParseGraph2(this.graph)})`);
+        return false;
+      } else {
+        this.iteration++;
+        return true;
+      }
+    }
+    end() {
+      if (this.error) {
+        logger_default2.error("[core]", this.error.message);
+        if (this.options.strict !== false) {
+          throw this.error;
+        } else {
+          return [];
+        }
+      } else if (this.options.target === "@csl/list+object") {
+        return upgradeCsl2(this.data).map(this.options.generateGraph ? (entry) => applyGraph2(entry, this.graph) : removeGraph2);
+      } else {
+        return this.data;
+      }
+    }
+  };
+  var chain2 = (...args) => {
+    const chain3 = new ChainParser2(...args);
+    while (chain3.iterate()) {
+      try {
+        chain3.data = data2(chain3.data, chain3.type);
+      } catch (e) {
+        chain3.error = e;
+      }
+    }
+    return chain3.end();
+  };
+  var chainLink2 = (input) => {
+    const type3 = type2(input);
+    const output = type3.match(/array|object/) ? deepCopy_default2(input) : input;
+    return data2(output, type3);
+  };
+  var chainAsync2 = async (...args) => {
+    const chain3 = new ChainParser2(...args);
+    while (chain3.iterate()) {
+      chain3.data = await dataAsync2(chain3.data, chain3.type).catch((e) => {
+        chain3.error = e;
+      });
+    }
+    return chain3.end();
+  };
+  var chainLinkAsync2 = async (input) => {
+    const type3 = type2(input);
+    const output = type3.match(/array|object/) ? deepCopy_default2(input) : input;
+    return dataAsync2(output, type3);
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
+  var util2 = Object.assign({}, dataType_exports2, graph_exports2, parser_exports2, csl_exports2);
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/set.js
+  function add8(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
+      this.save();
+    }
+    this.data.push(...chain2(data3, options3));
+    this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
+      entry.id = fetchId_default2(this.getIds(), "temp_id_");
+    });
+    return this;
+  }
+  async function addAsync2(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
+      this.save();
+    }
+    this.data.push(...await chainAsync2(data3, options3));
+    this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
+      entry.id = fetchId_default2(this.getIds(), "temp_id_");
+    });
+    return this;
+  }
+  function set2(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
+      this.save();
+    }
+    this.data = [];
+    return typeof options3 !== "boolean" ? this.add(data3, options3) : this.add(data3);
+  }
+  async function setAsync2(data3, options3 = {}, log = false) {
+    if (options3 === true || log === true) {
+      this.save();
+    }
+    this.data = [];
+    return typeof options3 !== "boolean" ? this.addAsync(data3, options3) : this.addAsync(data3);
+  }
+  function reset2(log) {
+    if (log) {
+      this.save();
+    }
+    this.data = [];
+    this._options = {};
+    return this;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/sort.js
+  var sort_exports2 = {};
+  __export(sort_exports2, {
+    sort: () => sort2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/output/label.js
+  function getLabel2(entry) {
+    if ("citation-label" in entry) {
+      return entry["citation-label"];
+    }
+    let res = "";
+    if (entry.author) {
+      res += entry.author[0].family || entry.author[0].literal;
+    }
+    if (entry.issued && entry.issued["date-parts"] && entry.issued["date-parts"][0]) {
+      res += entry.issued["date-parts"][0][0];
+    }
+    if (entry["year-suffix"]) {
+      res += entry["year-suffix"];
+    } else if (entry.title) {
+      res += entry.title.replace(/<\/?.*?>/g, "").match(/^(?:(?:the|a|an)\s+)?(\S+)/i)[1];
+    }
+    return res;
+  }
+  var label_default2 = {
+    label(data3) {
+      return data3.reduce((object, entry) => {
+        object[entry.id] = getLabel2(entry);
+        return object;
+      }, {});
+    }
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/sort.js
+  var import_name4 = __toESM(require_lib2());
+  function getComparisonValue2(obj, prop, label = prop === "label") {
+    let value = label ? getLabel2(obj) : obj[prop];
+    switch (prop) {
+      case "author":
+      case "editor":
+        return value.map((name) => name.literal || name.family || (0, import_name4.format)(name));
+      case "accessed":
+      case "issued":
+        return value["date-parts"][0];
+      case "page":
+        return value.split("-").map((num) => parseInt(num));
+      case "edition":
+      case "issue":
+      case "volume":
+        value = parseInt(value);
+        return !isNaN(value) ? value : -Infinity;
+      default:
+        return value || -Infinity;
+    }
+  }
+  function compareProp2(entryA, entryB, prop, flip2 = /^!/.test(prop)) {
+    prop = prop.replace(/^!/, "");
+    const a = getComparisonValue2(entryA, prop);
+    const b = getComparisonValue2(entryB, prop);
+    return (flip2 ? -1 : 1) * (a > b ? 1 : a < b ? -1 : 0);
+  }
+  function getSortCallback2(...props) {
+    return (a, b) => {
+      const keys = props.slice();
+      let output = 0;
+      while (!output && keys.length) {
+        output = compareProp2(a, b, keys.shift());
+      }
+      return output;
+    };
+  }
+  function sort2(method = [], log) {
+    if (log) {
+      this.save();
+    }
+    this.data.sort(typeof method === "function" ? method : getSortCallback2(...method, "label"));
+    return this;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/get.js
+  var get_exports2 = {};
+  __export(get_exports2, {
+    format: () => format4,
+    get: () => get6,
+    getIds: () => getIds2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/output.js
+  var output_exports2 = {};
+  __export(output_exports2, {
+    add: () => add9,
+    format: () => format3,
+    has: () => has7,
+    list: () => list7,
+    register: () => register3,
+    remove: () => remove7
+  });
+  function validate3(name, formatter) {
+    if (typeof name !== "string") {
+      throw new TypeError(`Invalid output format name, expected string, got ${typeof name}`);
+    } else if (typeof formatter !== "function") {
+      throw new TypeError(`Invalid formatter, expected function, got ${typeof formatter}`);
+    }
+  }
+  var register3 = new register_default2();
+  function add9(name, formatter) {
+    validate3(name, formatter);
+    register3.set(name, formatter);
+  }
+  function remove7(name) {
+    register3.remove(name);
+  }
+  function has7(name) {
+    return register3.has(name);
+  }
+  function list7() {
+    return register3.list();
+  }
+  function format3(name, data3, ...options3) {
+    if (!register3.has(name)) {
+      throw new Error(`Output format "${name}" unavailable`);
+    }
+    return register3.get(name)(data3, ...options3);
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/get.js
+  function getIds2() {
+    return this.data.map((entry) => entry.id);
+  }
+  function format4(format5, ...options3) {
+    return format3(format5, parseCsl2(this.data), ...options3);
+  }
+  function get6(options3 = {}) {
+    validateOutputOptions2(options3);
+    const parsedOptions = Object.assign({}, this.defaultOptions, this._options.output, options3);
+    const {
+      type: type3,
+      style
+    } = parsedOptions;
+    const [styleType, styleFormat] = style.split("-");
+    const newStyle = styleType === "citation" ? "bibliography" : styleType === "csl" ? "data" : styleType;
+    const newType = type3 === "string" ? "text" : type3 === "json" ? "object" : type3;
+    let formatOptions;
+    switch (newStyle) {
+      case "bibliography": {
+        const {
+          lang,
+          append,
+          prepend
+        } = parsedOptions;
+        formatOptions = {
+          template: styleFormat,
+          lang,
+          format: newType,
+          append,
+          prepend
+        };
+        break;
+      }
+      case "data":
+      case "bibtex":
+      case "bibtxt":
+      case "ndjson":
+      case "ris":
+        formatOptions = {
+          type: newType
+        };
+        break;
+      default:
+        throw new Error(`Invalid style "${newStyle}"`);
+    }
+    const result = this.format(newStyle, Object.assign(formatOptions, options3._newOptions));
+    const {
+      format: format5
+    } = parsedOptions;
+    if (format5 === "real" && newType === "html" && typeof document !== "undefined" && typeof document.createElement === "function") {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = result;
+      return tmp.firstChild;
+    } else if (format5 === "string" && typeof result === "object") {
+      return JSON.stringify(result);
+    } else {
+      return result;
+    }
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/static.js
+  var static_exports2 = {};
+  __export(static_exports2, {
+    async: () => async_default2,
+    validateOptions: () => validateOptions2,
+    validateOutputOptions: () => validateOutputOptions2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/async.js
+  function async2(data3, options3, callback) {
+    if (typeof options3 === "function" && !callback) {
+      callback = options3;
+      options3 = void 0;
+    }
+    const promise = new this().setAsync(data3, options3);
+    if (typeof callback === "function") {
+      promise.then(callback);
+      return void 0;
+    } else {
+      return promise;
+    }
+  }
+  var async_default2 = async2;
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/index.js
+  function Cite2(data3, options3 = {}) {
+    if (!(this instanceof Cite2)) {
+      return new Cite2(data3, options3);
+    }
+    this._options = options3;
+    this.log = [];
+    this.data = [];
+    this.set(data3, options3);
+    this.options(options3);
+    return this;
+  }
+  Object.assign(Cite2.prototype, log_exports2, options_exports2, set_exports2, sort_exports2, get_exports2);
+  Cite2.prototype[Symbol.iterator] = function* () {
+    yield* this.data;
+  };
+  Object.assign(Cite2, static_exports2);
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/index.js
+  var plugins_exports2 = {};
+  __export(plugins_exports2, {
+    add: () => add12,
+    config: () => config_exports2,
+    dict: () => dict_exports2,
+    has: () => has10,
+    input: () => input_exports2,
+    list: () => list10,
+    output: () => output_exports2,
+    remove: () => remove10
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/dict.js
+  var dict_exports2 = {};
+  __export(dict_exports2, {
+    add: () => add10,
+    get: () => get7,
+    has: () => has8,
+    list: () => list8,
+    register: () => register4,
+    remove: () => remove8
+  });
+  function validate4(name, dict) {
+    if (typeof name !== "string") {
+      throw new TypeError(`Invalid dict name, expected string, got ${typeof name}`);
+    } else if (typeof dict !== "object") {
+      throw new TypeError(`Invalid dict, expected object, got ${typeof dict}`);
+    }
+    for (const entryName in dict) {
+      const entry = dict[entryName];
+      if (!Array.isArray(entry) || entry.some((part) => typeof part !== "string")) {
+        throw new TypeError(`Invalid dict entry "${entryName}", expected array of strings`);
+      }
+    }
+  }
+  var register4 = new register_default2({
+    html: {
+      bibliographyContainer: ['<div class="csl-bib-body">', "</div>"],
+      entry: ['<div class="csl-entry">', "</div>"],
+      list: ['<ul style="list-style-type:none">', "</ul>"],
+      listItem: ["<li>", "</li>"]
+    },
+    text: {
+      bibliographyContainer: ["", "\n"],
+      entry: ["", "\n"],
+      list: ["\n", ""],
+      listItem: ["	", "\n"]
+    }
+  });
+  function add10(name, dict) {
+    validate4(name, dict);
+    register4.set(name, dict);
+  }
+  function remove8(name) {
+    register4.remove(name);
+  }
+  function has8(name) {
+    return register4.has(name);
+  }
+  function list8() {
+    return register4.list();
+  }
+  function get7(name) {
+    if (!register4.has(name)) {
+      throw new Error(`Dict "${name}" unavailable`);
+    }
+    return register4.get(name);
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/config.js
+  var config_exports2 = {};
+  __export(config_exports2, {
+    add: () => add11,
+    get: () => get8,
+    has: () => has9,
+    list: () => list9,
+    remove: () => remove9
+  });
+  var configs2 = {};
+  function add11(ref3, config) {
+    configs2[ref3] = config;
+  }
+  function get8(ref3) {
+    return configs2[ref3];
+  }
+  function has9(ref3) {
+    return Object.prototype.hasOwnProperty.call(configs2, ref3);
+  }
+  function remove9(ref3) {
+    delete configs2[ref3];
+  }
+  function list9() {
+    return Object.keys(configs2);
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/index.js
+  var registers2 = {
+    input: input_exports2,
+    output: output_exports2,
+    dict: dict_exports2,
+    config: config_exports2
+  };
+  var indices2 = {};
+  function add12(ref3, plugins = {}) {
+    const mainIndex = indices2[ref3] = {};
+    for (const type3 in plugins) {
+      if (type3 === "config") {
+        mainIndex.config = {
+          [ref3]: plugins.config
+        };
+        registers2.config.add(ref3, plugins.config);
+        continue;
+      }
+      const typeIndex = mainIndex[type3] = {};
+      const typePlugins = plugins[type3];
+      for (const name in typePlugins) {
+        const typePlugin = typePlugins[name];
+        typeIndex[name] = true;
+        registers2[type3].add(name, typePlugin);
+      }
+    }
+  }
+  function remove10(ref3) {
+    const mainIndex = indices2[ref3];
+    for (const type3 in mainIndex) {
+      const typeIndex = mainIndex[type3];
+      for (const name in typeIndex) {
+        registers2[type3].remove(name);
+      }
+    }
+    delete indices2[ref3];
+  }
+  function has10(ref3) {
+    return ref3 in indices2;
+  }
+  function list10() {
+    return Object.keys(indices2);
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/empty.js
+  function parse4() {
+    return [];
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/json.js
+  var substituters2 = [[/((?:\[|:|,)\s*)'((?:\\'|[^'])*?[^\\])?'(?=\s*(?:\]|}|,))/g, '$1"$2"'], [/((?:(?:"|]|}|\/[gmiuys]|\.|(?:\d|\.|-)*\d)\s*,|{)\s*)(?:"([^":\n]+?)"|'([^":\n]+?)'|([^":\n]+?))(\s*):/g, '$1"$2$3$4"$5:']];
+  function parseJSON2(str) {
+    if (typeof str !== "string") {
+      return JSON.parse(str);
+    }
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      logger_default2.debug("[plugin-common]", "Invalid JSON, switching to experimental parser");
+      substituters2.forEach(([regex, subst]) => {
+        str = str.replace(regex, subst);
+      });
+      return JSON.parse(str);
+    }
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/jquery.js
+  function parse5(input) {
+    return input.val() || input.text() || input.html();
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/html.js
+  function parse6(input) {
+    return input.value || input.textContent;
+  }
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/index.js
+  var ref2 = "@else";
+  var formats6 = {
+    "@empty/text": {
+      parse: parse4,
+      parseType: {
+        dataType: "String",
+        predicate: (input) => input === ""
+      }
+    },
+    "@empty/whitespace+text": {
+      parse: parse4,
+      parseType: {
+        dataType: "String",
+        predicate: /^\s+$/
+      }
+    },
+    "@empty": {
+      parse: parse4,
+      parseType: {
+        dataType: "Primitive",
+        predicate: (input) => input == null
+      }
+    },
+    "@else/json": {
+      parse: parseJSON2,
+      parseType: {
+        dataType: "String",
+        predicate: /^\s*(\{[\S\s]*\}|\[[\S\s]*\])\s*$/
+      }
+    },
+    "@else/url": {
+      parseType: {
+        dataType: "String",
+        predicate: /^https?:\/\/(([\w-]+\.)*[\w-]+)(:\d+)?(\/[^?/]*)*(\?[^#]*)?(#.*)?$/i
+      }
+    },
+    "@else/jquery": {
+      parse: parse5,
+      parseType: {
+        dataType: "ComplexObject",
+        predicate(input) {
+          return typeof jQuery !== "undefined" && input instanceof jQuery;
+        }
+      }
+    },
+    "@else/html": {
+      parse: parse6,
+      parseType: {
+        dataType: "ComplexObject",
+        predicate(input) {
+          return typeof HTMLElement !== "undefined" && input instanceof HTMLElement;
+        }
+      }
+    }
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/output/json.js
+  function appendCommas2(string, index, array) {
+    return string + (index < array.length - 1 ? "," : "");
+  }
+  function getJsonObject2(src, dict) {
+    const isArray = Array.isArray(src);
+    let entries;
+    if (isArray) {
+      entries = src.map((entry) => getJsonValue2(entry, dict));
+    } else {
+      entries = Object.keys(src).filter((prop) => JSON.stringify(src[prop])).map((prop) => `"${prop}": ${getJsonValue2(src[prop], dict)}`);
+    }
+    entries = entries.map(appendCommas2).map((entry) => dict.listItem.join(entry));
+    entries = dict.list.join(entries.join(""));
+    return isArray ? `[${entries}]` : `{${entries}}`;
+  }
+  function getJsonValue2(src, dict) {
+    if (typeof src === "object" && src !== null) {
+      if (src.length === 0) {
+        return "[]";
+      } else if (Object.keys(src).length === 0) {
+        return "{}";
+      } else {
+        return getJsonObject2(src, dict);
+      }
+    } else {
+      return JSON.stringify(src);
+    }
+  }
+  function getJson2(src, dict) {
+    let entries = src.map((entry) => getJsonObject2(entry, dict));
+    entries = entries.map(appendCommas2).map((entry) => dict.entry.join(entry));
+    entries = entries.join("");
+    return dict.bibliographyContainer.join(`[${entries}]`);
+  }
+  var json_default2 = {
+    data(data3, {
+      type: type3,
+      format: format5 = type3 || "text",
+      version: version3 = "1.0.2"
+    } = {}) {
+      if (version3 < "1.0.2") {
+        data3 = downgradeCsl2(data3);
+      }
+      if (format5 === "object") {
+        return deepCopy_default2(data3);
+      } else if (format5 === "text") {
+        return JSON.stringify(data3, null, 2);
+      } else {
+        logger_default2.warn("[core]", "This feature (JSON output with special formatting) is unstable. See https://github.com/larsgw/citation.js/issues/144");
+        return getJson2(data3, dict_exports2.get(format5));
+      }
+    },
+    ndjson(data3, {
+      version: version3 = "1.0.2"
+    } = {}) {
+      if (version3 < "1.0.2") {
+        data3 = downgradeCsl2(data3);
+      }
+      return data3.map((entry) => JSON.stringify(entry)).join("\n");
+    }
+  };
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/output/index.js
+  var output_default2 = Object.assign({}, json_default2, label_default2);
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/index.js
+  add12(ref2, {
+    input: formats6,
+    output: output_default2
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/index.js
+  var version2 = package_default2.version;
+
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/locales.json
   var locales_default = {
     "en-US": `<?xml version="1.0" encoding="utf-8"?>
 <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0" xml:lang="en-US"><!-- The abbreviations in this file follow the recommendations of The Chicago Manual of Style, 18th ed. (2024), sec. 10.48 (cited hereafter as CMOS), unless stated otherwise. --><!-- Additional abbreviations are from:1. Oxford Dictionary for Writers and Editors (2000), https://archive.org/details/oxfordstylemanua0000unse (cited hereafter as ODWE): reference has also been made to the New Oxford Dictionary for Writers and Editors (NODWE), but periods must be added to contractions in these later editions to reflect US English usage2. Oxford Dictionary of Abbreviations (2011), https://doi.org/10.1093/acref/9780199698295.001.0001 (cited hereafter as ODA)--><info><translator><name>Andrew Dunning</name><uri>https://orcid.org/0000-0003-0464-5036</uri></translator><translator><name>Sebastian Karcher</name><uri>https://orcid.org/0000-0001-8249-7388</uri></translator><translator><name>Rintze M. Zelle</name><uri>https://orcid.org/0000-0003-1779-8883</uri></translator><translator><name>Denis Meier</name></translator><translator><name>Brenton M. Wiernik</name><uri>https://orcid.org/0000-0001-9560-6336</uri></translator><rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights><updated>2026-01-10T00:00:00+00:00</updated></info><style-options punctuation-in-quote="true"/><date form="text"><date-part name="month" suffix=" "/><date-part name="day" suffix=", "/><date-part name="year"/></date><date form="numeric"><date-part name="month" form="numeric-leading-zeros" suffix="/"/><date-part name="day" form="numeric-leading-zeros" suffix="/"/><date-part name="year"/></date><terms><!-- LONG GENERAL TERMS --><term name="accessed">accessed</term><term name="advance-online-publication">advance online publication</term><term name="album">album</term><term name="and">and</term><term name="and others">and others</term><term name="anonymous">anonymous</term><term name="at">at</term><term name="audio-recording">audio recording</term><term name="available at">available at</term><term name="by">by</term><term name="circa">circa</term><term name="cited">cited</term><term name="et-al">et al.</term><term name="film">film</term><term name="forthcoming">forthcoming</term><term name="from">from</term><term name="henceforth">henceforth</term><term name="ibid">ibid.</term><term name="in">in</term><term name="in press">in press</term><term name="internet">internet</term><term name="letter">letter</term><term name="loc-cit">loc. cit.</term> <!-- like ibid., the abbreviated form is the regular form  --><term name="no date">no date</term><term name="no-place">no place</term><term name="no-publisher">no publisher</term><term name="on">on</term><term name="online">online</term><term name="op-cit">op. cit.</term> <!-- like ibid., the abbreviated form is the regular form  --><term name="original-work-published">original work published</term><term name="personal-communication">personal communication</term><term name="podcast">podcast</term><term name="podcast-episode">podcast episode</term><term name="preprint">preprint</term><term name="presented at">presented at the</term><term name="radio-broadcast">radio broadcast</term><term name="radio-series">radio series</term><term name="radio-series-episode">radio series episode</term><term name="reference"><single>reference</single><multiple>references</multiple></term><term name="retrieved">retrieved</term><term name="review-of">review of</term><term name="scale">scale</term><term name="special-issue">special issue</term><term name="special-section">special section</term><term name="television-broadcast">television broadcast</term><term name="television-series">television series</term><term name="television-series-episode">television series episode</term><term name="video">video</term><term name="working-paper">working paper</term>
@@ -21789,10 +24226,10 @@
     "es-ES": '<?xml version="1.0" encoding="utf-8"?>\n<locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0" xml:lang="es-ES"><info><translator><name>javimat</name></translator><rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights><updated>2026-01-10T00:00:00+00:00</updated></info><style-options punctuation-in-quote="false"/><date form="text"><date-part name="day" suffix=" de "/><date-part name="month" suffix=" de "/><date-part name="year"/></date><date form="numeric"><date-part name="day" form="numeric-leading-zeros" suffix="/"/><date-part name="month" form="numeric-leading-zeros" suffix="/"/><date-part name="year"/></date><terms><!-- LONG GENERAL TERMS --><term name="accessed">accedido</term><term name="advance-online-publication">advance online publication</term><term name="album">album</term><term name="and">y</term><term name="and others">y otros</term><term name="anonymous">an\xF3nimo</term><term name="at">en</term><term name="audio-recording">audio recording</term><term name="available at">disponible en</term><term name="by">de</term><term name="circa">circa</term><term name="cited">citado</term><term name="et-al">et&#160;al.</term><term name="film">film</term><term name="forthcoming">previsto</term><term name="from">a partir de</term><term name="henceforth">henceforth</term><term name="ibid">ibid.</term><term name="in">en</term><term name="in press">en imprenta</term><term name="internet">internet</term><term name="letter">carta</term><term name="loc-cit">loc. cit.</term> <!-- like ibid., the abbreviated form is the regular form  --><term name="no date">sin fecha</term><term name="no-place">no place</term><term name="no-publisher">no publisher</term> <!-- sine nomine --><term name="on">on</term><term name="online">en l\xEDnea</term><term name="op-cit">op. cit.</term> <!-- like ibid., the abbreviated form is the regular form  --><term name="original-work-published">obra original publicada en</term><term name="personal-communication">comunicaci\xF3n personal</term><term name="podcast">podcast</term><term name="podcast-episode">podcast episode</term><term name="preprint">preprint</term><term name="presented at">presentado en</term><term name="radio-broadcast">radio broadcast</term><term name="radio-series">radio series</term><term name="radio-series-episode">radio series episode</term><term name="reference"><single>referencia</single><multiple>referencias</multiple></term><term name="retrieved">recuperado</term><term name="review-of">review of</term><term name="scale">escala</term><term name="special-issue">special issue</term><term name="special-section">special section</term><term name="television-broadcast">television broadcast</term><term name="television-series">television series</term><term name="television-series-episode">television series episode</term><term name="video">video</term><term name="working-paper">working paper</term>\n<!-- SHORT GENERAL TERMS --><term name="anonymous" form="short">an\xF3n.</term><term name="circa" form="short">c.</term><term name="no date" form="short">s.&#160;f.</term><term name="no-place" form="short">n.p.</term><term name="no-publisher" form="short">n.p.</term><term name="reference" form="short"><single>ref.</single><multiple>refs.</multiple></term><term name="review-of" form="short">rev. of</term>\n<!-- SYMBOLIC GENERAL FORMS -->\n<!-- LONG ITEM TYPE FORMS --><term name="article">preprint</term><term name="article-journal">journal article</term><term name="article-magazine">magazine article</term><term name="article-newspaper">newspaper article</term><term name="bill">bill</term><!-- book is in the list of locator terms --><term name="broadcast">broadcast</term><!-- chapter is in the list of locator terms --><term name="classic">classic</term><term name="collection">collection</term><term name="dataset">dataset</term><term name="document">document</term><term name="entry">entry</term><term name="entry-dictionary">dictionary entry</term><term name="entry-encyclopedia">encyclopedia entry</term><term name="event">event</term><!-- figure is in the list of locator terms --><term name="graphic">graphic</term><term name="hearing">hearing</term><term name="interview">entrevista</term><term name="legal_case">legal case</term><term name="legislation">legislation</term><term name="manuscript">manuscript</term><term name="map">map</term><term name="motion_picture">video recording</term><term name="musical_score">musical score</term><term name="pamphlet">pamphlet</term><term name="paper-conference">conference paper</term><term name="patent">patent</term><term name="performance">performance</term><term name="periodical">periodical</term><term name="personal_communication">comunicaci\xF3n personal</term><term name="post">post</term><term name="post-weblog">blog post</term><term name="regulation">regulation</term><term name="report">report</term><term name="review">review</term><term name="review-book">book review</term><term name="software">software</term><term name="song">audio recording</term><term name="speech">presentation</term><term name="standard">standard</term><term name="thesis">thesis</term><term name="treaty">treaty</term><term name="webpage">webpage</term>\n<!-- SHORT ITEM TYPE FORMS --><term name="article-journal" form="short">journal art.</term><term name="article-magazine" form="short">mag. art.</term><term name="article-newspaper" form="short">newspaper art.</term><!-- book is in the list of locator terms --><!-- chapter is in the list of locator terms --><term name="document" form="short">doc.</term><!-- figure is in the list of locator terms --><term name="graphic" form="short">graph.</term><term name="interview" form="short">interv.</term><term name="manuscript" form="short">MS</term><term name="motion_picture" form="short">video rec.</term><term name="report" form="short">rep.</term><term name="review" form="short">rev.</term><term name="review-book" form="short">bk. rev.</term><term name="song" form="short">audio rec.</term>\n<!-- LONG VERB ITEM TYPE FORMS --><!-- Only where applicable --><term name="hearing" form="verb">testimony of</term><term name="review" form="verb">review of</term><term name="review-book" form="verb">review of the book</term>\n<!-- SHORT VERB ITEM TYPE FORMS -->\n<!-- HISTORICAL ERA TERMS --><term name="ad">d.&#160;C.</term><term name="bc">a.&#160;C.</term><term name="bce">BCE</term><term name="ce">CE</term>\n<!-- PUNCTUATION --><term name="open-quote">\xAB</term><term name="close-quote">\xBB</term><term name="open-inner-quote">\u201C</term><term name="close-inner-quote">\u201D</term><term name="page-range-delimiter">-</term><term name="colon">:</term><term name="comma">,</term><term name="semicolon">;</term>\n<!-- ORDINALS --><term name="ordinal">.\xAA</term>\n<!-- LONG ORDINALS --><term name="long-ordinal-01">primera</term><term name="long-ordinal-02">segunda</term><term name="long-ordinal-03">tercera</term><term name="long-ordinal-04">cuarta</term><term name="long-ordinal-05">quinta</term><term name="long-ordinal-06">sexta</term><term name="long-ordinal-07">s\xE9ptima</term><term name="long-ordinal-08">octava</term><term name="long-ordinal-09">novena</term><term name="long-ordinal-10">d\xE9cima</term>\n<!-- LONG LOCATOR FORMS --><term name="act"><single>act</single><multiple>acts</multiple></term><term name="appendix"><single>appendix</single><multiple>appendices</multiple></term><term name="article-locator"><single>article</single><multiple>articles</multiple></term><term name="book"><single>libro</single><multiple>libros</multiple></term><term name="canon"><single>canon</single><multiple>canons</multiple></term><term name="chapter"><single>cap\xEDtulo</single><multiple>cap\xEDtulos</multiple></term><term name="column"><single>columna</single><multiple>columnas</multiple></term><term name="elocation"><single>location</single><multiple>locations</multiple></term><term name="equation"><single>equation</single><multiple>equations</multiple></term><term name="figure"><single>figura</single><multiple>figuras</multiple></term><term name="folio"><single>folio</single><multiple>folios</multiple></term><term name="issue"><single>n\xFAmero</single><multiple>n\xFAmeros</multiple></term><term name="line"><single>l\xEDnea</single><multiple>l\xEDneas</multiple></term><term name="note"><single>nota</single><multiple>notas</multiple></term><term name="opus"><single>opus</single><multiple>opera</multiple></term><term name="page"><single>p\xE1gina</single><multiple>p\xE1ginas</multiple></term><term name="paragraph"><single>p\xE1rrafo</single><multiple>p\xE1rrafos</multiple></term><term name="part"><single>parte</single><multiple>partes</multiple></term><term name="rule"><single>rule</single><multiple>rules</multiple></term><term name="scene"><single>scene</single><multiple>scenes</multiple></term><term name="section"><single>secci\xF3n</single><multiple>secciones</multiple></term><term name="sub-verbo"><single>sub voce</single><multiple>sub vocibus</multiple></term><term name="supplement"><single>supplement</single><multiple>supplements</multiple></term><term name="table"><single>table</single><multiple>tables</multiple></term><term name="timestamp"> <!-- generally blank --><single/><multiple/></term><term name="title-locator"><single>title</single><multiple>titles</multiple></term><term name="verse"><single>verso</single><multiple>versos</multiple></term><term name="volume"><single>volumen</single><multiple>vol\xFAmenes</multiple></term>\n<!-- SHORT LOCATOR FORMS --><term name="appendix" form="short"><single>app.</single><multiple>apps.</multiple></term><term name="article-locator" form="short"><single>art.</single><multiple>arts.</multiple></term><term name="book" form="short">lib.</term><term name="chapter" form="short">cap.</term><term name="column" form="short">col.</term><term name="elocation" form="short"><single>loc.</single><multiple>locs.</multiple></term><term name="equation" form="short"><single>eq.</single><multiple>eqs.</multiple></term><term name="figure" form="short">fig.</term><term name="folio" form="short">f.</term><term name="issue" form="short">n.\xBA</term><term name="line" form="short">l.</term><term name="note" form="short">n.</term><term name="opus" form="short">op.</term><term name="page" form="short"><single>p.</single><multiple>pp.</multiple></term><term name="paragraph" form="short">p\xE1rr.</term><term name="part" form="short">pt.</term><term name="rule" form="short"><single>r.</single><multiple>rr.</multiple></term><term name="scene" form="short"><single>sc.</single><multiple>scs.</multiple></term><term name="section" form="short">sec.</term><term name="sub-verbo" form="short"><single>s.&#160;v.</single><multiple>s.&#160;vv.</multiple></term><term name="supplement" form="short"><single>supp.</single><multiple>supps.</multiple></term><term name="table" form="short"><single>tbl.</single><multiple>tbls.</multiple></term><term name="timestamp" form="short"> <!-- generally blank --><single/><multiple/></term><term name="title-locator" form="short"><single>tit.</single><multiple>tits.</multiple></term><term name="verse" form="short"><single>v.</single><multiple>vv.</multiple></term><term name="volume" form="short"><single>vol.</single><multiple>vols.</multiple></term>\n<!-- SYMBOLIC LOCATOR FORMS --><term name="paragraph" form="symbol"><single>\xA7</single><multiple>\xA7</multiple></term><term name="section" form="symbol"><single>\xA7</single><multiple>\xA7</multiple></term>\n<!-- LONG NUMBER VARIABLE FORMS --><term name="chapter-number"><single>chapter</single><multiple>chapters</multiple></term><term name="citation-number"><single>citation</single><multiple>citations</multiple></term><term name="collection-number"><single>n\xFAmero</single><multiple>n\xFAmeros</multiple></term><term name="edition"><single>edici\xF3n</single><multiple>ediciones</multiple></term><term name="first-reference-note-number"><single>nota</single><multiple>notas</multiple></term><term name="number"><single>number</single><multiple>numbers</multiple></term><term name="number-of-pages"><single>p\xE1gina</single><multiple>p\xE1ginas</multiple></term><term name="number-of-volumes"><single>volume</single><multiple>volumes</multiple></term><term name="page-first"><single>page</single><multiple>pages</multiple></term><term name="printing"><single>printing</single><multiple>printings</multiple></term><term name="version">versi\xF3n</term>\n<!-- SHORT NUMBER VARIABLE FORMS --><term name="chapter-number" form="short"><single>chap.</single><multiple>chaps.</multiple></term><term name="citation-number" form="short"><single>cit.</single><multiple>cits.</multiple></term><term name="collection-number" form="short">n.\xBA</term><term name="edition" form="short">ed.</term><term name="first-reference-note-number" form="short">n.</term><term name="number" form="short"><single>no.</single><multiple>nos.</multiple></term><term name="number-of-pages" form="short"><single>p.</single><multiple>pp.</multiple></term><term name="number-of-volumes" form="short"><single>vol.</single><multiple>vols.</multiple></term><term name="page-first" form="short"><single>p.</single><multiple>pp.</multiple></term><term name="printing" form="short"><single>print.</single><multiple>prints.</multiple></term>\n<!-- LONG ROLE FORMS --><term name="author"/> <!-- generally blank --><term name="chair"><single>chair</single><multiple>chairs</multiple></term><term name="collection-editor"><single>ed.</single><multiple>eds.</multiple></term><term name="compiler"><single>compiler</single><multiple>compilers</multiple></term><term name="composer"/> <!-- generally blank --><term name="container-author"/> <!-- generally blank --><term name="contributor"><single>contributor</single><multiple>contributors</multiple></term><term name="curator"><single>curator</single><multiple>curators</multiple></term><term name="director"><single>director</single><multiple>directores</multiple></term><term name="editor"><single>editor</single><multiple>editores</multiple></term><term name="editor-translator"><single>editor y traductor</single><multiple>editores y traductores</multiple></term><term name="editortranslator"><single>editor y traductor</single><multiple>editores y traductores</multiple></term><term name="editorial-director"><single>editor</single><multiple>editores</multiple></term><term name="executive-producer"><single>executive producer</single><multiple>executive producers</multiple></term><term name="guest"><single>guest</single><multiple>guests</multiple></term><term name="host"><single>host</single><multiple>hosts</multiple></term><term name="illustrator"><single>ilustrador</single><multiple>ilustradores</multiple></term><term name="interviewer"/> <!-- generally blank --><term name="narrator"><single>narrator</single><multiple>narrators</multiple></term><term name="organizer"><single>organizer</single><multiple>organizers</multiple></term><term name="original-author"/> <!-- generally blank --><term name="performer"><single>performer</single><multiple>performers</multiple></term><term name="producer"><single>producer</single><multiple>producers</multiple></term><term name="recipient"/> <!-- generally blank --><term name="reviewed-author"/> <!-- generally blank --><term name="script-writer"><single>writer</single><multiple>writers</multiple></term><term name="series-creator"><single>series creator</single><multiple>series creators</multiple></term><term name="translator"><single>traductor</single><multiple>traductores</multiple></term>\n<!-- SHORT ROLE FORMS --><term name="compiler" form="short"><single>comp.</single><multiple>comps.</multiple></term><term name="contributor" form="short"><single>contrib.</single><multiple>contribs.</multiple></term><term name="curator" form="short"><single>cur.</single><multiple>curs.</multiple></term><term name="director" form="short"><single>dir.</single><multiple>dirs.</multiple></term><term name="editor" form="short"><single>ed.</single><multiple>eds.</multiple></term><term name="editor-translator" form="short"><single>ed. y trad.</single><multiple>eds. y trads.</multiple></term><term name="editortranslator" form="short"><single>ed. y trad.</single><multiple>eds. y trads.</multiple></term><term name="editorial-director" form="short"><single>ed.</single><multiple>eds.</multiple></term><term name="executive-producer" form="short"><single>exec. prod.</single><multiple>exec. prods.</multiple></term><term name="illustrator" form="short"><single>ilust.</single><multiple>ilusts.</multiple></term><term name="narrator" form="short"><single>narr.</single><multiple>narrs.</multiple></term><term name="organizer" form="short"><single>org.</single><multiple>orgs.</multiple></term><term name="performer" form="short"><single>perf.</single><multiple>perfs.</multiple></term><term name="producer" form="short"><single>prod.</single><multiple>prods.</multiple></term><term name="script-writer" form="short"><single>writ.</single><multiple>writs.</multiple></term><term name="series-creator" form="short"><single>cre.</single><multiple>cres.</multiple></term><term name="translator" form="short"><single>trad.</single><multiple>trads.</multiple></term>\n<!-- VERB ROLE FORMS --><term name="chair" form="verb">chaired by</term><term name="collection-editor" form="verb">edited by</term><term name="compiler" form="verb">compiled by</term><term name="container-author" form="verb">de</term><term name="contributor" form="verb">with</term><term name="curator" form="verb">curated by</term><term name="director" form="verb">dirigido por</term><term name="editor" form="verb">editado por</term><term name="editor-translator" form="verb">editado y traducido por</term><term name="editortranslator" form="verb">editado y traducido por</term><term name="editorial-director" form="verb">editado por</term><term name="executive-producer" form="verb">executive produced by</term><term name="guest" form="verb">with guest</term><term name="host" form="verb">hosted by</term><term name="illustrator" form="verb">ilustrado por</term><term name="interviewer" form="verb">entrevistado por</term><term name="narrator" form="verb">narrated by</term><term name="organizer" form="verb">organized by</term><term name="performer" form="verb">performed by</term><term name="producer" form="verb">produced by</term><term name="recipient" form="verb">a</term><term name="reviewed-author" form="verb">por</term><term name="script-writer" form="verb">written by</term><term name="series-creator" form="verb">created by</term><term name="translator" form="verb">traducido por</term>\n<!-- SHORT VERB ROLE FORMS --><term name="collection-editor" form="verb-short">ed. by</term><term name="compiler" form="verb-short">comp. by</term><term name="contributor" form="verb-short">w.</term><term name="curator" form="verb-short">cur. by</term><term name="director" form="verb-short">dir.</term><term name="editor" form="verb-short">ed.</term><term name="editor-translator" form="verb-short">ed. y trad.</term><term name="editortranslator" form="verb-short">ed. y trad.</term><term name="editorial-director" form="verb-short">ed.</term><term name="executive-producer" form="verb-short">exec. prod. by</term><term name="guest" form="verb-short">w. guest</term><term name="host" form="verb-short">hosted by</term><term name="illustrator" form="verb-short">ilust.</term><term name="narrator" form="verb-short">narr. by</term><term name="organizer" form="verb-short">org. by</term><term name="performer" form="verb-short">perf. by</term><term name="producer" form="verb-short">prod. by</term><term name="script-writer" form="verb-short">writ. by</term><term name="series-creator" form="verb-short">cre. by</term><term name="translator" form="verb-short">trad.</term>\n<!-- LONG MONTH FORMS --><term name="month-01">enero</term><term name="month-02">febrero</term><term name="month-03">marzo</term><term name="month-04">abril</term><term name="month-05">mayo</term><term name="month-06">junio</term><term name="month-07">julio</term><term name="month-08">agosto</term><term name="month-09">septiembre</term><term name="month-10">octubre</term><term name="month-11">noviembre</term><term name="month-12">diciembre</term>\n<!-- SHORT MONTH FORMS --><term name="month-01" form="short">ene.</term><term name="month-02" form="short">feb.</term><term name="month-03" form="short">mar.</term><term name="month-04" form="short">abr.</term><term name="month-05" form="short">may</term><term name="month-06" form="short">jun.</term><term name="month-07" form="short">jul.</term><term name="month-08" form="short">ago.</term><term name="month-09" form="short">sep.</term><term name="month-10" form="short">oct.</term><term name="month-11" form="short">nov.</term><term name="month-12" form="short">dic.</term>\n<!-- SEASONS --><term name="season-01">primavera</term><term name="season-02">verano</term><term name="season-03">oto\xF1o</term><term name="season-04">invierno</term></terms>\n</locale>\n'
   };
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/locales.js
-  var locales = new util_exports.Register(locales_default);
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/locales.js
+  var locales = new util_exports2.Register(locales_default);
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/styles.json
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/styles.json
   var styles_default = {
     apa: '<?xml version="1.0" encoding="utf-8"?>\n<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" demote-non-dropping-particle="never" initialize-with=". " names-delimiter=", " page-range-format="expanded" version="1.0"><!-- This file was generated by the Style Variant Builder <https://github.com/citation-style-language/style-variant-builder>. To contribute changes, modify the template and regenerate variants. --><info><title>APA Style 7th edition</title><title-short>Publication Manual of the American Psychological Association, with Bluebook</title-short><id>http://www.zotero.org/styles/apa</id><link href="http://www.zotero.org/styles/apa" rel="self"/><link href="http://www.zotero.org/styles/apa-6th-edition" rel="template"/><link href="https://apastyle.apa.org/style-grammar-guidelines/references" rel="documentation"/><link href="https://zotero.org/groups/2205533/collections/MR2N872S" rel="documentation"/><author><name>Brenton M. Wiernik</name><email>zotero@wiernik.org</email><uri>https://orcid.org/0000-0001-9560-6336</uri></author><author><name>Andrew Dunning</name><uri>https://orcid.org/0000-0003-0464-5036</uri></author><category citation-format="author-date"/><category field="anthropology"/><category field="communications"/><category field="generic-base"/><category field="law"/><category field="medicine"/><category field="psychology"/><category field="social_science"/><category field="sociology"/><summary>Author-date system of the Publication Manual of the American Psychological Association (2020)</summary><updated>2026-02-14T01:18:34+00:00</updated><rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights></info><locale xml:lang="en"><terms><term name="ad"> C.E.</term><term name="bc"> B.C.E.</term><term form="short" name="circa">ca.</term><term name="guest"><single>guest expert</single><multiple>guest experts</multiple></term><term form="short" name="illustrator">illus.</term><term form="short" name="interviewer"><single>interviewer</single><multiple>interviewers</multiple></term><term form="short" name="legislation">Pub. L.</term><term name="manuscript">unpublished manuscript</term><term form="verb" name="performer">recorded by</term><term name="post">online post</term><term name="review-of">review of the</term><term form="short" name="review-of">review of</term><term name="software">computer software</term><term form="short" name="supplement"><single>suppl.</single><multiple>suppls.</multiple></term></terms></locale><locale xml:lang="da"><terms><term name="et-al">et al.</term></terms></locale><locale xml:lang="de"><terms><term name="et-al">et al.</term></terms></locale><locale xml:lang="es"><terms><term name="from">de</term></terms></locale><locale xml:lang="fr"><terms><term form="short" name="editor"><single>\xE9d.</single><multiple>\xE9ds.</multiple></term></terms></locale><locale xml:lang="nb"><terms><term name="et-al">et al.</term></terms></locale><locale xml:lang="nl"><terms><term name="et-al">et al.</term></terms></locale><locale xml:lang="nn"><terms><term name="et-al">et al.</term></terms></locale><locale xml:lang="pl"><terms><term name="et-al">i in.</term></terms></locale><locale xml:lang="ro"><terms><term name="et-al">et al.</term></terms></locale><!-- Contents:\nAPA uses four main reference elements:\n1. Author (APA 9.7-12)2. Date (APA 9.13-17)3. Title and descriptions (APA 9.18-22)3.1. Title (APA 9.18)3.2. Identifier (in parentheses) (APA 9.19)3.3. Description [in square brackets] (APA 9.21-22)4. Source (APA 9.23-37)4.1. Serial sources (APA 9.25-27)4.2. Monographic sources (APA 9.28)4.3. Publisher sources (APA 9.29)4.4. Database and archive sources (APA 9.30)4.5. Works with specific locations (APA 9.31)4.6. Social media and website sources (APA 9.32-33)4.7. DOI or URL (APA 9.34-36)\nA note on the source may follow the main reference elements:\n5. Publication history (APA 9.39-41)\nAPA also provides parallel rules for legal references following The Bluebook: A Uniform System of Citation (chap. 11):\n6. Legal references--><!-- APA categorizes all sources as serial (APA 9.25-27) or monographic (APA 9.28).\nSerial: article-journal article-magazine article-newspaper periodical post-weblog review review-book\nSerial or Monographic: interview paper-conference\nMonographic with any of `collection-editor compiler editor editorial-director`.A serial `paper-conference` is unpublished if it lacks any of `issue page supplement-number volume`.\nMonographic: article book broadcast chapter classic collection dataset document entry entry-dictionary entry-encyclopedia event figure graphic manuscript map motion_picture musical_score pamphlet patent performance personal_communication post report software song speech standard thesis webpage\nLegal: bill hearing legal_case legislation regulation treaty--><!-- Equivalencies:\n`classic` == `book``document` == `report` (but give full date)`standard` == `report``performance` == `speech``event` == `speech`--><!-- Role equivalencies:\n`compiler` == `editor``organizer`, `curator` == `chair``script-writer` == `director``producer` == `director` (but don\'t print both)`guest`, `host` == `director``series-creator`, `executive-producer` == `editor`--><!-- Reviews are detected if an item has type `review` or `review-book` or if it has any of the variables `reviewed-title`, `reviewed-author`, or `reviewed-genre`. For the latter case, reviews are commonly stored as types `article-journal`, `article-magazine`, `article-newspaper`, `post-weblog`, or `webpage`. --><!-- Indigeneous knowledge: Assume the item is stored as `document` or `speech` and that Nation/Community, treaty territory, where the Elder lives, and topic are all stored in `title`. Cf. <https://libguides.norquest.ca/c.php?g=314831&p=5188823>. If the item is stored as `interview`, assume that Nation/Community, treaty territory, and topic are stored in `title`. \'Oral teaching\' or similar is stored in `archive`, and where the Elder lives is stored in `archive-place`. --><!-- Variable labels --><macro name="label-chapter-number"><group delimiter=" "><choose><if is-numeric="chapter-number" type="song"><text text-case="capitalize-first" value="track"/></if><else-if is-numeric="chapter-number"><label text-case="capitalize-first" variable="chapter-number"/></else-if></choose><text variable="chapter-number"/></group></macro><macro name="label-edition"><group delimiter=" "><choose><if is-numeric="edition"><number form="ordinal" variable="edition"/><label form="short" variable="edition"/></if><else><text variable="edition"/></else></choose></group></macro><macro name="label-issue"><group delimiter=" "><label text-case="capitalize-first" variable="issue"/><text variable="issue"/></group></macro><macro name="label-locator"><!-- Abbreviate page and paragraph; leave other locator labels in long form (APA 8.13) --><group delimiter=" "><choose><if locator="page"><label form="short" variable="locator"/></if><else-if match="any" type="bill hearing legal_case legislation regulation treaty"><!-- Bluebook-style labels for legal types --><choose><if locator="chapter paragraph section" match="any"><label form="symbol" variable="locator"/></if><else><label text-case="capitalize-first" variable="locator"/></else></choose></else-if><else-if locator="paragraph"><label form="short" variable="locator"/></else-if><else-if is-numeric="locator"><label text-case="capitalize-first" variable="locator"/></else-if><!-- a non-numeric canonical reference is identified by its formatting and does not need a label, similar to a timestamp --><else-if locator="chapter line verse" match="any"/><else><label text-case="capitalize-first" variable="locator"/></else></choose><text variable="locator"/></group></macro><macro name="label-number"><group delimiter=" "><choose><if type="standard"/><else-if is-numeric="number" match="any" type="legislation patent regulation"><label form="short" text-case="capitalize-first" variable="number"/></else-if></choose><text text-case="capitalize-first" variable="number"/></group></macro><macro name="label-number-capitalized"><!-- alias for cross-compatibility of Bluebook macros --><text macro="label-number"/></macro><macro name="label-number-article"><!-- APA example 6: Journal article with article number or eLocator --><group delimiter=" "><text term="article-locator" text-case="capitalize-first"/><text variable="number"/></group></macro><macro name="label-number-of-volumes"><group delimiter=" "><choose><if is-numeric="number-of-volumes"><label form="short" text-case="capitalize-first" variable="number-of-volumes"/><group><text prefix="1" term="page-range-delimiter"/><number variable="number-of-volumes"/></group></if><else><text variable="number-of-volumes"/></else></choose></group></macro><macro name="label-page"><group delimiter=" "><label form="short" variable="page"/><text variable="page"/></group></macro><macro name="label-part-number"><group delimiter=" "><choose><if is-numeric="part-number"><!-- TODO: Replace with `part-number` label when CSL provides one --><text form="short" term="part" text-case="capitalize-first"/></if></choose><text text-case="capitalize-first" variable="part-number"/></group></macro><macro name="label-section-symbol"><group delimiter=" "><label form="symbol" variable="section"/><text variable="section"/></group></macro><macro name="label-supplement-number"><group delimiter=" "><choose><if is-numeric="supplement-number"><!-- TODO: Replace with `supplement-number` label when CSL provides one --><text form="short" term="supplement" text-case="capitalize-first"/></if></choose><text text-case="capitalize-first" variable="supplement-number"/></group></macro><macro name="label-version"><group delimiter=" "><label text-case="capitalize-first" variable="version"/><text variable="version"/></group></macro><macro name="label-volume"><group delimiter=" "><choose><if is-numeric="volume"><label form="short" text-case="capitalize-first" variable="volume"/></if></choose><text text-case="capitalize-first" variable="volume"/></group></macro><!-- 1. Author (APA 9.7-12) --><macro name="author"><!-- Substitutes for missing authors: order prioritizes primary creators (e.g., composer, author) over secondary roles (e.g., editor, curator), with title as the final fallback. --><names variable="composer"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label form="short" prefix=" (" suffix=")" text-case="title"/><substitute><names variable="author"/><!-- `narrator` only cited in `identifier-contributors` --><names variable="illustrator"/><choose><if type="broadcast"><names variable="script-writer director"><!-- Actors/performers and producers [not executive] not cited in APA style. --><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names></if></choose><names variable="director"><!-- For non-broadcast items, APA only cites directors and not writers. --><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><names variable="guest host"><!-- TODO: Collapse variables when that becomes available. --><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><names variable="producer"><!-- Producers not cited if there is a writer/director, but use if they are the principal creator. --><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><choose><if match="any" type="entry-dictionary entry-encyclopedia"><text variable="publisher"/></if></choose><choose><if match="none" variable="container-title"/><else-if match="any" type="book classic entry entry-dictionary entry-encyclopedia"><!-- Items with a monographic `container-title` substitute their title and identifier, but leave description after `container-title`. This mimics the `source-monographic` macro. --><text macro="author-title-substitute"/></else-if></choose><names variable="executive-producer"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><names variable="series-creator"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><names variable="editor-translator"/><!-- `translator` is not cited as a primary creator (only as Ed. & Trans.). --><names variable="editor"/><names variable="editorial-director"/><names variable="compiler"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><choose><if match="any" type="event performance speech"><names variable="chair"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><names variable="organizer"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names></if></choose><names variable="curator"><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/><label prefix=" (" suffix=")" text-case="title"/></names><names variable="collection-editor"/><choose><if match="any" type="software webpage"><!-- `software` (APA 10.10) and `webpage` (APA 10.16) can be cited under "name of group": likely in `publisher` if no `author` --><text variable="publisher"/></if><else-if type="standard"><text variable="authority"/></else-if></choose><text macro="author-title-substitute"/></substitute></names></macro><macro name="author-and-contributors"><group delimiter=" "><text macro="author"/><choose><!-- add nonprimary authors equivalent to those appearing "on a book cover"; do not modify the in-text citation (APA 9.8) --><if match="none" variable="author compiler composer editor editor-translator illustrator"/><else-if match="any" type="book musical_score pamphlet report standard"><names prefix="(" suffix=")" variable="contributor"><label form="verb" suffix=" "/><name and="symbol" delimiter-precedes-last="always" name-as-sort-order="all"/></names></else-if></choose></group></macro><macro name="author-short"><choose><if match="any" type="bill hearing legal_case legislation regulation treaty"><text macro="title-and-descriptions-short"/></if><else-if match="any" type="interview personal_communication"><choose><!-- These variables indicate that the letter is retrievable by the reader. If not, use the APA in-text-only personal communication format. --><if match="any" variable="archive archive-place container-title DOI number publisher references URL"><names variable="author"><name and="symbol" form="short"/><substitute><text macro="title-and-descriptions-short"/></substitute></names></if><else><group delimiter=", "><names variable="author"><name and="symbol"/><substitute><text macro="title-and-descriptions-short"/></substitute></names><text term="personal-communication"/></group></else></choose></else-if><else><names variable="composer"><name and="symbol" form="short"/><substitute><names variable="author"/><names variable="illustrator"/><choose><if type="broadcast"><!-- TODO: Collapse variables when that becomes available. --><!-- Ideally combine as `script-writer director` --><names variable="script-writer"/></if></choose><names variable="director"/><!-- TODO: Collapse variables when that becomes available. --><names variable="guest host"/><names variable="producer"/><choose><if match="any" type="entry-dictionary entry-encyclopedia"><text variable="publisher"/></if></choose><choose><if match="none" variable="container-title"/><else-if match="any" type="book classic entry entry-dictionary entry-encyclopedia"><text macro="title-and-descriptions-short"/></else-if></choose><names variable="executive-producer"/><names variable="series-creator"/><names variable="editor"/><names variable="editorial-director"/><names variable="compiler"/><choose><if match="any" type="event performance speech"><names variable="chair"/><names variable="organizer"/></if></choose><names variable="curator"/><names variable="collection-editor"/><choose><if match="any" type="software webpage"><!-- `software` (APA 10.10) and `webpage` (APA 10.16) can be cited under "name of group": likely in `publisher` if no `author` --><text form="short" variable="publisher"/></if><else-if type="standard"><text form="short" variable="authority"/></else-if></choose><text macro="title-and-descriptions-short"/></substitute></names></else></choose></macro><macro name="author-sort"><choose><if match="any" type="bill hearing legal_case legislation regulation treaty"><text macro="legal-title"/></if><else><text macro="author"/></else></choose></macro><!-- Author elements --><macro name="author-title-substitute"><choose><if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"><!-- `title` is only the review title if there is a separate `reviewed-genre` or `reviewed-title`; otherwise, it is the title of the reviewed work, printed in the description --><choose><if variable="reviewed-genre title"><text macro="title"/></if><else-if variable="reviewed-title title"><text macro="title"/></else-if><else><text macro="title-and-descriptions"/></else></choose></if><else-if variable="title"><!-- If an item has a `title`, substitute missing author with title and identifier, but leave description after the date (in the title position). --><group delimiter=" "><text macro="title"/><text macro="identifier"/></group></else-if><else><!-- If an item has no `title`, substitute with descriptions. --><text macro="title-and-descriptions"/></else></choose></macro><!-- 2. Date (APA 9.13-17) --><macro name="date"><!-- Full dates included for ephemeral sources (e.g. broadcasts, interviews) to provide maximum specificity, while books use year only. --><group delimiter="-" prefix="(" suffix=")"><choose><if variable="issued"><group delimiter=", "><group><text macro="date-issued-year"/><text variable="year-suffix"/></group><choose><if match="any" type="article-magazine article-newspaper broadcast collection document event motion_picture pamphlet performance personal_communication post post-weblog song speech webpage"><!-- Many video and audio examples in manual give full dates. Err on the side of too much information. --><text macro="date-issued-month-day"/></if><!-- Only show the month and day for an unpublished `interview` or `paper-conference` --><else-if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"/><else-if match="any" type="interview paper-conference"><text macro="date-issued-month-day"/></else-if><!-- Only year: article article-journal book chapter classic entry entry-dictionary entry-encyclopedia dataset figure graphic manuscript map musical_score paper-conference[published] patent periodical report review review-book software standard thesis --></choose></group></if><else-if variable="status"><!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) --><text text-case="lowercase" variable="status"/><text variable="year-suffix"/></else-if><else><text form="short" term="no date"/><text variable="year-suffix"/></else></choose></group></macro><macro name="date-short"><group delimiter="-"><choose><if variable="issued"><group delimiter="/"><text macro="date-original-year"/><group><choose><if match="any" variable="archive archive-place container-title DOI number publisher references URL"><text macro="date-issued-year"/></if><else-if match="any" type="interview personal_communication"><!-- use the in-text-only format for inaccessible personal communications --><text macro="date-issued-full"/></else-if><else><text macro="date-issued-year"/></else></choose><text variable="year-suffix"/></group></group></if><else-if variable="status"><!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) --><text text-case="lowercase" variable="status"/><text variable="year-suffix"/></else-if><else><text form="short" term="no date"/><text variable="year-suffix"/></else></choose></group></macro><macro name="date-sort"><!-- Sort items by issue date as printed --><choose><if match="any" type="article article-journal book chapter entry entry-dictionary entry-encyclopedia dataset figure graphic manuscript map musical_score patent report review review-book thesis"><date date-parts="year" form="numeric" variable="issued"/></if><else-if type="paper-conference"><!-- Determine whether published and serial or monographic --><choose><if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"><date date-parts="year" form="numeric" variable="issued"/></if><else><text macro="date-issued-leading-zeros"/></else></choose></else-if><else><text macro="date-issued-leading-zeros"/></else></choose></macro><macro name="date-sort-group"><!-- Sorts items with and without dates:\n1. `no date` items (= 0)2. items with dates (= 1)3. items with `status` (forthcoming, in press, etc.) (= 2) --><choose><if variable="issued"><text value="1"/></if><else-if variable="status"><text value="2"/></else-if><else><text value="0"/></else></choose></macro><!-- Date elements --><macro name="date-event-full"><group delimiter=" "><choose><if is-uncertain-date="event-date"><text form="short" term="circa"/></if></choose><date form="text" variable="event-date"/></group></macro><macro name="date-issued-full"><group delimiter=" "><choose><if is-uncertain-date="issued"><text form="short" term="circa"/></if></choose><date form="text" variable="issued"/></group></macro><macro name="date-issued-leading-zeros"><date delimiter="-" variable="issued"><date-part name="year"/><date-part form="numeric-leading-zeros" name="month"/><date-part form="numeric-leading-zeros" name="day"/></date></macro><macro name="date-issued-month-day"><date variable="issued"><date-part name="month"/><date-part name="day" prefix=" "/></date></macro><macro name="date-issued-year"><group delimiter=" "><choose><if is-uncertain-date="issued"><text form="short" term="circa"/></if></choose><date date-parts="year" form="numeric" variable="issued"/></group></macro><macro name="date-original-year"><group delimiter=" "><choose><if is-uncertain-date="original-date"><text form="short" term="circa"/></if></choose><date date-parts="year" form="numeric" variable="original-date"/></group></macro><!-- 3. Title and descriptions (APA 9.18-22) --><macro name="title-and-descriptions"><group delimiter=" "><choose><if variable="title"><text macro="title"/><text macro="identifier"/><text macro="description"/></if><else-if match="any" type="bill report"><!-- Bills, resolutions, and congressional reports substitute bill number if no title. --><!-- Congressional reports are indistinguishable from other reports --><text macro="identifier-number"/><text macro="description"/><text macro="identifier"/></else-if><else><text macro="description"/><text macro="identifier"/></else></choose></group></macro><macro name="title-and-descriptions-short"><choose><if variable="title"><text macro="title-short"/></if><else-if match="any" type="bill report"><!-- Bills, resolutions, and congressional reports substitute bill number if no title. --><text macro="legal-identifier-bill-report"/></else-if><else><text macro="description-short"/></else></choose></macro><!-- 3.1. Title (APA 9.18) --><macro name="title"><choose><if match="any" type="post webpage"><!-- part number/title always at the analytic level --><text font-style="italic" macro="title-and-part-filter-review"/></if><!-- Other types are italicized based on presence of `container-title`. Assume that `review` and `review-book` are published either in a serial or on a webpage (APA example 69) --><else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><text macro="title-serial"/></else-if><else-if match="any" variable="collection-editor compiler editor editorial-director"><text macro="title-monographic"/></else-if><else-if match="any" type="interview paper-conference"><text macro="title-serial"/></else-if><else><text macro="title-monographic"/></else></choose></macro><macro name="title-short"><choose><if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"><!-- `title` is only the review title if there is a separate `reviewed-genre` or `reviewed-title`; otherwise, it is the title of the reviewed work, printed in the description --><choose><if variable="reviewed-genre title"><!-- Quotes, title case --><text form="short" quotes="true" text-case="title" variable="title"/></if><else-if variable="reviewed-title title"><!-- Quotes, title case --><text form="short" quotes="true" text-case="title" variable="title"/></else-if><else><text macro="description-short"/></else></choose></if><else-if match="any" type="bill legislation regulation report treaty"><!-- No italics or quotes, title case --><text form="short" text-case="title" variable="title"/></else-if><else-if match="any" type="legal_case post"><!-- Italicized, sentence case --><text font-style="italic" form="short" variable="title"/></else-if><else-if match="any" type="hearing webpage"><!-- Italicized, title case (regardless of `container-title`) --><text font-style="italic" form="short" text-case="title" variable="title"/></else-if><!-- Other types are formatted based on presence of `container-title`, as in title macro --><else-if variable="container-title"><!-- Quotes, title case --><text form="short" quotes="true" text-case="title" variable="title"/></else-if><else><!-- Italicized, title case (default) --><text font-style="italic" form="short" text-case="title" variable="title"/></else></choose></macro><!-- Title elements --><macro name="title-and-part-filter-review"><choose><if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"><!-- If a review has no `reviewed-genre` or `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. --><choose><if variable="reviewed-genre title"><text macro="title-and-part-title"/></if><else-if variable="reviewed-title title"><text macro="title-and-part-title"/></else-if></choose></if><else><text macro="title-and-part-title"/></else></choose></macro><macro name="title-and-part-title"><group delimiter=": "><text variable="title"/><text macro="title-part"/></group></macro><macro name="title-and-volume-title"><group delimiter=": "><text variable="title"/><text macro="title-volume"/></group></macro><macro name="title-monographic"><!-- For monographic items, assume `part-number` and `part-title` refer to the book/volume. --><choose><if variable="container-title"><text variable="title"/></if><else><!-- For monographic items without `container-title` and with `volume-title`, append `volume-title` to `title` (APA example 30) --><text font-style="italic" macro="title-and-volume-title"/></else></choose></macro><macro name="title-part"><choose><if variable="part-title"><group delimiter=". "><text macro="label-part-number"/><text text-case="capitalize-first" variable="part-title"/></group></if><else-if is-numeric="part-number"/><else><text macro="label-part-number"/></else></choose></macro><macro name="title-serial"><!-- For serials, assume that `part-number` and `part-title` refer to the article and append to `title` --><choose><if variable="container-title"><text macro="title-and-part-filter-review"/></if><else><!-- for serial items without `container-title`, don\'t append `volume-title` to `title` --><text font-style="italic" macro="title-and-part-filter-review"/></else></choose></macro><macro name="title-volume"><group delimiter=", "><choose><!-- Assume that `part-number` and `part-title` of monographic items refer to the source book/volume --><if variable="volume-title"><group delimiter=": "><group delimiter=". "><text macro="label-volume"/><text variable="volume-title"/></group><text macro="title-part"/></group></if><else-if variable="part-title"><text macro="label-volume"/><text macro="title-part"/></else-if><!-- if there is no `part-title` or `volume title`, `part-number` and `volume` appear in `identifier` if numeric --><else-if is-numeric="part-number volume"/><else-if is-numeric="part-number" variable="volume"><text macro="label-volume"/></else-if><else-if is-numeric="volume" variable="part-number"><text macro="label-part-number"/></else-if><else-if is-numeric="part-number"/><else-if is-numeric="volume"/><else><text macro="label-volume"/><text macro="label-part-number"/></else></choose></group></macro><!-- 3.2. Identifier (in parentheses) (APA 9.19) --><macro name="identifier"><!-- (Secondary contributors; Database location; Genre no. 123; Report Series 123, Version, Edition, Volume, Page) --><group delimiter="; " prefix="(" suffix=")"><choose><if type="patent"><text macro="identifier-patent"/></if><else-if match="any" type="post webpage"><!-- print `container-title` on `post` or `webpage` in the same way as `publisher` --><text macro="identifier-contributors"/><text macro="identifier-number"/><text macro="identifier-monographic"/></else-if><else-if type="report" variable="container-title"><!-- If the report is a chapter in a larger report, then most identifying information is printed in the source. --><text macro="identifier-contributors"/></else-if><else-if type="report" variable="title"><text macro="identifier-contributors"/><text macro="identifier-number"/><text macro="identifier-monographic"/></else-if><else-if type="report"><!-- If there is no `title`, then `genre` and `number` are already printed as the title. --><text macro="identifier-contributors"/><text macro="identifier-monographic"/></else-if><else-if variable="container-title"><choose><if match="none" variable="genre title"><text macro="label-chapter-number"/></if></choose><text macro="identifier-contributors"/><choose><if match="any" type="broadcast graphic map motion_picture"><!-- For some audiovisual media, `number` information comes after title, not `container-title` (APA example 94); but an album track number is `chapter-number` --><text macro="identifier-number"/></if></choose><text macro="identifier-serial"/></else-if><else><text macro="identifier-contributors"/><text macro="identifier-number"/><text macro="identifier-monographic"/><text macro="identifier-serial"/></else></choose></group></macro><!-- Identifier elements --><macro name="identifier-contributors"><choose><if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><text macro="identifier-contributors-serial"/></if><else-if match="any" variable="collection-editor compiler editor editorial-director"><text macro="identifier-contributors-monographic"/></else-if><else-if match="any" type="interview paper-conference"><text macro="identifier-contributors-serial"/></else-if><else><text macro="identifier-contributors-monographic"/></else></choose></macro><macro name="identifier-contributors-monographic"><group delimiter="; "><choose><if variable="title"><names variable="interviewer"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names></if></choose><choose><if match="any" type="post webpage"><!-- print `container-title` on `post` or `webpage` in the same way as `publisher` --><names variable="container-author"><label form="verb-short" suffix=" " text-case="title"/><name and="symbol"/></names><names delimiter="; " variable="editor translator"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names><names delimiter="; " variable="illustrator narrator"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names><names delimiter="; " variable="compiler chair organizer curator series-creator executive-producer"><name and="symbol"/><label prefix=", " text-case="title"/></names></if><else><names delimiter="; " variable="illustrator narrator"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names><choose><if variable="container-title editor-translator"/><else-if variable="container-title"><!-- TODO: Check logic once processors start to automatically populate `editor-translator` --><names delimiter="; " variable="translator"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names></else-if><else><names variable="container-author"><label form="verb-short" suffix=" " text-case="title"/><name and="symbol"/></names><names delimiter="; " variable="editor translator"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names><names delimiter="; " variable="compiler chair organizer curator series-creator executive-producer"><name and="symbol"/><label prefix=", " text-case="title"/></names></else></choose></else></choose></group></macro><macro name="identifier-contributors-serial"><group delimiter="; "><choose><if variable="title"><names delimiter="; " variable="interviewer"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names></if></choose><names delimiter="; " variable="translator narrator"><name and="symbol"/><label form="short" prefix=", " text-case="title"/></names></group></macro><macro name="identifier-locators"><choose><if variable="page"><text macro="label-page"/></if><else-if variable="chapter-number genre"><text macro="label-chapter-number"/></else-if><else-if variable="chapter-number title"><text macro="label-chapter-number"/></else-if><!-- `chapter-number` appears earlier in `identifier` if there is no `title` or `genre` --></choose></macro><macro name="identifier-monographic"><choose><!-- omit serial types --><if match="any" type="article-journal article-magazine article-newspaper broadcast event patent performance periodical post post-weblog review review-book speech webpage"/><else-if match="any" variable="collection-editor compiler editor editorial-director"><!-- monographic types --><text macro="identifier-monographic-item"/></else-if><!-- omit serial types --><else-if match="any" type="interview paper-conference"/><else><!-- monographic types --><text macro="identifier-monographic-item"/></else></choose></macro><macro name="identifier-monographic-item"><group delimiter=", "><text macro="label-version"/><text macro="label-edition"/><text macro="identifier-series"/><text macro="label-supplement-number"/><text macro="identifier-number-volume"/><text macro="identifier-number-part"/><text macro="label-issue"/><text macro="identifier-locators"/></group></macro><macro name="identifier-number"><group delimiter=" "><choose><if type="thesis" variable="genre"><!-- `genre` provided with thesis description (APA example 65) --><text text-case="capitalize-first" value="publication"/></if><else-if variable="number"><text text-case="title" variable="genre"/></else-if></choose><text macro="label-number"/></group></macro><macro name="identifier-number-part"><choose><!-- Part number printed with part title --><if variable="part-title"/><!-- Non-numeric part numbers printed as part of the title --><else-if is-numeric="part-number"><text macro="label-part-number"/></else-if></choose></macro><macro name="identifier-number-volume"><choose><!-- Volume number printed with volume/part title --><if variable="volume volume-title"/><else-if variable="part-title volume"/><!-- Non-numeric volumes printed as part of the book title --><else-if is-numeric="volume"><text macro="label-volume"/></else-if><else><text macro="label-number-of-volumes"/></else></choose></macro><macro name="identifier-patent"><!-- `authority`: U.S. ; `genre`: patent ; `number`: 123,445 --><group delimiter=" "><text form="short" variable="authority"/><choose><if variable="genre"><text text-case="capitalize-first" variable="genre"/></if><else><text term="patent" text-case="capitalize-first"/></else></choose><text macro="label-number"/></group></macro><macro name="identifier-serial"><choose><if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><!-- serial types --><text macro="identifier-number-part"/></if><!-- omit monographic types --><else-if match="any" variable="collection-editor compiler editor editorial-director"/><else-if match="any" type="interview paper-conference"><!-- serial types --><text macro="identifier-number-part"/></else-if></choose></macro><macro name="identifier-series"><!-- Series given only for report-like types (APA example 52) --><choose><if match="any" type="document report standard"><group delimiter=" "><text text-case="title" variable="collection-title"/><text variable="collection-number"/></group></if></choose></macro><!-- 3.3. Description [in square brackets] (APA 9.21) --><macro name="description"><group prefix="[" suffix="]"><choose><if match="any" type="interview" variable="interviewer"><text macro="description-interview"/></if><else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"><text macro="description-review"/></else-if><else-if type="personal_communication"><text macro="description-letter"/></else-if><else-if type="song" variable="composer"><text macro="description-song"/></else-if><else-if type="thesis"><text macro="description-thesis"/></else-if><else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><text macro="description-serial"/></else-if><else-if match="none" variable="container-title"><!-- Other description --><text macro="description-format"/></else-if><!-- For unpublished conference presentations/performances/events, chapters in reports/standards/generic documents, software, place description within the source element --><else-if match="any" type="document report software standard"/><else-if match="any" type="event paper-conference performance speech"><choose><if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"><text macro="description-format"/></if></choose></else-if><else><text macro="description-format"/></else></choose></group></macro><macro name="description-short"><group prefix="[" suffix="]"><choose><if match="any" type="interview" variable="interviewer"><text macro="description-interview-short"/></if><else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"><text macro="description-review-short"/></else-if><else-if type="personal_communication"><text macro="description-letter-short"/></else-if><else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><!-- serial types --><text macro="description-serial-short"/></else-if><else-if match="any" variable="collection-editor compiler editor editorial-director"><!-- monographic types --><text macro="description-format-short"/></else-if><else-if match="any" type="interview paper-conference"><!-- serial types --><text macro="description-serial-short"/></else-if><else><!-- monographic types --><text macro="description-format-short"/></else></choose></group></macro><!-- Description elements --><macro name="description-format"><choose><if match="any" variable="genre medium"><group delimiter="; "><choose><if match="none" variable="number"><text text-case="capitalize-first" variable="genre"/></if></choose><text text-case="capitalize-first" variable="medium"/></group></if><else><text macro="description-format-term-generic"/></else></choose></macro><macro name="description-format-short"><choose><if variable="genre"><text form="short" text-case="capitalize-first" variable="genre"/></if><else-if variable="medium"><text form="short" text-case="capitalize-first" variable="medium"/></else-if><else><text macro="description-format-term-generic"/></else></choose></macro><macro name="description-format-term-generic"><!-- Generic labels for specific types --><choose><if type="broadcast"><text term="broadcast" text-case="capitalize-first"/></if><else-if type="collection"><text term="collection" text-case="capitalize-first"/></else-if><else-if type="dataset"><text term="dataset" text-case="capitalize-first"/></else-if><else-if type="figure"><text term="figure" text-case="capitalize-first"/></else-if><else-if type="graphic"><text term="graphic" text-case="capitalize-first"/></else-if><else-if match="any" type="interview personal_communication"><choose><if match="none" variable="archive archive-place container-title DOI number publisher references URL"><text term="personal-communication" text-case="capitalize-first"/></if><else-if type="interview"><text term="interview" text-case="capitalize-first"/></else-if><else-if type="personal_communication"><text term="letter" text-case="capitalize-first"/></else-if></choose></else-if><else-if type="manuscript"><choose><if match="none" variable="archive archive-place container-title DOI number publisher references URL"><text term="manuscript" text-case="capitalize-first"/></if></choose></else-if><else-if type="map"><text term="map" text-case="capitalize-first"/></else-if><else-if type="motion_picture"><text term="motion_picture" text-case="capitalize-first"/></else-if><else-if type="periodical" variable="container-title supplement-number"><text term="supplement" text-case="capitalize-first"/></else-if><else-if type="periodical" variable="container-title title"><text term="special-issue" text-case="capitalize-first"/></else-if><else-if type="song"><text term="song" text-case="capitalize-first"/></else-if><else-if type="software"><text term="software" text-case="capitalize-first"/></else-if><else-if type="post"><text term="post" text-case="capitalize-first"/></else-if><else-if type="review"><text term="review" text-case="capitalize-first"/></else-if><else-if type="review-book"><text term="review-book" text-case="capitalize-first"/></else-if></choose></macro><macro name="description-interview"><group delimiter="; "><choose><if variable="interviewer title"><!-- Avoid repeating \'interview\' --><choose><if match="none" variable="number"><text text-case="capitalize-first" variable="genre"/></if></choose><text text-case="capitalize-first" variable="medium"/></if><else-if variable="title"><text macro="description-format"/></else-if><else-if variable="genre"><group delimiter=" "><text text-case="capitalize-first" variable="genre"/><choose><if variable="interviewer"><text form="verb" term="container-author"/><names variable="interviewer"><name and="symbol"/></names></if></choose></group></else-if><else-if variable="interviewer"><names variable="interviewer"><label form="verb" suffix=" " text-case="capitalize-first"/><name and="symbol"/></names><text text-case="capitalize-first" variable="medium"/></else-if><else><text macro="description-format"/></else></choose></group></macro><macro name="description-interview-short"><names variable="interviewer"><label form="verb" suffix=" " text-case="capitalize-first"/><name and="symbol" form="short"/><substitute><text macro="description-format-short"/></substitute></names></macro><macro name="description-letter"><choose><if variable="recipient"><group delimiter="; "><group delimiter=" "><text macro="description-format"/><names variable="recipient"><label form="verb" suffix=" "/><name and="symbol" initialize="false"/></names></group><text macro="description-medium"/></group></if><else><text macro="description-format"/></else></choose></macro><macro name="description-letter-short"><choose><if variable="recipient"><group delimiter=" "><text macro="description-format-short"/><names variable="recipient"><label form="verb" suffix=" "/><name and="symbol" form="short"/></names></group></if><else><text macro="description-format-short"/></else></choose></macro><macro name="description-medium"><choose><if variable="number"/><else-if variable="genre"><text text-case="capitalize-first" variable="medium"/></else-if></choose></macro><macro name="description-review"><group delimiter="; "><group delimiter=", "><group delimiter=" "><choose><if variable="reviewed-genre"><text term="review-of" text-case="capitalize-first"/><text variable="reviewed-genre"/></if><else-if variable="number"><!-- Genre printed with `number` --><text form="short" term="review-of" text-case="capitalize-first"/></else-if><!-- If no `reviewed-genre`, assume that `genre` or `medium` is entered as \'Review of the book\' or similar --><else-if variable="genre"><text text-case="capitalize-first" variable="genre"/></else-if><else-if variable="medium"><text text-case="capitalize-first" variable="medium"/></else-if><else-if type="review-book"><text term="review-of" text-case="capitalize-first"/><text term="book" text-case="lowercase"/></else-if><else><text form="short" term="review-of" text-case="capitalize-first"/></else></choose><text macro="description-review-title"/></group><names variable="reviewed-author"><label form="verb-short" suffix=" "/><name and="symbol"/></names></group><text macro="description-medium"/></group></macro><macro name="description-review-short"><group delimiter=" "><text form="short" term="review-of" text-case="capitalize-first"/><text macro="description-review-title-short"/></group></macro><macro name="description-review-title"><choose><if match="any" variable="reviewed-genre reviewed-title"><!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title (APA example 69) --><!-- TODO: Adapt for `reviewed-container-title` or similar if it becomes available --><text font-style="italic" variable="reviewed-title"/></if><else><!-- Assume `title` is the title of the reviewed work --><text font-style="italic" variable="title"/></else></choose></macro><macro name="description-review-title-short"><choose><if match="any" variable="reviewed-genre reviewed-title"><!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title (APA example 69) --><!-- TODO: Adapt for `reviewed-container-title` or similar if it becomes available --><text font-style="italic" form="short" text-case="title" variable="reviewed-title"/></if><else><!-- Assume `title` is the title of the reviewed work --><text font-style="italic" form="short" text-case="title" variable="title"/></else></choose></macro><macro name="description-serial"><group delimiter="; "><text macro="description-format"/><choose><if match="none" variable="title"><text variable="section"/></if></choose></group></macro><macro name="description-serial-short"><choose><if variable="title"/><else-if variable="section"><text form="short" text-case="capitalize-first" variable="section"/></else-if><else><text macro="description-format-short"/></else></choose></macro><macro name="description-song"><!-- Performer of classical music works --><group delimiter="; "><group delimiter=" "><!-- Based on `description-format` macro --><choose><if match="any" variable="genre medium"><choose><if match="none" variable="number"><text text-case="capitalize-first" variable="genre"/></if></choose><text text-case="capitalize-first" variable="medium"/><text form="verb" term="performer"/></if><else><text form="verb" term="performer" text-case="capitalize-first"/></else></choose><names variable="author"><name and="symbol"/><substitute><names variable="performer"/></substitute></names></group><text macro="description-medium"/></group></macro><macro name="description-thesis"><group delimiter="; "><group delimiter=", "><text text-case="capitalize-first" variable="genre"/><choose><if match="any" variable="archive DOI URL"><!-- Include the university in description if thesis is published --><text variable="publisher"/></if></choose></group><text text-case="capitalize-first" variable="medium"/></group></macro><!-- 4. Source (APA 9.23-37) --><macro name="source"><group delimiter=". "><choose><if match="any" type="post webpage"/><else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><text macro="source-serial"/></else-if><else-if match="any" variable="collection-editor compiler editor editorial-director"><text macro="source-monographic"/></else-if><else-if match="any" type="interview paper-conference"><text macro="source-serial"/></else-if><else><text macro="source-monographic"/></else></choose><text macro="source-publisher"/><text macro="source-archive"/><text macro="source-location"/><text macro="source-website"/></group></macro><!-- 4.1. Serial sources (APA 9.25-27) --><macro name="source-serial"><group delimiter=". "><group delimiter=", "><group delimiter=", " font-style="italic"><text text-case="title" variable="container-title"/><!-- `collection-title` is for any serial with multiple series (e.g. \'second series\') --><text text-case="title" variable="collection-title"/></group><group><text font-style="italic" variable="volume"/><group delimiter=", " prefix="(" suffix=")"><text variable="issue"/><text macro="label-supplement-number"/></group></group><choose><if variable="number"><text macro="label-number-article"/></if><else><text variable="page"/></else></choose></group><choose><if match="any" variable="collection-title issue number page supplement-number volume"/><else-if variable="issued status"><!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) --><text text-case="capitalize-first" variable="status"/></else-if></choose></group></macro><!-- 4.2. Monographic sources (APA 9.28) --><macro name="source-monographic"><!-- Monographic sources repeat main reference elements --><choose><if variable="container-title"><group delimiter=" "><choose><if type="song"><text term="on" text-case="capitalize-first"/></if><else><text term="in" text-case="capitalize-first"/></else></choose><group delimiter=", "><text macro="source-monographic-author"/><text macro="source-monographic-title"/></group><text macro="source-monographic-identifier"/><text macro="source-monographic-description"/></group></if></choose></macro><!-- Monographic source author --><macro name="source-monographic-author"><names variable="container-author"><name and="symbol"/><label prefix=" (" suffix=")" text-case="title"/><substitute><names variable="executive-producer"/><names variable="series-creator"/><names variable="editor-translator"><name and="symbol"/><label form="short" prefix=" (" suffix=")" text-case="title"/></names><!-- TODO: Translator omitted on the assumption that editor-translators are uncommon for chapter citations. If needed, direct entry or automatic population of `editor-translator` can produce combined labels. --><names delimiter="; " variable="editor"><name and="symbol"/><label form="short" prefix=" (" suffix=")" text-case="title"/></names><names variable="editorial-director"><name and="symbol"/><label form="short" prefix=" (" suffix=")" text-case="title"/></names><names variable="compiler"/><choose><if match="any" type="event performance speech"><names variable="chair"/><names variable="organizer"/></if></choose><names variable="curator"/><names variable="collection-editor"><name and="symbol"/><label form="short" prefix=" (" suffix=")" text-case="title"/></names></substitute></names></macro><!-- Monographic source title --><macro name="source-monographic-title"><group delimiter=": " font-style="italic"><text variable="container-title"/><text macro="title-volume"/></group></macro><!-- Monographic source identifier --><macro name="source-monographic-identifier"><choose><if variable="container-title"><group delimiter="; " prefix="(" suffix=")"><choose><if match="none" type="broadcast graphic map motion_picture"><!-- For some audiovisual media, number information comes after `title`, not `container-title` (APA example 94); but an album track number is `chapter-number` --><text macro="identifier-number"/></if></choose><text macro="identifier-monographic"/></group></if></choose></macro><!-- Monographic source description --><macro name="source-monographic-description"><group prefix="[" suffix="]"><choose><if match="any" type="document report software standard"><!-- place description after `container-title` --><text macro="description-format"/></if><else-if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"/><else-if match="any" type="event paper-conference performance speech"><!-- unpublished conference presentations should describe the session --><text macro="description-format"/></else-if></choose></group></macro><!-- 4.3. Publisher sources (APA 9.29) --><macro name="source-publisher"><choose><if type="thesis"><choose><if match="none" variable="archive DOI URL"><!-- Provide university in `publisher` if unpublished --><text variable="publisher"/></if></choose></if><!-- omit serial types --><else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"/><else-if match="any" variable="collection-editor compiler editor editorial-director"><!-- monographic types --><text variable="publisher"/></else-if><else-if type="interview"><!-- give publisher for a broadcast `interview` handled as a serial type --><text variable="publisher"/></else-if><!-- omit serial `paper-conference` --><else-if type="paper-conference"/><else><text variable="publisher"/></else></choose></macro><!-- 4.4. Database and archive sources (APA 9.30) --><macro name="source-archive"><group delimiter=", "><choose><if variable="archive_collection"><!-- With collection: `archive_collection` (`archive_location`), `archive`, `archive-place` --><group delimiter=" "><text variable="archive_collection"/><text prefix="(" suffix=")" variable="archive_location"/></group><text variable="archive"/><text variable="archive-place"/></if><else><!-- No collection: `archive` (`archive_location`), `archive-place` --><group delimiter=" "><text variable="archive"/><text prefix="(" suffix=")" variable="archive_location"/></group><text variable="archive-place"/></else></choose><!-- a database identifier/number is stored in `number` and appears in `identifier-number` --></group></macro><!-- 4.5. Works with specific locations (APA 9.31) --><macro name="source-location"><choose><if match="any" variable="event event-title"><!-- TODO: To prevent Zotero from printing `event-place`, due to its double-mapping of `publisher-place` and `event-place`. Remove this when that is changed. --><choose><if type="paper-conference"><choose><if match="none" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"><!-- Don\'t print event info for conference papers published in a proceedings --><text macro="source-location-title-place-date"/></if></choose></if><else><!-- For other item types, print event info even if published (e.g. collection catalogs, performance programs). These items aren\'t given explicit examples in the APA manual, so err on the side of providing too much information. --><text macro="source-location-title-place-date"/></else></choose></if></choose></macro><macro name="source-location-title-place-date"><group delimiter=", "><choose><!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated yet. This macro ensures that either `event` or `event-title` can be accepted. Remove if processor logic and application adoption can handle this. --><if variable="event-title"><text text-case="capitalize-first" variable="event-title"/></if><else><text text-case="capitalize-first" variable="event"/></else></choose><text variable="event-place"/><text macro="date-event-full"/></group></macro><!-- 4.6. Social media and website sources (APA 9.32-33) --><macro name="source-website"><choose><if match="any" type="post webpage"><text text-case="title" variable="container-title"/></if></choose></macro><!-- 4.7. DOI or URL (APA 9.34-36) --><macro name="source-DOI-URL"><choose><if variable="DOI"><text prefix="https://doi.org/" variable="DOI"/></if><else-if variable="URL"><group delimiter=" "><choose><if match="none" variable="issued status"><text term="retrieved" text-case="capitalize-first"/><group delimiter=", "><date form="text" variable="accessed"/><text term="from"/></group></if></choose><text variable="URL"/></group></else-if></choose></macro><!-- 5. Publication history (APA 9.39-41) --><macro name="publication-history"><!-- Notes on source element: original publication, reprint info, retraction info --><group delimiter="; " prefix="(" suffix=")"><choose><if type="patent"><text variable="references"/></if><else><!-- Print `status` here for "retracted" etc. if it\'s not printed elsewhere. --><choose><if match="none" variable="issued"/><else-if match="any" variable="collection-title issue number page supplement-number volume"><text text-case="capitalize-first" variable="status"/></else-if></choose><choose><if variable="references"><!-- Provide the option for more elaborate description of publication history, such as full "reprinted" references (APA examples 11, 43, 44) --><text variable="references"/></if><else><!-- Format publication history using CSL variables --><group delimiter=" "><text term="original-work-published" text-case="capitalize-first"/><group delimiter=", "><group delimiter=" "><text value="as"/><text font-style="italic" variable="original-title"/></group><text macro="date-original-year"/><text variable="original-publisher"/></group></group></else></choose></else></choose></group></macro><!-- 6. Legal references: Bluebook style (shared with Chicago) --><!-- Where APA or Chicago diverge from Bluebook, the official manual is followed --><macro name="legal-reference"><!-- Type usage:\n`bill`: bills, resolutions, federal reports\n`legal_case`: all legal and court cases\n`hearing`: hearings and testimony\n`legislation`: statutes, constitutional items, and charters\n`regulation`: codified regulations, uncodified regulations, executive orders\n`treaty`: treaties--><group delimiter=", "><choose><if type="treaty"><text macro="legal-title"/><names variable="author"><!-- Treaty parties should be included at least for bilateral treaties (Bluebook 21.4.2) --><name delimiter="-" et-al-min="100" et-al-use-first="99" form="short" initialize="false"/></names><text macro="legal-date"/><!-- treaty source/report in addition to URL (Bluebook 21.4.5) --><text macro="legal-source"/></if><else><group delimiter=" "><group delimiter=", "><text macro="legal-title"/><text macro="legal-source"/></group><text macro="legal-date"/><text macro="legal-identifier"/></group></else></choose><group delimiter=" "><!-- locator for use in notes --><choose><if locator="page" variable="page"><text term="at"/></if></choose><text macro="label-locator"/></group></group></macro><!-- 6.1. Legal date --><macro name="legal-date"><choose><if type="treaty"><text macro="date-issued-full"/></if><else-if type="legal_case"><text macro="legal-date-case"/></else-if><else-if match="any" type="bill hearing legislation regulation"><group delimiter=" " prefix="(" suffix=")"><group delimiter=" "><text macro="date-original-year"/><text form="symbol" term="and"/></group><choose><if variable="issued"><text macro="date-issued-year"/></if><else><!-- Show proposal date for uncodified regulations. Assume date is entered literally ala "proposed May 23, 2016". --><!-- TODO: Add `proposed` date here if that becomes available --><date form="text" variable="submitted"/></else></choose></group></else-if></choose></macro><macro name="legal-date-case"><group delimiter=" " prefix="(" suffix=")"><text variable="authority"/><choose><if variable="container-title"><!-- Print only year for cases published in reporters--><text macro="date-issued-year"/></if><else><text macro="date-issued-full"/></else></choose></group></macro><!-- 6.2.1. Legal title --><macro name="legal-title"><choose><if match="any" type="bill legal_case legislation regulation treaty"><text text-case="title" variable="title"/></if><else-if type="hearing"><!-- use standard format (Bluebook 13.3) --><group delimiter=": " font-style="italic"><text text-case="capitalize-first" variable="title"/><group delimiter=" "><text term="hearing" text-case="capitalize-first"/><group delimiter=" "><text term="on"/><text variable="number"/></group><group delimiter=" "><text value="before the"/><text variable="section"/></group></group></group></else-if></choose></macro><!-- 6.2.2. Legal identifier --><macro name="legal-identifier"><group delimiter=" " prefix="(" suffix=")"><choose><if type="hearing"><!-- Use the \'verb\' form of the hearing term to hold \'testimony of\' --><text form="verb" term="hearing"/><names variable="author"><name and="symbol" initialize="false"/></names></if><else-if match="any" type="bill legislation regulation"><!-- For uncodified regulations, assume future code section is in `status`. --><text variable="status"/></else-if></choose></group></macro><macro name="legal-identifier-bill-report"><group delimiter=" "><text variable="genre"/><choose><if match="any" variable="authority chapter-number container-title"><text variable="number"/></if><else><!-- If there is no legislative body, session number, or code/record title, assume the item is a congressional report and include \'No.\' label. --><text macro="label-number-capitalized"/></else></choose></group></macro><!-- 6.3. Legal source --><macro name="legal-source"><!-- Expect legal item `container-title` to be stored in short form --><choose><if type="bill"><text macro="legal-source-bill"/></if><else-if type="hearing"><text macro="legal-source-hearing"/></else-if><else-if type="legal_case"><text macro="legal-source-case"/></else-if><else-if type="legislation"><text macro="legal-source-legislation"/></else-if><else-if type="regulation"><text macro="legal-source-regulation"/></else-if><else-if type="treaty"><text macro="legal-source-treaty"/></else-if></choose></macro><!-- Legal source types --><macro name="legal-source-bill"><group delimiter=", "><text macro="legal-identifier-bill-report"/><group delimiter=" "><text variable="authority"/><!-- `chapter-number` is a session number --><text variable="chapter-number"/></group><group delimiter=" "><text variable="volume"/><text variable="container-title"/><text variable="page-first"/></group></group></macro><macro name="legal-source-case"><group delimiter=" "><choose><if variable="container-title"><text variable="volume"/><text variable="container-title"/><text macro="label-section-symbol"/><choose><if match="any" variable="page page-first"><text variable="page-first"/></if><else><text value="___"/></else></choose></if><else><text macro="label-number-capitalized"/></else></choose></group></macro><macro name="legal-source-hearing"><group delimiter=" "><text variable="authority"/><!-- `chapter-number` is a session number --><text variable="chapter-number"/></group></macro><macro name="legal-source-legislation"><choose><if variable="number"><!-- `number` is a public law number --><group delimiter=", "><group delimiter=" "><choose><if variable="genre"><text text-case="capitalize-first" variable="genre"/></if><else><text form="short" term="legislation" text-case="capitalize-first"/></else></choose><text macro="label-number-capitalized"/></group><group delimiter=" "><text variable="volume"/><text variable="container-title"/><text variable="page-first"/></group></group></if><else><group delimiter=" "><text variable="volume"/><text variable="container-title"/><choose><if variable="section"><text macro="label-section-symbol"/></if><else><text variable="page-first"/></else></choose></group></else></choose></macro><macro name="legal-source-regulation"><group delimiter=", "><group delimiter=" "><text variable="genre"/><text macro="label-number-capitalized"/></group><group delimiter=" "><text variable="volume"/><text variable="container-title"/><choose><if variable="section"><text macro="label-section-symbol"/></if><else><text variable="page-first"/></else></choose></group></group></macro><macro name="legal-source-treaty"><group delimiter=" "><number variable="volume"/><text variable="container-title"/><choose><if match="any" variable="page page-first"><text variable="page-first"/></if><else><text macro="label-number-capitalized"/></else></choose></group></macro><!-- Citation --><citation collapse="year" disambiguate-add-givenname="true" disambiguate-add-names="true" disambiguate-add-year-suffix="true" et-al-min="3" et-al-use-first="1" givenname-disambiguation-rule="primary-name-with-initials"><sort><key macro="author-sort" names-min="3" names-use-first="1"/><key macro="date-sort-group"/><key macro="date-sort"/><key variable="status"/></sort><layout delimiter="; " prefix="(" suffix=")"><group delimiter=", "><text macro="author-short"/><text macro="date-short"/><text macro="label-locator"/></group></layout></citation><!-- Bibliography --><macro name="bibliography"><group delimiter=" "><choose><if match="any" type="bill hearing legal_case legislation regulation treaty"><!-- Legal items have different orders and delimiters --><text macro="legal-reference" suffix="."/><text macro="source-DOI-URL"/><text variable="references"/></if><else><group delimiter=". " suffix="."><text macro="author-and-contributors"/><text macro="date"/><text macro="title-and-descriptions"/><text macro="source"/></group><text macro="source-DOI-URL"/><text macro="publication-history"/></else></choose></group></macro><bibliography entry-spacing="0" et-al-min="21" et-al-use-first="19" et-al-use-last="true" hanging-indent="true" line-spacing="2"><sort><key macro="author-sort"/><key macro="date-sort-group"/><key macro="date-sort"/><key variable="status"/><key macro="title"/><key variable="volume"/><key variable="part-number"/><key variable="event-date"/><key variable="original-date"/><key macro="source-archive"/></sort><layout><choose><if match="any" variable="archive archive-place container-title DOI number publisher references URL"><text macro="bibliography"/></if><!-- an inaccessible `interview` or `personal_communication` is cited in-text only (APA 8.9) --><else-if match="any" type="interview personal_communication"/><else><text macro="bibliography"/></else></choose></layout></bibliography>\n</style>\n',
     vancouver: '<?xml version="1.0" encoding="utf-8"?>\n<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" delimiter-precedes-last="always" demote-non-dropping-particle="sort-only" initialize-with="" initialize-with-hyphen="false" name-as-sort-order="all" name-delimiter=", " names-delimiter=", " page-range-format="minimal" sort-separator=" " version="1.0"><!-- This file was generated by the Style Variant Builder <https://github.com/citation-style-language/style-variant-builder>. To contribute changes, modify the template and regenerate variants. --><info><title>NLM/Vancouver: Citing Medicine 2nd edition (citation-sequence)</title><title-short>National Library of Medicine, ANSI/NISO Z39.29-2005 (R2010), ICMJE Recommendations/URMs (C-S)</title-short><id>http://www.zotero.org/styles/nlm-citation-sequence</id><link href="http://www.zotero.org/styles/nlm-citation-sequence" rel="self"/><link href="https://www.nlm.nih.gov/citingmedicine" rel="documentation"/><link href="https://www.nlm.nih.gov/bsd/uniform_requirements.html" rel="documentation"/><link href="https://www.icmje.org/recommendations/" rel="documentation"/><author><name>Michael Berkowitz</name><email>mberkowi@gmu.edu</email></author><author><name>Andrew Dunning</name><uri>https://orcid.org/0000-0003-0464-5036</uri></author><contributor><name>Petr Hlustik</name><uri>https://orcid.org/0000-0002-1951-0671</uri></contributor><contributor><name>Sebastian Karcher</name><uri>https://orcid.org/0000-0001-8249-7388</uri></contributor><contributor><name>Charles Parnot</name><uri>https://orcid.org/0000-0002-7346-5883</uri></contributor><contributor><name>Sean Takats</name><uri>https://orcid.org/0000-0002-7851-5069</uri></contributor><category citation-format="numeric"/><category field="generic-base"/><category field="medicine"/><category field="science"/><summary>Citing Medicine: The NLM Style Guide for Authors, Editors, and Publishers, 2nd edition (2015), based on ANSI/NISO Z39.29-2005 (R2010); citation-sequence system.</summary><updated>2026-03-29T15:20:09+00:00</updated><rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights></info><locale xml:lang="en"><date delimiter=" " form="text"><date-part name="year"/><date-part form="short" name="month" strip-periods="true"/><date-part name="day"/></date><terms><term name="available at">available from</term><term name="collection-editor"><single>editor</single><multiple>editors</multiple></term><term form="short" name="month-06">Jun.</term><term form="short" name="month-07">Jul.</term><term form="short" name="month-09">Sep.</term><term name="presented at">presented at</term><term form="short" name="section"><single>sect.</single><multiple>sects.</multiple></term><term form="short" name="supplement"><single>suppl.</single><multiple>suppls.</multiple></term></terms></locale><locale xml:lang="fr"><date delimiter=" " form="text"><date-part name="day"/><date-part form="short" name="month" strip-periods="true"/><date-part name="year"/></date></locale><!-- Variable labels --><macro name="label-collection-number"><group delimiter=" "><choose><if is-numeric="collection-number"><label form="short" variable="collection-number"/></if></choose><text variable="collection-number"/></group></macro><macro name="label-edition"><group delimiter=" "><choose><if is-numeric="edition"><number form="ordinal" variable="edition"/><label form="short" variable="edition"/></if><else><text variable="edition"/></else></choose></group></macro><macro name="label-number"><group delimiter=": "><choose><if type="standard"/><else-if is-numeric="number" match="any" type="legislation patent regulation"><label form="short" variable="number"/></else-if></choose><text variable="number"/></group></macro><macro name="label-number-of-pages"><group delimiter=" "><text variable="number-of-pages"/><choose><if is-numeric="number-of-pages"><label form="short" plural="never" variable="number-of-pages"/></if></choose></group></macro><macro name="label-page"><group delimiter=" "><label form="short" plural="never" variable="page"/><text variable="page"/></group></macro><macro name="label-part-number-capitalized"><group delimiter=" "><choose><if is-numeric="part-number"><!-- TODO: Replace with `part-number` label when CSL provides one --><text form="short" term="part" text-case="capitalize-first"/></if></choose><text variable="part-number"/></group></macro><macro name="label-supplement-number"><group delimiter=" "><choose><if is-numeric="supplement-number"><!-- TODO: Replace with `supplement-number` label when CSL provides one --><text form="short" strip-periods="true" term="supplement" text-case="capitalize-first"/></if></choose><text text-case="capitalize-first" variable="supplement-number"/></group></macro><macro name="label-volume-capitalized"><group delimiter=" "><choose><if is-numeric="volume"><label form="short" text-case="capitalize-first" variable="volume"/></if></choose><text variable="volume"/></group></macro><macro name="author"><names variable="author"><label prefix=", "/><substitute><names variable="editor-translator"/><names variable="editor translator"/><names variable="editor"/><names variable="collection-editor"/></substitute></names></macro><macro name="title"><choose><if type="webpage" variable="container-title"><!-- `webpage` listed under `container-title` (Citing Medicine, ch. 25) --><text variable="container-title"/></if><else><text variable="title"/></else></choose></macro><macro name="content-type"><text variable="genre"/></macro><macro name="type-of-medium"><choose><if variable="medium"><text text-case="capitalize-first" variable="medium"/></if><else-if match="any" type="chapter entry-dictionary entry-encyclopedia paper-conference"/><else-if variable="URL"><text term="internet" text-case="capitalize-first"/></else-if></choose></macro><macro name="container-preposition"><choose><if match="any" type="chapter paper-conference entry-dictionary entry-encyclopedia"><text term="in" text-case="capitalize-first"/></if></choose></macro><macro name="secondary-authors"><names variable="editor"><label prefix=", "/></names></macro><macro name="container-title"><group delimiter=", "><choose><if type="webpage"/><else-if variable="container-title"><group delimiter=". "><group delimiter=" "><choose><if match="any" type="article-journal review review-book"><text form="short" strip-periods="true" variable="container-title"/></if><else><text variable="container-title"/></else></choose><choose><if type="article-journal" variable="DOI"/><else-if type="article-journal" variable="PMID"/><else-if type="article-journal" variable="PMCID"/><else-if variable="URL"><text prefix="[" suffix="]" term="internet" text-case="capitalize-first"/></else-if></choose></group><text macro="label-edition"/></group></else-if><!-- TODO: add `event-name` and `event-place` --><else-if match="any" type="bill legislation"><group delimiter=". "><text variable="container-title"/><group delimiter=" "><text form="short" term="section" text-case="capitalize-first"/><text variable="section"/></group></group><text variable="number"/></else-if><else-if type="speech"><group delimiter=": "><group delimiter=" "><text text-case="capitalize-first" variable="genre"/><text term="presented at"/></group><text variable="event-title"/></group></else-if><else><group delimiter=", "><text macro="label-volume-capitalized"/><text variable="volume-title"/></group><group delimiter=", "><text macro="label-part-number-capitalized"/><text variable="part-title"/></group></else></choose></group></macro><macro name="place-of-publication"><choose><if type="thesis"><text prefix="[" suffix="]" variable="publisher-place"/></if><else-if type="speech"/><else><text variable="publisher-place"/></else></choose></macro><macro name="publisher"><choose><!-- discard publisher for serial publications --><if match="none" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><group delimiter=": "><text macro="place-of-publication"/><text variable="publisher"/></group></if></choose></macro><macro name="date"><group delimiter=" "><choose><if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"><group delimiter=":"><group delimiter=" "><date form="text" variable="issued"/><choose><if type="article-journal" variable="DOI"/><else-if type="article-journal" variable="PMID"/><else-if type="article-journal" variable="PMCID"/><else><text macro="date-of-citation"/></else></choose></group><choose><if type="article-newspaper"><text variable="page"/></if></choose></group></if><else-if match="any" type="bill legislation"><date form="text" variable="issued"/></else-if><else-if type="report"><date date-parts="year-month" form="text" variable="issued"/><text macro="date-of-citation"/></else-if><else-if type="patent"><group delimiter=", "><text variable="number"/><date date-parts="year" form="numeric" variable="issued"/></group><text macro="date-of-citation"/></else-if><else-if type="speech"><group delimiter="; "><group delimiter=" "><date form="text" variable="issued"/><text macro="date-of-citation"/></group><text variable="event-place"/></group></else-if><else><date date-parts="year" form="numeric" variable="issued"/><text macro="date-of-citation"/></else></choose></group></macro><macro name="identifier-serial"><choose><if match="any" type="article-journal article-magazine periodical post-weblog review review-book"><group delimiter=":"><group><text variable="collection-title"/><text variable="volume"/><group delimiter=" " prefix="(" suffix=")"><text variable="issue"/><text macro="label-supplement-number"/></group></group><text macro="location-pagination-serial"/></group></if></choose></macro><macro name="date-of-citation"><choose><if variable="URL"><group delimiter=" " prefix="[" suffix="]"><text term="cited"/><date form="text" variable="accessed"/></group></if></choose></macro><macro name="location-pagination-monographic"><group delimiter=" "><choose><if match="any" type="article-journal article-magazine article-newspaper review review-book"/><else-if type="book"><text macro="label-number-of-pages"/></else-if><else><text macro="label-page"/></else></choose></group></macro><macro name="location-pagination-serial"><choose><if variable="number"><text variable="number"/></if><else><text variable="page"/></else></choose></macro><macro name="webpage-part"><choose><if type="webpage" variable="container-title"><text variable="title"/></if></choose></macro><macro name="series"><choose><if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"/><else-if variable="collection-title"><group delimiter=". " prefix="(" suffix=")"><names variable="collection-editor"><label prefix=", "/></names><group delimiter="; "><text variable="collection-title"/><text macro="label-collection-number"/></group></group></else-if></choose></macro><macro name="report-number"><choose><if type="report" variable="number"><group delimiter=" "><choose><if variable="genre"><text text-case="capitalize-first" variable="genre"/></if><else><text term="report" text-case="capitalize-first"/></else></choose><text macro="label-number"/></group></if></choose></macro><macro name="availability"><group delimiter=". "><group delimiter=": "><text text-case="capitalize-first" value="located at"/><group delimiter="; "><group delimiter=", "><text variable="archive_collection"/><text variable="archive"/><text variable="archive-place"/></group><text variable="archive_location"/></group></group><group delimiter=" "><choose><if type="article-journal" variable="DOI"/><else-if type="article-journal" variable="PMID"/><else-if type="article-journal" variable="PMCID"/><else><group delimiter=": "><text term="available at" text-case="capitalize-first"/><text variable="URL"/></group></else></choose><text prefix="doi:" variable="DOI"/></group></group></macro><macro name="notes"><group delimiter=". " suffix="."><group delimiter="; "><group delimiter=": "><text value="PubMed PMID"/><text variable="PMID"/></group><group delimiter=": "><text value="PubMed Central PMCID"/><text variable="PMCID"/></group></group><text variable="references"/></group></macro><citation collapse="citation-number"><sort><key variable="citation-number"/></sort><layout delimiter="," prefix="(" suffix=")"><text variable="citation-number"/></layout></citation><macro name="bibliography"><group delimiter=" "><group delimiter=". " suffix="."><text macro="author"/><group delimiter=" "><text macro="title"/><text macro="content-type" prefix="[" suffix="]"/><choose><if type="webpage" variable="container-title"><text macro="type-of-medium" prefix="[" suffix="]"/></if><else-if match="none" variable="container-title"><text macro="type-of-medium" prefix="[" suffix="]"/></else-if></choose></group><choose><if match="none" variable="container-title"><text macro="label-edition"/></if></choose><group delimiter=": "><text macro="container-preposition"/><group delimiter=". "><text macro="secondary-authors"/><text macro="container-title"/></group></group><group delimiter="; "><text macro="publisher"/><group delimiter=";"><text macro="date"/><text macro="identifier-serial"/></group></group><text macro="location-pagination-monographic"/><text macro="webpage-part"/><text macro="series"/><text macro="report-number"/></group><text macro="availability"/><text macro="notes"/></group></macro><bibliography et-al-min="7" et-al-use-first="6" second-field-align="flush"><layout><text suffix="." variable="citation-number"/><text macro="bibliography"/></layout></bibliography>\n</style>\n',
@@ -21802,10 +24239,10 @@
 `
   };
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/styles.js
-  var styles2 = new util_exports.Register(styles_default);
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/styles.js
+  var styles3 = new util_exports2.Register(styles_default);
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/engines.js
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/engines.js
   var import_citeproc = __toESM(require_citeproc_commonjs());
   var proxied = /* @__PURE__ */ Symbol.for("proxied");
   var getWrapperProxy = function(original) {
@@ -21819,12 +24256,12 @@
     proxy[proxied] = true;
     return proxy;
   };
-  for (const format3 in import_citeproc.default.Output.Formats) {
-    const original = import_citeproc.default.Output.Formats[format3]["@bibliography/entry"];
+  for (const format5 in import_citeproc.default.Output.Formats) {
+    const original = import_citeproc.default.Output.Formats[format5]["@bibliography/entry"];
     if (!original || original[proxied]) {
       continue;
     }
-    import_citeproc.default.Output.Formats[format3]["@bibliography/entry"] = getWrapperProxy(original);
+    import_citeproc.default.Output.Formats[format5]["@bibliography/entry"] = getWrapperProxy(original);
   }
   function retrieveLocale(locale) {
     if (locales.has(locale)) {
@@ -21853,14 +24290,14 @@
     }
     return engine;
   };
-  var prepareEngine = function(data2, styleName, locale, format3) {
-    if (!import_citeproc.default.Output.Formats[format3] || !import_citeproc.default.Output.Formats[format3]["@bibliography/entry"]) {
-      throw new TypeError(`Cannot find format '${format3}'`);
+  var prepareEngine = function(data3, styleName, locale, format5) {
+    if (!import_citeproc.default.Output.Formats[format5] || !import_citeproc.default.Output.Formats[format5]["@bibliography/entry"]) {
+      throw new TypeError(`Cannot find format '${format5}'`);
     }
-    if (!styles2.has(styleName)) {
+    if (!styles3.has(styleName)) {
       throw new TypeError(`Cannot find style '${styleName}'`);
     }
-    const items = data2.reduce((store, entry) => {
+    const items = data3.reduce((store, entry) => {
       store[entry.id] = entry;
       return store;
     }, {});
@@ -21872,45 +24309,45 @@
         throw new Error(`Cannot find entry with id '${key}'`);
       }
     };
-    const engine = fetchEngine(styleName, locale, styles2.get(styleName), callback, retrieveLocale);
-    engine.setOutputFormat(format3);
+    const engine = fetchEngine(styleName, locale, styles3.get(styleName), callback, retrieveLocale);
+    engine.setOutputFormat(format5);
     engine.opt.development_extensions.wrap_url_and_doi = false;
     return engine;
   };
   var engines_default = prepareEngine;
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/attr.js
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/attr.js
   var getAttributedEntry = (string, name, value) => string.replace(/^\s*<[a-z]+/i, `$& data-${name}="${value}"`);
   var getPrefixedEntry = (value, id) => getAttributedEntry(value, "csl-entry-id", id);
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/bibliography.js
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/bibliography.js
   var getAffix = (source, affix) => typeof affix === "function" ? affix(source) : affix || "";
-  function bibliography(data2, options2 = {}) {
-    const style = options2.style || options2.template || "apa";
+  function bibliography(data3, options3 = {}) {
+    const style = options3.style || options3.template || "apa";
     const {
       lang,
-      format: format3 = "text",
+      format: format5 = "text",
       nosort = false
-    } = options2;
-    const ids = options2.entry ? [].concat(options2.entry) : data2.map(({
+    } = options3;
+    const ids = options3.entry ? [].concat(options3.entry) : data3.map(({
       id
     }) => id);
-    if (options2.downgradeCsl) {
-      data2 = util_exports.downgradeCsl(data2);
+    if (options3.downgradeCsl) {
+      data3 = util_exports2.downgradeCsl(data3);
     }
-    const citeproc = engines_default(data2, style, lang, format3);
+    const citeproc = engines_default(data3, style, lang, format5);
     const sortedIds = citeproc.updateItems(ids, nosort);
-    if (options2.append || options2.prepend) {
-      const items = data2.reduce((items2, entry) => {
+    if (options3.append || options3.prepend) {
+      const items = data3.reduce((items2, entry) => {
         items2[entry.id] = entry;
         return items2;
       }, {});
       citeproc.sys.wrapBibliographyEntry = function(id) {
         const entry = items[id];
-        return [getAffix(entry, options2.prepend), getAffix(entry, options2.append)];
+        return [getAffix(entry, options3.prepend), getAffix(entry, options3.append)];
       };
     }
-    if (options2.hyperlinks) {
+    if (options3.hyperlinks) {
       citeproc.opt.development_extensions.wrap_url_and_doi = true;
     }
     const bibliography2 = citeproc.makeBibliography();
@@ -21919,13 +24356,13 @@
       bibend
     }, bibBody] = bibliography2;
     const entries = bibBody.map((element, index) => getPrefixedEntry(element, sortedIds[index]));
-    if (options2.asEntryArray) {
+    if (options3.asEntryArray) {
       return entries.map((element, index) => [sortedIds[index], element]);
     }
     return bibstart + entries.join("") + bibend;
   }
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/citation.js
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/citation.js
   function prepareCiteItem(citeItem) {
     return typeof citeItem === "object" ? citeItem : {
       id: citeItem
@@ -21948,29 +24385,29 @@
     }
     return context.map(prepareCitation);
   }
-  function citation(data2, options2 = {}) {
-    const style = options2.style || options2.template || "apa";
+  function citation(data3, options3 = {}) {
+    const style = options3.style || options3.template || "apa";
     const {
       lang,
-      format: format3 = "text"
-    } = options2;
-    const ids = data2.map(({
+      format: format5 = "text"
+    } = options3;
+    const ids = data3.map(({
       id
     }) => id);
-    const entries = options2.entry ? options2.entry : ids;
-    if (options2.downgradeCsl) {
-      data2 = util_exports.downgradeCsl(data2);
+    const entries = options3.entry ? options3.entry : ids;
+    if (options3.downgradeCsl) {
+      data3 = util_exports2.downgradeCsl(data3);
     }
-    const citeproc = engines_default(data2, style, lang, format3);
-    const before = prepareCitations(options2.citationsPre);
+    const citeproc = engines_default(data3, style, lang, format5);
+    const before = prepareCitations(options3.citationsPre);
     const citation2 = prepareCitation(entries);
-    const after = prepareCitations(options2.citationsPost);
-    const output = citeproc.rebuildProcessorState([...before, citation2, ...after], format3, []);
+    const after = prepareCitations(options3.citationsPost);
+    const output = citeproc.rebuildProcessorState([...before, citation2, ...after], format5, []);
     return output[before.length][2];
   }
 
-  // node_modules/@citation-js/plugin-csl/lib-mjs/index.js
-  plugins_exports.add("@csl", {
+  // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/index.js
+  plugins_exports2.add("@csl", {
     output: {
       bibliography,
       citation
@@ -21978,7 +24415,7 @@
     config: {
       engine: engines_default,
       locales,
-      styles: styles2
+      styles: styles3
     }
   });
 
@@ -22513,7 +24950,7 @@
   // src/csl/chicago-author-date.csl
   var chicago_author_date_default = '<?xml version="1.0" encoding="utf-8"?>\n<style xmlns="http://purl.org/net/xbiblio/csl" class="in-text" initialize-with=". " page-range-format="chicago-16" version="1.0">\n  <!-- This file was generated by the Style Variant Builder <https://github.com/citation-style-language/style-variant-builder>. To contribute changes, modify the template and regenerate variants. -->\n  <info>\n    <title>Chicago Manual of Style 18th edition (author-date)</title>\n    <title-short>CMOS/CMS with Bluebook (author-date/AD [13.102])</title-short>\n    <id>http://www.zotero.org/styles/chicago-author-date</id>\n    <link href="http://www.zotero.org/styles/chicago-author-date" rel="self"/>\n    <link href="http://www.zotero.org/styles/chicago-notes-bibliography" rel="template"/>\n    <link href="https://www.chicagomanualofstyle.org/" rel="documentation"/>\n    <link href="https://zotero.org/groups/2205533/collections/5V67EPX3" rel="documentation"/>\n    <author>\n      <name>Andrew Dunning</name>\n      <uri>https://orcid.org/0000-0003-0464-5036</uri>\n    </author>\n    <category citation-format="author-date"/>\n    <category field="anthropology"/>\n    <category field="communications"/>\n    <category field="generic-base"/>\n    <category field="geography"/>\n    <category field="history"/>\n    <category field="humanities"/>\n    <category field="law"/>\n    <category field="linguistics"/>\n    <category field="literature"/>\n    <category field="philosophy"/>\n    <category field="political_science"/>\n    <category field="science"/>\n    <category field="social_science"/>\n    <category field="sociology"/>\n    <category field="theology"/>\n    <summary>Chicago-style source citations (with Bluebook for legal citations), author-date system</summary>\n    <updated>2025-02-09T00:00:00+00:00</updated>\n    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>\n  </info>\n  <locale xml:lang="en">\n    <terms>\n      <!-- Chicago omits \'by\' from `verb-short` forms; it abbreviates only the most common roles -->\n      <term name="advance-online-publication">ahead of print</term>\n      <term name="anonymous">unsigned</term>\n      <term form="verb-short" name="collection-editor">ed.</term>\n      <term form="short" name="collection-number">\n        <single>vol.</single>\n        <multiple>vols.</multiple>\n      </term>\n      <term form="verb-short" name="compiler">comp.</term>\n      <term form="verb-short" name="editor">ed.</term>\n      <term form="short" name="editor-translator">\n        <single>ed. and trans.</single>\n        <multiple>eds. and trans.</multiple>\n      </term>\n      <term form="short" name="editortranslator">\n        <single>ed. and trans.</single>\n        <multiple>eds. and trans.</multiple>\n      </term>\n      <term form="verb" name="editor-translator">edited and translated by</term>\n      <term form="verb" name="editortranslator">edited and translated by</term>\n      <term form="verb-short" name="editor-translator">ed. and trans.</term>\n      <term form="verb-short" name="editortranslator">ed. and trans.</term>\n      <term form="verb-short" name="illustrator">ill.</term>\n      <term form="short" name="legislation">Pub. L.</term>\n      <term name="manuscript">unpublished manuscript</term>\n      <term name="original-work-published">originally published as</term>\n      <term form="short" name="paper-conference">paper</term>\n      <!-- \'under\' replaces \'s.v.\' from CMOS17 and earlier (CMOS18 14.130) -->\n      <term name="sub-verbo">under</term>\n      <term form="short" name="sub-verbo">under</term>\n      <term name="timestamp">at</term>\n      <term form="verb-short" name="translator">trans.</term>\n    </terms>\n  </locale>\n  <locale xml:lang="en-GB">\n    <terms>\n      <!-- the Bibliography of Additional Resources recommends the New Oxford Style Manual as a British English guide, which the `en-GB` locale follows -->\n      <term form="short" name="collection-number">\n        <single>vol.</single>\n        <multiple>vols</multiple>\n      </term>\n      <term form="short" name="editor-translator">\n        <single>ed. and trans.</single>\n        <multiple>eds and trans.</multiple>\n      </term>\n      <term form="short" name="editortranslator">\n        <single>ed. and trans.</single>\n        <multiple>eds and trans.</multiple>\n      </term>\n      <term form="verb-short" name="illustrator">illus.</term>\n    </terms>\n  </locale>\n  <!-- Contents:\n\n       This file interprets Chicago using APA\'s four basic reference elements\n       (cf. CMOS18 14.2, 14.64, 14.161):\n\n        1. Author (CMOS18 13.74-86)\n        2. Date (author-date system only, CMOS18 13.102)\n        3. Title and descriptions (CMOS18 13.87-101)\n            3.1. Title\n            3.2. Description\n            3.3. Identifiers (edition, contributors, volume)\n        4. Source\n            4.1. Serial sources\n            4.2. Monographic sources\n            4.3. Series\n            4.4. Event\n            4.5. Publisher\n            4.6. Date\n            4.7. Locator (including page references)\n            4.8. Medium\n            4.9. Archival location\n            4.10. URL or persistent identifier\n\n       Freeform annotations to bibliography entries:\n\n        5. Notes\n\n       Chicago also provides parallel rules for legal references following\n       The Bluebook: A Uniform System of Citation (code shared with APA):\n\n        6. Legal references\n  -->\n  <!-- In this file, macros suffixed `-bib` and `-note` are parallel versions\n       of the same features for the bibliography and notes, and all changes\n       must be applied to both. They should only contain differences of\n       punctuation (periods in bibliography, commas in notes) and capitalization,\n       except where the comments indicate structural changes. -->\n  <!-- Categories of CSL item types:\n\n       Serial\n       : article-journal article-magazine article-newspaper periodical post-weblog review review-book\n\n       Serial or Monographic\n       : interview paper-conference\n\n         Monographic with any of `collection-editor compiler editor editorial-director`.\n         A serial `paper-conference` is unpublished if it lacks any of `issue page supplement-number volume`.\n\n       Monographic\n       : article book broadcast chapter classic collection dataset document\n         entry entry-dictionary entry-encyclopedia event figure\n         graphic manuscript map motion_picture musical_score\n         pamphlet patent performance personal_communication post report\n         software song speech standard thesis webpage\n\n       Legal\n       : bill hearing legal_case legislation regulation treaty\n  -->\n  <!-- Variable labels -->\n  <macro name="label-chapter-number">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="chapter-number" type="song">\n          <text value="track"/>\n        </if>\n        <else-if is-numeric="chapter-number">\n          <label form="short" variable="chapter-number"/>\n        </else-if>\n      </choose>\n      <text variable="chapter-number"/>\n    </group>\n  </macro>\n  <macro name="label-chapter-number-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="chapter-number" type="song">\n          <text text-case="capitalize-first" value="track"/>\n        </if>\n        <else-if is-numeric="chapter-number">\n          <label form="short" text-case="capitalize-first" variable="chapter-number"/>\n        </else-if>\n      </choose>\n      <text text-case="capitalize-first" variable="chapter-number"/>\n    </group>\n  </macro>\n  <macro name="label-collection-number">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="collection-number">\n          <label form="short" variable="collection-number"/>\n        </if>\n      </choose>\n      <text variable="collection-number"/>\n    </group>\n  </macro>\n  <macro name="label-edition">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="edition">\n          <number form="ordinal" variable="edition"/>\n          <label form="short" variable="edition"/>\n        </if>\n        <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n          <!-- serial types: full label (CMOS18 14.89) -->\n          <text variable="edition"/>\n          <label variable="edition"/>\n        </else-if>\n        <else-if match="any" variable="collection-editor compiler editor editorial-director">\n          <!-- monographic types -->\n          <text variable="edition"/>\n        </else-if>\n        <else-if match="any" type="interview paper-conference">\n          <!-- serial types -->\n          <text variable="edition"/>\n          <label variable="edition"/>\n        </else-if>\n        <else>\n          <!-- monographic types -->\n          <text variable="edition"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="label-edition-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="edition">\n          <number form="ordinal" variable="edition"/>\n          <label form="short" variable="edition"/>\n        </if>\n        <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n          <!-- serial types: full label (CMOS18 14.89) -->\n          <text text-case="title" variable="edition"/>\n          <label text-case="capitalize-first" variable="edition"/>\n        </else-if>\n        <else-if match="any" variable="collection-editor compiler editor editorial-director">\n          <!-- monographic types -->\n          <text text-case="capitalize-first" variable="edition"/>\n        </else-if>\n        <else-if match="any" type="interview paper-conference">\n          <!-- serial types -->\n          <text text-case="title" variable="edition"/>\n          <label text-case="capitalize-first" variable="edition"/>\n        </else-if>\n        <else>\n          <!-- monographic types -->\n          <text text-case="capitalize-first" variable="edition"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="label-issue">\n    <group delimiter=" ">\n      <label form="short" variable="issue"/>\n      <text variable="issue"/>\n    </group>\n  </macro>\n  <macro name="label-locator">\n    <group delimiter=" ">\n      <choose>\n        <if locator="page"/>\n        <else-if match="any" type="bill hearing legal_case legislation regulation treaty">\n          <!-- Bluebook-style labels for legal types (CMOS18 14.174) -->\n          <choose>\n            <if locator="chapter paragraph section" match="any">\n              <label form="symbol" variable="locator"/>\n            </if>\n            <else>\n              <label form="short" variable="locator"/>\n            </else>\n          </choose>\n        </else-if>\n        <else-if is-numeric="locator" locator="line">\n          <label variable="locator"/>\n        </else-if>\n        <else-if is-numeric="locator">\n          <label form="short" variable="locator"/>\n        </else-if>\n        <else-if locator="chapter line verse" match="any"/>\n        <!-- a non-numeric canonical reference is identified by its formatting and does not need a label (CMOS18 14.143-54) -->\n        <else>\n          <label form="short" variable="locator"/>\n        </else>\n      </choose>\n      <text variable="locator"/>\n    </group>\n  </macro>\n  <macro name="label-locator-all">\n    <group delimiter=" ">\n      <label form="short" variable="locator"/>\n      <text variable="locator"/>\n    </group>\n  </macro>\n  <macro name="label-number-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if type="standard"/>\n        <else-if is-numeric="number" match="any" type="legislation regulation">\n          <label form="short" text-case="capitalize-first" variable="number"/>\n        </else-if>\n      </choose>\n      <text text-case="capitalize-first" variable="number"/>\n    </group>\n  </macro>\n  <macro name="label-number-of-volumes">\n    <group delimiter=" ">\n      <text variable="number-of-volumes"/>\n      <choose>\n        <if is-numeric="number-of-volumes">\n          <label form="short" variable="number-of-volumes"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="label-page">\n    <group delimiter=" ">\n      <label form="short" variable="page"/>\n      <text variable="page"/>\n    </group>\n  </macro>\n  <macro name="label-part-number">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="part-number">\n          <!-- TODO: Replace with `part-number` label when CSL provides one -->\n          <text form="short" term="part"/>\n        </if>\n      </choose>\n      <text variable="part-number"/>\n    </group>\n  </macro>\n  <macro name="label-part-number-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="part-number">\n          <!-- TODO: Replace with `part-number` label when CSL provides one -->\n          <text form="short" term="part" text-case="capitalize-first"/>\n        </if>\n      </choose>\n      <text text-case="capitalize-first" variable="part-number"/>\n    </group>\n  </macro>\n  <macro name="label-section-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="section">\n          <label form="short" text-case="capitalize-first" variable="section"/>\n        </if>\n      </choose>\n      <text text-case="title" variable="section"/>\n    </group>\n  </macro>\n  <macro name="label-section-symbol">\n    <group delimiter=" ">\n      <label form="symbol" variable="section"/>\n      <text variable="section"/>\n    </group>\n  </macro>\n  <macro name="label-supplement-number">\n    <group delimiter=" ">\n      <choose>\n        <!-- TODO: Replace with `supplement-number` label when CSL provides one -->\n        <if variable="issue supplement-number">\n          <!-- if there is both an issue and supplement number, do not label both as \'no.\' -->\n          <text form="short" term="supplement"/>\n        </if>\n        <else-if is-numeric="supplement-number" variable="volume-title">\n          <!-- if there is a volume title, it is already described as a supplement -->\n          <text form="short" term="issue"/>\n        </else-if>\n        <else-if is-numeric="supplement-number" type="periodical" variable="title">\n          <text form="short" term="issue"/>\n        </else-if>\n        <else-if is-numeric="supplement-number">\n          <text form="short" term="supplement"/>\n        </else-if>\n      </choose>\n      <text variable="supplement-number"/>\n    </group>\n  </macro>\n  <macro name="label-version">\n    <group delimiter=" ">\n      <choose>\n        <if type="software">\n          <!-- short version label for software (CMOS18 14.169) -->\n          <label form="short" variable="version"/>\n        </if>\n        <else>\n          <label variable="version"/>\n        </else>\n      </choose>\n      <text variable="version"/>\n    </group>\n  </macro>\n  <macro name="label-version-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if type="software">\n          <!-- short version label for software (CMOS18 14.169) -->\n          <label form="short" text-case="capitalize-first" variable="version"/>\n        </if>\n        <else>\n          <label text-case="capitalize-first" variable="version"/>\n        </else>\n      </choose>\n      <text variable="version"/>\n    </group>\n  </macro>\n  <macro name="label-volume">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="volume">\n          <label form="short" variable="volume"/>\n        </if>\n      </choose>\n      <text variable="volume"/>\n    </group>\n  </macro>\n  <macro name="label-volume-capitalized">\n    <group delimiter=" ">\n      <choose>\n        <if is-numeric="volume">\n          <label form="short" text-case="capitalize-first" variable="volume"/>\n        </if>\n      </choose>\n      <text text-case="capitalize-first" variable="volume"/>\n    </group>\n  </macro>\n  <!-- 1. Author (CMOS18 13.74-86) -->\n  <macro name="author-bib">\n    <names variable="composer">\n      <name and="text" delimiter-precedes-last="always" initialize="false" name-as-sort-order="first"/>\n      <label form="short" prefix=", "/>\n      <substitute>\n        <names variable="author"/>\n        <!-- cf. `interview` model (CMOS18 14.110); if it is desired to prioritize `host` over `guest`, the latter could be encoded as a `contributor` -->\n        <names variable="guest"/>\n        <names variable="host"/>\n        <choose>\n          <if type="song">\n            <names variable="performer"/>\n          </if>\n        </choose>\n        <choose>\n          <if type="classic">\n            <!-- contributors fall after the title of `classic` (CMOS18 14.147) -->\n            <text macro="author-title-substitute-bib"/>\n          </if>\n          <else-if type="entry-dictionary" variable="container-title">\n            <!-- contributors fall after the title of unsigned reference entries (CMOS18 14.130) -->\n            <text macro="author-title-substitute-container"/>\n          </else-if>\n          <else-if type="entry-encyclopedia" variable="container-title">\n            <text macro="author-title-substitute-container"/>\n          </else-if>\n        </choose>\n        <names variable="illustrator"/>\n        <choose>\n          <if match="none" type="standard">\n            <names variable="editor-translator"/>\n            <names variable="editor"/>\n            <names variable="translator"/>\n            <names variable="collection-editor"/>\n          </if>\n        </choose>\n        <names variable="director"/>\n        <choose>\n          <!-- serial `broadcast` prioritizes title (CMOS18 14.165, 14.168) -->\n          <if type="broadcast" variable="container-title number title"/>\n          <else>\n            <names variable="producer"/>\n            <names variable="executive-producer"/>\n            <names variable="series-creator"/>\n            <choose>\n              <if type="broadcast">\n                <names variable="contributor"/>\n              </if>\n            </choose>\n          </else>\n        </choose>\n        <names variable="editorial-director"/>\n        <names variable="compiler"/>\n        <choose>\n          <if match="any" type="event performance speech">\n            <names variable="chair"/>\n            <names variable="organizer"/>\n          </if>\n        </choose>\n        <names variable="curator"/>\n        <choose>\n          <if match="any" type="software webpage">\n            <!-- `software` listed under the name of the publisher or developer (CMOS18 14.169); `webpage` listed under a site owner or sponsor (CMOS18 14.104) -->\n            <text variable="publisher"/>\n          </if>\n          <else-if type="standard">\n            <!-- `standard` listed in bibliography under organization, but note omits this (CMOS18 14.159) -->\n            <text variable="authority"/>\n          </else-if>\n        </choose>\n        <text macro="author-title-substitute-container"/>\n        <text macro="author-title-substitute-bib"/>\n        <choose>\n          <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place"/>\n          <else-if type="manuscript">\n            <text macro="source-archive-bib"/>\n          </else-if>\n        </choose>\n      </substitute>\n    </names>\n  </macro>\n  <macro name="author-inline">\n    <choose>\n      <if match="any" type="bill hearing legal_case legislation regulation treaty">\n        <text macro="title-and-descriptions-short"/>\n      </if>\n      <else-if match="any" type="interview personal_communication">\n        <text macro="author-inline-and-recipient"/>\n      </else-if>\n      <else>\n        <names variable="composer">\n          <name and="text" form="short" initialize="true"/>\n          <substitute>\n            <names variable="author"/>\n            <names variable="guest"/>\n            <names variable="host"/>\n            <choose>\n              <if type="song">\n                <names variable="performer"/>\n              </if>\n            </choose>\n            <choose>\n              <if match="any" type="classic performance">\n                <!-- contributors fall after the title of `classic` (CMOS18 14.147), `performance` (CMOS18 14.166) -->\n                <text macro="author-title-substitute-short"/>\n              </if>\n              <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n                <!-- contributors fall after the title of unsigned reference entries (CMOS18 14.130) -->\n                <text macro="author-title-substitute-container-short"/>\n              </else-if>\n            </choose>\n            <names variable="illustrator"/>\n            <choose>\n              <if match="none" type="standard">\n                <names variable="editor-translator"/>\n                <names variable="editor"/>\n                <names variable="translator"/>\n                <names variable="collection-editor"/>\n              </if>\n            </choose>\n            <choose>\n              <if type="broadcast" variable="container-title number title"/>\n              <else>\n                <names variable="director"/>\n                <names variable="producer"/>\n                <names variable="executive-producer"/>\n                <names variable="series-creator"/>\n                <choose>\n                  <if type="broadcast">\n                    <names variable="contributor"/>\n                  </if>\n                </choose>\n              </else>\n            </choose>\n            <names variable="editorial-director"/>\n            <names variable="compiler"/>\n            <choose>\n              <if match="any" type="event performance speech">\n                <names variable="chair"/>\n                <names variable="organizer"/>\n              </if>\n            </choose>\n            <names variable="curator"/>\n            <choose>\n              <if match="any" type="software webpage">\n                <!-- `software` listed under the name of the publisher or developer (CMOS18 14.169); `webpage` listed under a site owner or sponsor (CMOS18 14.104) -->\n                <text form="short" variable="publisher"/>\n              </if>\n              <else-if type="standard">\n                <!-- `standard` listed in bibliography under organization, but note omits this (CMOS18 14.159) -->\n                <text form="short" variable="authority"/>\n              </else-if>\n            </choose>\n            <text macro="author-title-substitute-container-short"/>\n            <text macro="author-title-substitute-short"/>\n            <choose>\n              <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place"/>\n              <else-if type="manuscript">\n                <text macro="source-archive-note"/>\n              </else-if>\n            </choose>\n          </substitute>\n        </names>\n      </else>\n    </choose>\n  </macro>\n  <macro name="author-sort">\n    <choose>\n      <if match="any" type="bill hearing legal_case legislation regulation treaty">\n        <text macro="legal-title"/>\n      </if>\n      <else>\n        <text macro="author-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Author elements -->\n  <macro name="author-inline-and-recipient">\n    <!-- identical to `author-short-and-recipient` but with initialization -->\n    <group delimiter=" ">\n      <choose>\n        <!-- inaccessible `interview` or `personal_commmunication`: in-text citation (CMOS18 14.111) -->\n        <if match="none" variable="archive archive-place container-title DOI number publisher references URL">\n          <choose>\n            <if position="first">\n              <!-- do not shorten at first reference as there is no bibliography entry -->\n              <names variable="author">\n                <name and="text" initialize="false"/>\n                <!-- never initialize -->\n                <substitute>\n                  <text macro="title-and-descriptions-short"/>\n                </substitute>\n              </names>\n            </if>\n            <else>\n              <names variable="author">\n                <name and="text" form="short" initialize="true"/>\n                <substitute>\n                  <text macro="title-and-descriptions-short"/>\n                </substitute>\n              </names>\n            </else>\n          </choose>\n          <choose>\n            <if variable="genre"/>\n            <!-- recipient appears in the description if there is a `genre`; otherwise after `author` -->\n            <else-if position="first">\n              <names variable="recipient">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </else-if>\n            <else>\n              <names variable="recipient">\n                <label form="verb" suffix=" "/>\n                <name and="text" form="short" initialize="true"/>\n              </names>\n            </else>\n          </choose>\n        </if>\n        <!-- accessible `interview` or `personal_communication`: standard citation -->\n        <else-if variable="author recipient">\n          <names variable="author">\n            <name and="text" form="short" initialize="true"/>\n          </names>\n          <choose>\n            <if match="none" variable="genre">\n              <names variable="recipient">\n                <label form="verb" suffix=" "/>\n                <name and="text" form="short" initialize="true"/>\n              </names>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <names variable="author">\n            <name and="text" form="short" initialize="true"/>\n            <substitute>\n              <text macro="title-and-descriptions-short"/>\n            </substitute>\n          </names>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="author-title-substitute-bib">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- If a review has no `reviewed-genre` or `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. -->\n        <choose>\n          <if variable="reviewed-genre title">\n            <text macro="title-bib"/>\n          </if>\n          <else-if variable="reviewed-genre reviewed-title title">\n            <text macro="title-bib"/>\n          </else-if>\n          <else>\n            <text macro="title-and-descriptions-bib"/>\n          </else>\n        </choose>\n      </if>\n      <else-if variable="title">\n        <text macro="title-bib"/>\n      </else-if>\n      <else>\n        <!-- If an item has no `title`, substitute with descriptions. -->\n        <text macro="title-and-descriptions-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="author-title-substitute-short">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- If a review has no `reviewed-genre` or `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. -->\n        <choose>\n          <if variable="reviewed-genre title">\n            <text macro="title-short"/>\n          </if>\n          <else-if variable="reviewed-genre reviewed-title title">\n            <text macro="title-short"/>\n          </else-if>\n          <else>\n            <text macro="title-and-descriptions-short"/>\n          </else>\n        </choose>\n      </if>\n      <else-if variable="title">\n        <text macro="title-short"/>\n      </else-if>\n      <else>\n        <!-- If an item has no `title`, substitute with descriptions and capitalize -->\n        <text macro="title-and-descriptions-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="author-title-substitute-container">\n    <choose>\n      <!-- no Chicago model for citing an anonymous article with an issue title in `volume-title` -->\n      <if variable="volume-title"/>\n      <else-if match="any" type="article-magazine article-newspaper">\n        <!-- Anonymous magazine and newspaper articles substitute name of publication (CMOS18 14.87, 14.97) -->\n        <text macro="source-serial-name"/>\n      </else-if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- Publication name also substituted for unsigned reviews (CMOS18 14.102) -->\n        <text macro="source-serial-name"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <!-- Anonymous entries in reference works (CMOS18 14.130) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="broadcast">\n        <!-- TV broadcasts and podcasts (CMOS18 14.165, 14.168) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="webpage">\n        <!-- list a webpage under the website title if there is no owner or sponsor (CMOS18 14.104) -->\n        <choose>\n          <if variable="container-title-short">\n            <text text-case="title" variable="container-title-short"/>\n          </if>\n          <else>\n            <text text-case="title" variable="container-title"/>\n          </else>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="author-title-substitute-container-short">\n    <choose>\n      <if match="any" type="article-magazine article-newspaper">\n        <!-- Anonymous magazine/newspaper articles substitute name of publication (CMOS18 14.87, 14.97) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- Publication name also substituted for unsigned reviews (CMOS18 14.102) -->\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <!-- Anonymous entries in reference works (CMOS18 14.130) -->\n        <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="broadcast">\n        <!-- TV broadcasts and podcasts (CMOS18 14.165, 14.168) -->\n        <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n      </else-if>\n      <else-if type="webpage">\n        <!-- list a webpage under the website title if there is no owner or sponsor (CMOS18 14.104) -->\n        <text form="short" text-case="title" variable="container-title"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 2. Date (CMOS18 13.102) -->\n  <macro name="date">\n    <group delimiter="-">\n      <choose>\n        <if variable="issued">\n          <group delimiter=" ">\n            <!-- reprints and earlier editions may give original year in brackets (CMOS18 14.16) -->\n            <text macro="date-original-year" prefix="(" suffix=")"/>\n            <group>\n              <text macro="date-issued-year"/>\n              <text variable="year-suffix"/>\n            </group>\n          </group>\n        </if>\n        <else-if variable="event-date">\n          <text macro="date-event-year"/>\n        </else-if>\n        <else-if variable="available-date">\n          <date date-parts="year" form="numeric" variable="available-date"/>\n        </else-if>\n        <else-if variable="status">\n          <!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) -->\n          <text text-case="capitalize-first" variable="status"/>\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if type="collection">\n          <!-- do not give n.d. for archival collections (CMOS18 14.128) -->\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if type="manuscript">\n          <!-- do not give n.d. with a bare shelfmark -->\n          <choose>\n            <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place">\n              <text form="short" term="no date"/>\n              <text variable="year-suffix"/>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <text form="short" term="no date"/>\n          <text variable="year-suffix"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="date-short">\n    <group delimiter="-">\n      <choose>\n        <if variable="issued">\n          <group delimiter=" ">\n            <choose>\n              <if is-uncertain-date="original-date">\n                <!-- Uncertain date already has square brackets -->\n                <text macro="date-original-year"/>\n              </if>\n              <else>\n                <text macro="date-original-year" prefix="[" suffix="]"/>\n              </else>\n            </choose>\n            <group>\n              <choose>\n                <if match="none" type="interview personal_communication">\n                  <text macro="date-issued-year"/>\n                </if>\n                <!-- accessible `interview` or `personal_communication` items appear in the bibliography; inaccessible items are in-text only -->\n                <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n                  <text macro="date-issued-year"/>\n                </else-if>\n                <else>\n                  <text macro="date-issued-full"/>\n                </else>\n              </choose>\n              <text variable="year-suffix"/>\n            </group>\n          </group>\n        </if>\n        <else-if variable="event-date">\n          <text macro="date-event-year"/>\n        </else-if>\n        <else-if variable="available-date">\n          <date date-parts="year" form="numeric" variable="available-date"/>\n        </else-if>\n        <else-if variable="status">\n          <!-- Print the status variable rather than use generic CSL terms (`in press`, etc.) -->\n          <text text-case="lowercase" variable="status"/>\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if match="any" type="interview personal_communication">\n          <choose>\n            <if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n              <!-- only give n.d. for accessible personal communication (CMOS18 14.111)-->\n              <text form="short" term="no date"/>\n              <text variable="year-suffix"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if match="any" type="classic collection entry entry-dictionary entry-encyclopedia">\n          <!-- do not give n.d. for archival collections (CMOS18 14.128), `classic` (CMOS18 14.143), or reference entries (CMOS18 14.131) -->\n          <text variable="year-suffix"/>\n        </else-if>\n        <else-if type="manuscript">\n          <!-- do not give n.d. with a bare shelfmark -->\n          <choose>\n            <if match="any" variable="container-title event-date event-place event-title genre title publisher publisher-place">\n              <text form="short" term="no date"/>\n              <text variable="year-suffix"/>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <text form="short" term="no date"/>\n          <text variable="year-suffix"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="date-sort-group">\n    <!-- Sort items with and without dates (CMOS18 14.44):\n\n          1. items with dates (= 0)\n          2. `no date` items (= 1)\n          3. items with `status` (forthcoming, in press, etc.) (= 2) -->\n    <choose>\n      <if variable="issued">\n        <text value="0"/>\n      </if>\n      <else-if variable="status">\n        <text value="2"/>\n      </else-if>\n      <else>\n        <!-- n.d. -->\n        <text value="1"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-sort-year">\n    <!-- while reference lists are to be sorted chronologically (CMOS18 13.112), it appears that only the year is to be taken into account (CMOS18 13.114) -->\n    <choose>\n      <if type="personal_communication" variable="event-date issued">\n        <date date-parts="year" form="numeric" variable="event-date"/>\n      </if>\n      <else>\n        <text macro="date-issued-year"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Date elements -->\n  <macro name="date-event-full">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date form="text" prefix="[" suffix="?]" variable="event-date"/>\n      </if>\n      <else>\n        <date form="text" variable="event-date"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-event-year">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date date-parts="year" form="numeric" prefix="[" suffix="?]" variable="event-date"/>\n      </if>\n      <else>\n        <date date-parts="year" form="numeric" variable="event-date"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-issued-full">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date form="text" prefix="[" suffix="?]" variable="issued"/>\n      </if>\n      <else>\n        <date form="text" variable="issued"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-issued-month">\n    <date variable="issued">\n      <date-part name="month"/>\n    </date>\n  </macro>\n  <macro name="date-issued-month-day">\n    <date variable="issued">\n      <date-part name="month"/>\n      <date-part name="day" prefix=" "/>\n    </date>\n  </macro>\n  <macro name="date-issued-year">\n    <choose>\n      <if is-uncertain-date="issued">\n        <!-- guessed-at date (CMOS18 14.44) -->\n        <date date-parts="year" form="numeric" prefix="[" suffix="?]" variable="issued"/>\n      </if>\n      <else>\n        <date date-parts="year" form="numeric" variable="issued"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="date-original-month">\n    <date variable="original-date">\n      <date-part name="month"/>\n    </date>\n  </macro>\n  <macro name="date-original-month-day">\n    <date variable="original-date">\n      <date-part name="month"/>\n      <date-part name="day" prefix=" "/>\n    </date>\n  </macro>\n  <macro name="date-original-year">\n    <choose>\n      <if is-uncertain-date="original-date">\n        <date date-parts="year" form="numeric" prefix="[" suffix="?]" variable="original-date"/>\n      </if>\n      <else>\n        <date date-parts="year" form="numeric" variable="original-date"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 3. Title and descriptions (CMOS18 13.87-101) -->\n  <macro name="title-and-descriptions-bib">\n    <group delimiter=". ">\n      <choose>\n        <if variable="title">\n          <text macro="title-bib"/>\n          <text macro="description-bib"/>\n          <text macro="identifier-bib"/>\n        </if>\n        <else-if match="any" type="bill report">\n          <!-- Bills, resolutions, and congressional reports substitute bill number if no title -->\n          <!-- Congressional reports are indistinguishable from other reports -->\n          <text macro="identifier-number-bib"/>\n          <text macro="identifier-bib"/>\n          <text macro="description-bib"/>\n        </else-if>\n        <else>\n          <text macro="description-bib"/>\n          <text macro="identifier-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="title-and-descriptions-short">\n    <choose>\n      <if variable="title">\n        <text macro="title-short"/>\n      </if>\n      <else-if match="any" type="bill report">\n        <!-- Bills, resolutions, and congressional reports substitute bill number if no title -->\n        <text macro="legal-identifier-bill-report"/>\n      </else-if>\n      <else>\n        <text macro="description-short"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-and-source-bib">\n    <group delimiter=". ">\n      <choose>\n        <if type="broadcast" variable="container-title number title">\n          <!-- Bespoke `broadcast` format (CMOS18 14.165, 14.168) -->\n          <text macro="source-monographic-title-specific-title-first"/>\n          <group delimiter=", ">\n            <text macro="identifier-number-bib"/>\n            <text macro="title-bib"/>\n            <text macro="description-bib"/>\n            <text macro="source-monographic-identifier-contributors-bib"/>\n          </group>\n          <text macro="source-monographic-identifier-contributors-bib-container-author"/>\n          <text macro="source-series-bib"/>\n          <choose>\n            <!-- show event information here only if not collapsed with `issued` (CMOS18 14.167) -->\n            <if match="any" variable="event-date original-date original-publisher original-publisher-place publisher status">\n              <text macro="source-event-bib"/>\n            </if>\n          </choose>\n        </if>\n        <else-if type="chapter" variable="container-title genre">\n          <!-- \'introduction to\', \'online appendix to\' (CMOS18 14.12, 14.14) -->\n          <group delimiter=" ">\n            <text macro="title-and-descriptions-bib"/>\n            <text macro="source-bib"/>\n          </group>\n        </else-if>\n        <else-if type="article-journal" variable="container-title genre volume-title">\n          <!-- introduction to a special issue or supplement -->\n          <group delimiter=" ">\n            <text macro="title-and-descriptions-bib"/>\n            <text macro="source-bib"/>\n          </group>\n        </else-if>\n        <else>\n          <text macro="title-and-descriptions-bib"/>\n          <text macro="source-bib"/>\n        </else>\n      </choose>\n      <group delimiter=", ">\n        <choose>\n          <!-- show event information here only if collapsed with `issued` (CMOS18 14.167) -->\n          <if match="any" variable="event-date original-date original-publisher original-publisher-place publisher status"/>\n          <!-- omit serial types -->\n          <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"/>\n          <else-if match="any" variable="collection-editor compiler editor editorial-director">\n            <!-- monographic types -->\n            <text macro="source-event-bib"/>\n          </else-if>\n          <!-- omit serial types -->\n          <else-if match="any" type="interview paper-conference"/>\n          <else>\n            <!-- monographic types -->\n            <text macro="source-event-bib"/>\n          </else>\n        </choose>\n        <text macro="source-monographic-publication-bib"/>\n      </group>\n      <text macro="source-medium-bib"/>\n      <text macro="source-archive-bib"/>\n      <text macro="source-date-accessed-DOI-URL-bib"/>\n    </group>\n  </macro>\n  <!-- 3.1. Title -->\n  <macro name="title-bib">\n    <choose>\n      <if match="any" type="post webpage">\n        <!-- part number/title always at the analytic level -->\n        <text macro="title-and-part-filter-review-bib"/>\n      </if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="title-and-part-filter-review-bib"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="title-monographic-bib-specific-title-first"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="title-and-part-filter-review-bib"/>\n      </else-if>\n      <else>\n        <text macro="title-monographic-bib-specific-title-first"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-short">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- If a review has no `reviewed-title`, assume that `title` contains the title of the reviewed work; the description provides it. -->\n        <choose>\n          <if variable="reviewed-genre title">\n            <!-- Quotes, title case -->\n            <text form="short" quotes="true" text-case="title" variable="title"/>\n          </if>\n          <else-if variable="reviewed-genre reviewed-title title">\n            <!-- Quotes, title case -->\n            <text form="short" quotes="true" text-case="title" variable="title"/>\n          </else-if>\n          <else>\n            <text macro="description-short"/>\n          </else>\n        </choose>\n      </if>\n      <else>\n        <text macro="title-primary-short"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Title elements -->\n  <macro name="title-and-part-filter-review-bib">\n    <choose>\n      <if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <!-- `title` is only the review title if there is a separate `reviewed-genre` or `reviewed-title`; otherwise, it is the title of the reviewed work, printed in the description -->\n        <choose>\n          <if match="any" variable="reviewed-genre reviewed-title">\n            <text macro="title-and-part-title-bib"/>\n          </if>\n        </choose>\n      </if>\n      <else>\n        <text macro="title-and-part-title-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-and-part-title-bib">\n    <group delimiter=". ">\n      <text macro="title-primary"/>\n      <group delimiter=", ">\n        <text macro="label-part-number-capitalized"/>\n        <text macro="title-part"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="title-monographic-bib-specific-title-first">\n    <!-- Use with author-date or notes and bibliography leading with volume title (CMOS18 14.21). -->\n    <!-- For monographic items, assume `part-number` and `part-title` refer to the book/volume. -->\n    <choose>\n      <if variable="container-title">\n        <text macro="title-primary"/>\n      </if>\n      <!-- For monographic items without `container-title`, bibliography entries list `part-title` or `volume-title` first if available -->\n      <else-if variable="part-title">\n        <text macro="title-part"/>\n      </else-if>\n      <else-if variable="volume-title">\n        <text macro="title-volume"/>\n      </else-if>\n      <else>\n        <text macro="title-primary"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-part">\n    <choose>\n      <if type="patent">\n        <!-- No italics or quotes, sentence case -->\n        <text form="short" text-case="capitalize-first" variable="part-title"/>\n      </if>\n      <else-if match="any" type="bill collection legislation regulation treaty">\n        <!-- No italics or quotes, title case -->\n        <text text-case="title" variable="part-title"/>\n      </else-if>\n      <else-if type="legal_case">\n        <!-- Italicized, sentence case -->\n        <text font-style="italic" variable="part-title"/>\n      </else-if>\n      <else-if match="any" type="book classic graphic hearing map">\n        <!-- Italicized, title case (regardless of `container-title`) -->\n        <text font-style="italic" text-case="title" variable="part-title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="author container-title">\n        <!-- Signed encyclopedia entry in quotes, title case (CMOS18 14.132) -->\n        <text quotes="true" text-case="title" variable="part-title"/>\n      </else-if>\n      <else-if type="entry-dictionary" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="part-title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="part-title"/>\n      </else-if>\n      <else-if type="post">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="part-title"/>\n      </else-if>\n      <else-if type="webpage">\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="part-title"/>\n      </else-if>\n      <!-- Other types are formatted based on presence of `container-title` -->\n      <else-if variable="container-title">\n        <choose>\n          <if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n            <!-- serial types -->\n            <!-- Quotes, title case -->\n            <text quotes="true" text-case="title" variable="part-title"/>\n          </if>\n          <else-if match="any" variable="collection-editor compiler editor editorial-director">\n            <!-- monographic types -->\n            <!-- Italics, title case -->\n            <text font-style="italic" text-case="title" variable="part-title"/>\n          </else-if>\n          <else-if match="any" type="interview paper-conference">\n            <!-- serial types -->\n            <!-- Quotes, title case -->\n            <text quotes="true" text-case="title" variable="part-title"/>\n          </else-if>\n          <else>\n            <!-- monographic types -->\n            <!-- Italics, title case -->\n            <text font-style="italic" text-case="title" variable="part-title"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if match="any" type="article dataset document interview manuscript paper-conference personal_communication speech thesis webpage">\n        <!-- Container-like but not necessarily with `container-title` -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="part-title"/>\n      </else-if>\n      <else>\n        <!-- Italicized, title case (default) -->\n        <text font-style="italic" text-case="title" variable="part-title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-primary">\n    <choose>\n      <if type="patent">\n        <!-- No italics or quotes, sentence case -->\n        <text form="short" text-case="capitalize-first" variable="title"/>\n      </if>\n      <else-if match="any" type="bill collection legislation regulation treaty">\n        <!-- No italics or quotes, title case -->\n        <text text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="legal_case">\n        <!-- Italicized, sentence case -->\n        <text font-style="italic" variable="title"/>\n      </else-if>\n      <else-if match="any" type="book classic graphic hearing map">\n        <!-- Italicized, title case (regardless of `container-title`) -->\n        <text font-style="italic" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="author container-title">\n        <!-- Signed encyclopedia entry in quotes, title case (CMOS18 14.132) -->\n        <text quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-dictionary" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="post">\n        <!-- Quotes, sentence case -->\n        <text quotes="true" variable="title"/>\n      </else-if>\n      <!-- Other types are formatted based on presence of `container-title` -->\n      <else-if variable="container-title">\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if match="any" type="article dataset document interview manuscript paper-conference personal_communication speech thesis webpage">\n        <!-- Container-like but not necessarily with `container-title` -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else>\n        <!-- Italicized, title case (default) -->\n        <text font-style="italic" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-primary-short">\n    <choose>\n      <if type="patent">\n        <!-- No italics or quotes, sentence case -->\n        <text form="short" text-case="capitalize-first" variable="title"/>\n      </if>\n      <else-if match="any" type="bill collection legislation regulation treaty">\n        <!-- No italics or quotes, title case -->\n        <text form="short" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="legal_case">\n        <!-- Italicized, sentence case -->\n        <text font-style="italic" form="short" variable="title"/>\n      </else-if>\n      <else-if match="any" type="book classic graphic hearing map">\n        <!-- Italicized, title case (regardless of `container-title`) -->\n        <text font-style="italic" form="short" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="author container-title">\n        <!-- Signed encyclopedia entry in quotes, title case (CMOS18 14.132) -->\n        <text form="short" quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if type="entry-dictionary" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text form="short" quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="entry-encyclopedia" variable="container-title">\n        <!-- Quotes, sentence case -->\n        <text form="short" quotes="true" variable="title"/>\n      </else-if>\n      <else-if type="post">\n        <!-- Quotes, sentence case -->\n        <text form="short" quotes="true" variable="title"/>\n      </else-if>\n      <!-- Other types are formatted based on presence of `container-title` -->\n      <else-if variable="container-title">\n        <!-- Quotes, title case -->\n        <text form="short" quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else-if match="any" type="article dataset document interview manuscript paper-conference personal_communication speech thesis webpage">\n        <!-- Container-like but not necessarily with `container-title` -->\n        <!-- Quotes, title case -->\n        <text form="short" quotes="true" text-case="title" variable="title"/>\n      </else-if>\n      <else>\n        <!-- Italicized, title case (default) -->\n        <text font-style="italic" form="short" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="title-volume">\n    <choose>\n      <if type="manuscript">\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="volume-title"/>\n      </if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="volume-title"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <!-- Italics, title case -->\n        <text font-style="italic" text-case="title" variable="volume-title"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <!-- Quotes, title case -->\n        <text quotes="true" text-case="title" variable="volume-title"/>\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <!-- Italics, title case -->\n        <text font-style="italic" text-case="title" variable="volume-title"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 3.2. Description -->\n  <macro name="description-bib">\n    <choose>\n      <if match="any" type="interview" variable="interviewer">\n        <text macro="description-interview-bib"/>\n      </if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <text macro="description-review-bib"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <text macro="description-letter-bib"/>\n      </else-if>\n      <else-if type="song" variable="composer">\n        <text macro="description-song-bib"/>\n      </else-if>\n      <!-- thesis type appears with university name (CMOS18 14.113) -->\n      <else-if type="thesis"/>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="description-serial-bib"/>\n      </else-if>\n      <else-if type="paper-conference">\n        <text macro="description-paper-conference-bib"/>\n      </else-if>\n      <else-if match="none" variable="container-title">\n        <text macro="description-format-bib"/>\n      </else-if>\n      <!-- For conference presentations/performances/events, chapters in reports/standards/generic documents, software, place description within the source element -->\n      <else-if match="any" type="document report software standard"/>\n      <else-if match="any" type="event paper-conference performance speech">\n        <choose>\n          <if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume">\n            <text macro="description-format-bib"/>\n          </if>\n        </choose>\n      </else-if>\n      <else>\n        <text macro="description-format-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-short">\n    <choose>\n      <if match="any" type="interview" variable="interviewer">\n        <choose>\n          <if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n            <text macro="description-interview-short"/>\n          </if>\n          <else>\n            <!-- for an inaccessible `interview`, give a full in-text description at the first citation -->\n            <choose>\n              <if position="first">\n                <text macro="description-interview-note"/>\n              </if>\n              <else>\n                <text macro="description-interview-short"/>\n              </else>\n            </choose>\n          </else>\n        </choose>\n      </if>\n      <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n        <text macro="description-review-short"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <text macro="description-letter-short"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="description-serial-short"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="description-format-short"/>\n      </else-if>\n      <else-if type="paper-conference">\n        <!-- serial `paper-conference` -->\n        <text macro="description-serial-short"/>\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <text macro="description-format-short"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Description elements -->\n  <macro name="description-format-bib">\n    <choose>\n      <if variable="genre number"/>\n      <else-if variable="genre">\n        <text text-case="capitalize-first" variable="genre"/>\n      </else-if>\n      <!-- generic labels if unpublished -->\n      <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL"/>\n      <else-if type="manuscript">\n        <!-- \'unpublished manuscript\' if no `genre` (CMOS18 14.114) -->\n        <text term="manuscript" text-case="capitalize-first"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <!-- \'personal communication\' if no `genre` (CMOS18 14.111) -->\n        <text term="personal-communication" text-case="capitalize-first"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="description-format-note">\n    <choose>\n      <if variable="genre number"/>\n      <else-if variable="genre">\n        <text variable="genre"/>\n      </else-if>\n      <!-- generic labels if unpublished -->\n      <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL"/>\n      <else-if type="manuscript">\n        <!-- \'unpublished manuscript\' if no `genre` (CMOS18 14.114) -->\n        <text term="manuscript"/>\n      </else-if>\n      <else-if type="personal_communication">\n        <!-- \'personal communication\' if no `genre` (CMOS18 14.111) -->\n        <text term="personal-communication"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="description-format-short">\n    <group delimiter=" ">\n      <choose>\n        <if type="chapter" variable="container-title genre">\n          <!-- untitled introductions: cf. review model, which includes a title (CMOS18 14.101) -->\n          <text form="short" variable="genre"/>\n          <choose>\n            <if match="none" position="ibid ibid-with-locator">\n              <!-- CMOS team suggests leaving out title in repeated references -->\n              <text macro="source-monographic-preposition-note"/>\n              <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n            </if>\n          </choose>\n        </if>\n        <else-if type="article-journal" variable="container-title genre volume-title">\n          <!-- untitled introduction to a special issue or supplement -->\n          <text form="short" variable="genre"/>\n          <choose>\n            <if match="none" position="ibid ibid-with-locator">\n              <text macro="source-monographic-preposition-note"/>\n              <text form="short" quotes="true" text-case="title" variable="volume-title"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if variable="genre">\n          <text form="short" variable="genre"/>\n        </else-if>\n        <else-if variable="medium">\n          <text form="short" variable="medium"/>\n        </else-if>\n        <else-if variable="chapter-number container-title">\n          <text macro="source-monographic-preposition-note"/>\n          <text font-style="italic" form="short" text-case="title" variable="container-title"/>\n        </else-if>\n        <else-if variable="chapter-number">\n          <text macro="label-chapter-number"/>\n        </else-if>\n        <!-- generic labels if unpublished -->\n        <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL"/>\n        <else-if type="manuscript">\n          <!-- \'unpublished manuscript\' if no `genre` (CMOS18 14.114) -->\n          <text term="manuscript"/>\n        </else-if>\n        <else-if type="personal_communication">\n          <!-- \'pers. comm.\' if no `genre` (CMOS18 14.111) -->\n          <text form="short" term="personal-communication"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="description-interview-bib">\n    <group delimiter=", ">\n      <choose>\n        <if variable="genre number">\n          <!-- `genre` printed with `number` -->\n          <names variable="interviewer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n        </if>\n        <else-if variable="genre">\n          <group delimiter=" ">\n            <text text-case="capitalize-first" variable="genre"/>\n            <group delimiter=" ">\n              <text form="verb" term="container-author"/>\n              <names variable="interviewer">\n                <name and="text" initialize="false"/>\n              </names>\n            </group>\n          </group>\n        </else-if>\n        <else-if variable="interviewer">\n          <names variable="interviewer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n        </else-if>\n        <else>\n          <text macro="description-format-bib"/>\n        </else>\n      </choose>\n      <text macro="source-event-place-first"/>\n    </group>\n  </macro>\n  <macro name="description-interview-note">\n    <group delimiter=", ">\n      <choose>\n        <if variable="genre number">\n          <!-- `genre` printed with `number` -->\n          <names variable="interviewer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n        </if>\n        <else-if variable="genre">\n          <group delimiter=" ">\n            <text variable="genre"/>\n            <group delimiter=" ">\n              <text form="verb" term="container-author"/>\n              <names variable="interviewer">\n                <name and="text" initialize="false"/>\n              </names>\n            </group>\n          </group>\n        </else-if>\n        <else-if variable="interviewer">\n          <names variable="interviewer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n        </else-if>\n        <else>\n          <text macro="description-format-note"/>\n        </else>\n      </choose>\n      <text macro="source-event-place-first"/>\n    </group>\n  </macro>\n  <macro name="description-interview-short">\n    <choose>\n      <if disambiguate="true">\n        <names variable="interviewer">\n          <label form="verb" suffix=" "/>\n          <name and="text" form="short" initialize="true"/>\n          <substitute>\n            <text macro="description-format-short"/>\n          </substitute>\n        </names>\n      </if>\n      <else-if match="any" variable="genre medium">\n        <choose>\n          <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n            <text macro="description-format-short"/>\n          </if>\n          <else>\n            <!-- capitalize if no author or title -->\n            <text macro="description-format-bib"/>\n          </else>\n        </choose>\n      </else-if>\n      <else>\n        <!-- generic description for an unpublished interview (CMOS18 14.108) -->\n        <text term="interview"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-letter-bib">\n    <choose>\n      <if variable="recipient">\n        <group delimiter=", ">\n          <choose>\n            <if variable="genre number">\n              <!-- `genre` appears with `number` -->\n              <names variable="recipient">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n            <else-if variable="genre">\n              <group delimiter=" ">\n                <text macro="description-format-bib"/>\n                <names variable="recipient">\n                  <label form="verb" suffix=" "/>\n                  <name and="text" initialize="false"/>\n                </names>\n              </group>\n            </else-if>\n            <else>\n              <names variable="recipient">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </else>\n          </choose>\n          <text variable="event-place"/>\n          <text macro="date-event-full"/>\n        </group>\n      </if>\n      <else>\n        <text macro="description-format-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-letter-short">\n    <!-- shortened notes ideally give author, recipient, place, and date (CMOS18 14.13) -->\n    <group delimiter=", ">\n      <choose>\n        <if variable="genre recipient">\n          <group delimiter=" ">\n            <text macro="description-format-short"/>\n            <names variable="recipient">\n              <label form="verb" suffix=" "/>\n              <name and="text" form="short" initialize="true"/>\n            </names>\n          </group>\n        </if>\n        <else>\n          <text macro="description-format-short"/>\n        </else>\n      </choose>\n      <text variable="event-place"/>\n      <choose>\n        <if variable="event-date">\n          <text macro="date-event-full"/>\n        </if>\n        <else>\n          <text macro="date-issued-full"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="description-paper-conference-bib">\n    <choose>\n      <if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="description-format-bib"/>\n      </if>\n      <else>\n        <!-- serial types -->\n        <group delimiter=". ">\n          <text macro="description-serial-bib"/>\n          <text macro="source-event-bib"/>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-bib">\n    <!-- Reviewed item -->\n    <group delimiter=". ">\n      <group delimiter=", ">\n        <group delimiter=" ">\n          <text macro="description-review-genre-bib"/>\n          <text macro="description-review-title"/>\n        </group>\n        <choose>\n          <if variable="reviewed-genre reviewed-title title">\n            <names variable="reviewed-author">\n              <label form="verb" suffix=" "/>\n              <name and="text" initialize="false"/>\n            </names>\n          </if>\n          <else-if variable="reviewed-genre"/>\n          <else>\n            <names variable="reviewed-author">\n              <label form="verb" suffix=" "/>\n              <name and="text" initialize="false"/>\n            </names>\n          </else>\n        </choose>\n        <text macro="source-event-place-first"/>\n      </group>\n      <text macro="label-section-capitalized"/>\n    </group>\n  </macro>\n  <macro name="description-review-genre-bib">\n    <choose>\n      <if variable="reviewed-genre">\n        <group delimiter=" ">\n          <text macro="description-review-term-unsigned-bib"/>\n          <text variable="reviewed-genre"/>\n          <choose>\n            <if match="none" variable="reviewed-title">\n              <names variable="reviewed-author">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </group>\n      </if>\n      <else-if variable="number">\n        <text macro="description-review-term-unsigned-bib"/>\n      </else-if>\n      <!-- If no `reviewed-genre`, assume that `genre` is entered as \'Review of the book\' or similar -->\n      <else-if variable="genre">\n        <text text-case="capitalize-first" variable="genre"/>\n      </else-if>\n      <else>\n        <text macro="description-review-term-unsigned-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-short">\n    <choose>\n      <if match="any" position="ibid ibid-with-locator">\n        <text term="review"/>\n      </if>\n      <else>\n        <group delimiter=" ">\n          <text term="review-of"/>\n          <text macro="description-review-title-short"/>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-term-unsigned-bib">\n    <!-- Anonymous reviews appear as \'unsigned\' (CMOS18 14.102) -->\n    <choose>\n      <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n        <text term="review-of" text-case="capitalize-first"/>\n      </if>\n      <else>\n        <group delimiter=" ">\n          <text term="anonymous" text-case="capitalize-first"/>\n          <text term="review-of"/>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-title">\n    <choose>\n      <if match="any" variable="reviewed-genre reviewed-title">\n        <!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title -->\n        <!-- Adapt for `reviewed-container-title` or similar if it becomes available -->\n        <text font-style="italic" text-case="title" variable="reviewed-title"/>\n      </if>\n      <else>\n        <!-- Assume title is title of reviewed work -->\n        <text font-style="italic" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-review-title-short">\n    <choose>\n      <if match="any" variable="reviewed-genre reviewed-title">\n        <!-- Not possible to distinguish TV series episode from other reviewed works without a reviewed source title -->\n        <!-- Adapt for `reviewed-container-title` or similar if it becomes available -->\n        <text font-style="italic" form="short" text-case="title" variable="reviewed-title"/>\n      </if>\n      <else>\n        <!-- Assume title is title of reviewed work -->\n        <text font-style="italic" form="short" text-case="title" variable="title"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-serial-bib">\n    <group delimiter=". ">\n      <text macro="description-format-bib"/>\n      <!-- `section` provides magazine departments (CMOS18 14.88) and newspaper column names (CMOS18 14.93) -->\n      <text macro="label-section-capitalized"/>\n    </group>\n  </macro>\n  <macro name="description-serial-short">\n    <choose>\n      <if variable="title"/>\n      <else-if variable="genre">\n        <text macro="description-format-short"/>\n      </else-if>\n      <else>\n        <text form="short" text-case="title" variable="section"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="description-song-bib">\n    <!-- Performer of classical music works -->\n    <!-- TODO: remove when Zotero fixes mapping of performer to `author` -->\n    <group delimiter=" ">\n      <!-- Based on `description-format` macro -->\n      <choose>\n        <if variable="genre">\n          <text text-case="capitalize-first" variable="genre"/>\n          <text form="verb" term="performer"/>\n        </if>\n        <!-- providing \'performed by\' label for recorded readings (CMOS18 14.164), but it should be omitted for classical music (CMOS18 14.163) -->\n        <else>\n          <text form="verb" term="performer" text-case="capitalize-first"/>\n        </else>\n      </choose>\n      <names variable="author">\n        <name and="text" initialize="false"/>\n        <substitute>\n          <names variable="performer"/>\n        </substitute>\n      </names>\n    </group>\n  </macro>\n  <!-- 3.3. Identifier (edition, contributors, volume) -->\n  <macro name="identifier-bib">\n    <group delimiter=". ">\n      <choose>\n        <if type="patent">\n          <text macro="identifier-patent"/>\n        </if>\n        <else-if type="report">\n          <text macro="identifier-report-bib"/>\n        </else-if>\n        <else-if match="any" type="post webpage">\n          <!-- print `container-title` on `post` or `webpage` in the same way as `publisher` (CMOS18 14.104-106) -->\n          <text macro="identifier-number-bib"/>\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-bib"/>\n        </else-if>\n        <else-if variable="container-title">\n          <choose>\n            <if match="any" type="broadcast graphic map motion_picture">\n              <!-- For audiovisual media, number information comes after `title`, not `container-title`; `song` places album catalogue `number` with `publisher` (CMOS18 14.163-164) -->\n              <text macro="identifier-number-bib"/>\n            </if>\n          </choose>\n          <text macro="identifier-contributors-bib"/>\n        </else-if>\n        <else>\n          <choose>\n            <if match="none" type="song">\n              <text macro="identifier-number-bib"/>\n            </if>\n          </choose>\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-and-volume-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Identifier elements -->\n  <macro name="identifier-contributors-bib">\n    <choose>\n      <if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <text macro="identifier-contributors-serial-bib"/>\n      </if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <text macro="identifier-contributors-monographic-bib"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <text macro="identifier-contributors-serial-bib"/>\n      </else-if>\n      <else>\n        <text macro="identifier-contributors-monographic-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-contributors-monographic-bib">\n    <group delimiter=". ">\n      <choose>\n        <if match="any" type="post webpage">\n          <names variable="container-author">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editor-translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="editor translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editorial-director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="guest">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="host">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="illustrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="narrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="compiler chair organizer curator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="series-creator executive-producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="any" type="broadcast performance">\n              <names variable="script-writer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="performer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" type="thesis">\n              <names variable="contributor">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </if>\n        <else>\n          <!-- print `container-title` on `post` or `webpage` in the same way as `publisher` (CMOS18 14.104-106) -->\n          <choose>\n            <if match="none" variable="container-title">\n              <names variable="container-author">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="editor-translator">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names delimiter=". " variable="editor translator">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="editorial-director">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="guest">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="host">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="illustrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="narrator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" variable="container-title">\n              <names delimiter=". " variable="compiler chair organizer curator">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names delimiter=". " variable="series-creator executive-producer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="producer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <names variable="director">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <choose>\n                <if match="any" type="broadcast performance">\n                  <names variable="script-writer">\n                    <label form="verb" suffix=" " text-case="capitalize-first"/>\n                    <name and="text" initialize="false"/>\n                  </names>\n                </if>\n              </choose>\n              <names variable="performer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n              <choose>\n                <if match="none" type="song thesis">\n                  <names variable="contributor">\n                    <label form="verb" suffix=" " text-case="capitalize-first"/>\n                    <name and="text" initialize="false"/>\n                  </names>\n                </if>\n              </choose>\n            </if>\n          </choose>\n          <choose>\n            <if type="song">\n              <!-- Song contributors attached to album (CMOS18 14.163) -->\n              <names variable="contributor">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-contributors-serial-bib">\n    <group delimiter=". ">\n      <names delimiter=". " variable="translator narrator">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names delimiter=". " variable="compiler chair organizer curator">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names delimiter=". " variable="series-creator executive-producer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="producer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="director">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="script-writer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n      <names variable="performer">\n        <label form="verb" suffix=" " text-case="capitalize-first"/>\n        <name and="text" initialize="false"/>\n      </names>\n    </group>\n  </macro>\n  <macro name="identifier-contributors-and-volume-bib">\n    <choose>\n      <if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="identifier-contributors-serial-bib"/>\n      </if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="identifier-contributors-and-volume-monographic-bib-specific-title-first"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="identifier-contributors-serial-bib"/>\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <text macro="identifier-contributors-and-volume-monographic-bib-specific-title-first"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-contributors-and-volume-monographic-bib-specific-title-first">\n    <group delimiter=". ">\n      <text macro="identifier-contributors-monographic-bib"/>\n      <group delimiter=", ">\n        <text macro="identifier-volume-bib-specific-title-first"/>\n        <choose>\n          <if match="any" variable="number-of-volumes part-number part-title volume volume-title">\n            <!-- cite multivolume `collection-editor`; otherwise it belongs with `collection-title` -->\n            <names variable="collection-editor">\n              <label form="verb" suffix=" "/>\n              <name and="text" initialize="false"/>\n            </names>\n          </if>\n        </choose>\n      </group>\n      <choose>\n        <if match="none" variable="part-number part-title volume volume-title">\n          <text macro="label-number-of-volumes"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-edition-bib">\n    <choose>\n      <!-- ensure `source-publication-history-bib` does not duplicate edition -->\n      <if variable="original-title">\n        <text macro="label-edition-capitalized"/>\n      </if>\n      <else-if variable="issued original-date"/>\n      <else>\n        <text macro="label-edition-capitalized"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-edition-note">\n    <choose>\n      <!-- ensure `source-publication-history-note` does not duplicate edition -->\n      <if variable="original-title">\n        <text macro="label-edition"/>\n      </if>\n      <else-if variable="issued original-date"/>\n      <else>\n        <text macro="label-edition"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="identifier-number-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="thesis"/>\n        <else-if is-numeric="number" type="broadcast" variable="genre">\n          <text text-case="capitalize-first" variable="genre"/>\n          <text variable="number"/>\n        </else-if>\n        <else-if is-numeric="number" type="broadcast">\n          <text text-case="capitalize-first" value="episode"/>\n          <text variable="number"/>\n        </else-if>\n        <else-if variable="number">\n          <text text-case="title" variable="genre"/>\n          <text macro="label-number-capitalized"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-patent">\n    <group delimiter=", ">\n      <group delimiter=" ">\n        <!-- `authority`: US ; `genre`: patent ; `number`: 123,445 -->\n        <text form="short" variable="authority"/>\n        <!-- \'US Patent\' capitalized in both bibliography and note forms -->\n        <choose>\n          <if variable="genre">\n            <text text-case="capitalize-first" variable="genre"/>\n          </if>\n          <else>\n            <text term="patent" text-case="capitalize-first"/>\n          </else>\n        </choose>\n        <text variable="number"/>\n      </group>\n      <group delimiter=" ">\n        <text value="filed"/>\n        <date form="text" variable="submitted"/>\n      </group>\n      <group delimiter=" ">\n        <choose>\n          <if variable="issued submitted">\n            <text term="and"/>\n          </if>\n        </choose>\n        <text value="issued"/>\n        <!-- Always give full issue date, even in author-date (CMOS18 14.158) -->\n        <text macro="date-issued-full"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="identifier-report-bib">\n    <group delimiter=". ">\n      <choose>\n        <if variable="container-title">\n          <!-- If the report is a chapter in a larger report, then most identifying information is printed in the source. -->\n          <text macro="identifier-contributors-bib"/>\n        </if>\n        <else-if variable="title">\n          <text macro="identifier-number-bib"/>\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-and-volume-bib"/>\n        </else-if>\n        <else>\n          <!-- If there is no `title`, then `genre` and `number` are already printed as the title. -->\n          <text macro="label-version-capitalized"/>\n          <text macro="identifier-edition-bib"/>\n          <text macro="identifier-contributors-and-volume-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="identifier-volume-bib-specific-title-first">\n    <!-- In author-date, bibliography must be listed under the individual volume title rather than the general title of the multivolume set; this is also allowable in notes styles (CMOS18 14.21) -->\n    <group delimiter=", ">\n      <choose>\n        <if variable="part-number part-title volume volume-title">\n          <!-- part and title with individual titles -->\n          <group delimiter=" ">\n            <text macro="label-part-number-capitalized"/>\n            <text value="of"/>\n            <text macro="title-volume"/>\n          </group>\n          <group delimiter=" ">\n            <text macro="label-volume"/>\n            <text value="of"/>\n            <text macro="title-primary"/>\n          </group>\n        </if>\n        <else-if match="any" variable="part-title volume-title">\n          <group delimiter=" ">\n            <choose>\n              <if variable="part-number volume">\n                <group delimiter=", ">\n                  <text macro="label-volume-capitalized"/>\n                  <text macro="label-part-number"/>\n                  <text value="of"/>\n                </group>\n              </if>\n              <else-if variable="part-number">\n                <text macro="label-part-number-capitalized"/>\n                <text value="of"/>\n              </else-if>\n              <else-if variable="volume">\n                <text macro="label-volume-capitalized"/>\n                <text value="of"/>\n              </else-if>\n            </choose>\n            <text macro="title-primary"/>\n          </group>\n        </else-if>\n        <else-if variable="part-number volume">\n          <text macro="label-volume-capitalized"/>\n          <text macro="label-part-number"/>\n        </else-if>\n        <else-if variable="part-number">\n          <text macro="label-part-number-capitalized"/>\n        </else-if>\n        <else-if variable="volume">\n          <text macro="label-volume-capitalized"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <!-- 4. Source -->\n  <macro name="source-bib">\n    <choose>\n      <if match="any" type="patent post webpage"/>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <text macro="source-serial-bib"/>\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <text macro="source-monographic-bib"/>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <text macro="source-serial-bib"/>\n      </else-if>\n      <else>\n        <text macro="source-monographic-bib"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.1. Serial sources -->\n  <macro name="source-serial-bib">\n    <group delimiter=". ">\n      <text macro="source-serial-title-volume-bib"/>\n      <choose>\n        <if match="any" type="article-magazine article-newspaper">\n          <!-- magazines and newspapers provide the full date in place of volume/issue numbers (CMOS18 14.87, 14.89) -->\n          <group delimiter=", ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </if>\n        <else-if variable="collection-title volume">\n          <group delimiter=", ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </else-if>\n        <else-if variable="volume">\n          <group delimiter=" ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </else-if>\n        <else>\n          <group delimiter=", ">\n            <text macro="source-serial-title-bib"/>\n            <text macro="source-serial-identifier-bib"/>\n          </group>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Serial source title -->\n  <macro name="source-serial-name">\n    <group delimiter=" ">\n      <text font-style="italic" text-case="title" variable="container-title"/>\n      <choose>\n        <!-- TODO: remove conditional when Zotero stops double-mapping `event-place` and `publisher-place` -->\n        <if match="none" variable="event-date event-title">\n          <text prefix="(" suffix=")" variable="publisher-place"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-title-bib">\n    <group delimiter=", ">\n      <choose>\n        <!-- Journal special issues (CMOS18 14.77) and supplements (CMOS18 14.78) -->\n        <if match="none" variable="container-title"/>\n        <else-if match="none" type="periodical" variable="supplement-number volume-title"/>\n        <!-- TODO: use `container-genre` here once available to allow a custom description of the journal volume -->\n        <else-if variable="supplement-number volume-title">\n          <text term="supplement" text-case="capitalize-first"/>\n        </else-if>\n        <else-if type="periodical" variable="supplement-number title">\n          <text term="supplement" text-case="capitalize-first"/>\n        </else-if>\n        <else-if variable="volume-title">\n          <text term="special-issue" text-case="capitalize-first"/>\n        </else-if>\n        <else-if type="periodical" variable="title">\n          <text term="special-issue" text-case="capitalize-first"/>\n        </else-if>\n      </choose>\n      <text macro="source-serial-name"/>\n      <choose>\n        <!-- \'ahead of print\' is placed akin to a series (CMOS18 14.75) -->\n        <if match="any" variable="collection-title issue number page supplement-number volume volume-title"/>\n        <else-if match="any" variable="available-date status"/>\n        <else-if type="article-journal" variable="DOI issued">\n          <text term="advance-online-publication"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-title-volume-bib">\n    <choose>\n      <if variable="volume-title">\n        <!-- Journal special issues (CMOS18 14.77) and supplements (CMOS18 14.78) -->\n        <group delimiter=", ">\n          <group delimiter=" ">\n            <text macro="source-monographic-preposition-bib"/>\n            <text macro="title-volume"/>\n          </group>\n          <text macro="source-monographic-identifier-contributors-bib"/>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <!-- Serial source identifier -->\n  <macro name="source-serial-identifier-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" type="article-magazine article-newspaper">\n          <group delimiter=". ">\n            <text macro="source-serial-identifier-volume-author-date"/>\n            <!-- newspaper edition always capitalized (CMOS18 14.89) -->\n            <text macro="label-edition-capitalized"/>\n          </group>\n          <text macro="source-serial-locator"/>\n        </if>\n        <else-if match="any" variable="issue supplement-number volume">\n          <group delimiter=": ">\n            <text macro="source-serial-identifier-volume-author-date"/>\n            <text macro="source-serial-locator"/>\n          </group>\n        </else-if>\n        <else>\n          <text macro="source-serial-identifier-volume-author-date"/>\n          <text macro="source-serial-locator"/>\n        </else>\n        <!-- TODO: If CSL adds `date-part` detection, add two further conditions to address CMOS18 14.74: delimiting with ":" if there is a `volume` and no month or `issue` or `supplement number`; delimiting with ", " or there is an `issue` or `supplement number` and no month -->\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-identifier-volume-author-date">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" type="article-magazine article-newspaper">\n          <!-- magazines and newspapers provide the full date in place of volume/issue numbers (CMOS18 14.87, 14.89) -->\n          <text variable="collection-title"/>\n          <text macro="source-serial-volume-status-bib"/>\n        </if>\n        <else-if match="any" variable="issue supplement-number volume">\n          <choose>\n            <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator"/>\n            <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n              <!-- date appears first if the review `container-title` has been substituted for a missing author (CMOS18 14.87, 14.102) -->\n              <choose>\n                <!-- extra date details only appear with a lone volume or issue -->\n                <if variable="issue volume"/>\n                <else-if variable="supplement-number"/>\n                <else-if match="any" variable="issue volume">\n                  <text macro="source-date-specific-title-first"/>\n                </else-if>\n              </choose>\n            </else-if>\n          </choose>\n          <!-- `collection-title` is for any serial with multiple series (e.g. \'4th ser.\') -->\n          <text variable="collection-title"/>\n          <group delimiter=" ">\n            <choose>\n              <if variable="volume">\n                <choose>\n                  <if variable="collection-title">\n                    <text macro="label-volume"/>\n                  </if>\n                  <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n                    <!-- provide label if a review `container-title` has been substituted for a missing author (CMOS18 14.87, 14.102) -->\n                    <choose>\n                      <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n                        <text variable="volume"/>\n                      </if>\n                      <!-- TODO: when CSL provides date part detection, volume should be lowercase if there is a month, but otherwise capitalized -->\n                      <else>\n                        <text macro="label-volume-capitalized"/>\n                      </else>\n                    </choose>\n                  </else-if>\n                  <else>\n                    <text variable="volume"/>\n                  </else>\n                </choose>\n                <group delimiter=", " prefix="(" suffix=")">\n                  <choose>\n                    <if match="any" variable="issue supplement-number">\n                      <text variable="issue"/>\n                      <text macro="label-supplement-number"/>\n                    </if>\n                    <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title">\n                      <!-- date for unsigned reviews only appears here if it did not earlier (CMOS18 14.102) -->\n                      <choose>\n                        <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n                          <text macro="source-date-specific-title-first"/>\n                        </if>\n                      </choose>\n                    </else-if>\n                    <else>\n                      <text macro="source-date-specific-title-first"/>\n                    </else>\n                  </choose>\n                </group>\n              </if>\n              <else-if match="any" variable="issue supplement-number">\n                <group delimiter=" ">\n                  <group delimiter=", ">\n                    <text macro="label-issue"/>\n                    <text macro="label-supplement-number"/>\n                  </group>\n                  <choose>\n                    <if match="any" variable="author chair collection-editor compiler composer curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n                      <text macro="source-date-specific-title-first" prefix="(" suffix=")"/>\n                    </if>\n                  </choose>\n                </group>\n              </else-if>\n            </choose>\n          </group>\n        </else-if>\n        <else>\n          <text variable="collection-title"/>\n          <choose>\n            <if match="any" type="interview post-weblog">\n              <!-- publisher possible with broadcast `interview` (CMOS18 14.110) or `post-weblog` (CMOS18 14.105) -->\n              <text variable="publisher"/>\n            </if>\n          </choose>\n          <text macro="source-serial-volume-status-bib"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-serial-volume-status-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" variable="collection-title issue number page supplement-number volume volume-title"/>\n        <else-if variable="issued"/>\n        <else-if variable="available-date">\n          <group delimiter=" ">\n            <!-- article accepted for publication and available on publisher website (CMOS18 14.75) -->\n            <!-- TODO: use CSL term for `available-date` when available -->\n            <text value="accepted"/>\n            <date form="text" variable="available-date"/>\n          </group>\n        </else-if>\n      </choose>\n      <group delimiter=" ">\n        <text macro="source-date-status-bib"/>\n        <text macro="source-date-specific-title-first"/>\n      </group>\n    </group>\n  </macro>\n  <!-- Serial source locator -->\n  <macro name="source-serial-locator">\n    <choose>\n      <if match="any" variable="locator number">\n        <group delimiter=", ">\n          <text macro="label-locator"/>\n          <!-- an article ID appears alongside locators in notes (CMOS18 14.71) -->\n          <choose>\n            <!-- if there is an `archive` with no other reference, `number` appears in `source-archive-database-number` -->\n            <if match="any" variable="archive_collection archive_location archive-place">\n              <text variable="number"/>\n            </if>\n            <else-if variable="archive"/>\n            <else>\n              <text variable="number"/>\n            </else>\n          </choose>\n        </group>\n      </if>\n      <!-- do not give pages for magazines or newspapers (CMOS18 14.87, 14.89) -->\n      <else-if match="any" type="article-magazine article-newspaper"/>\n      <else>\n        <text variable="page"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.2. Monographic sources -->\n  <macro name="source-monographic-bib">\n    <group delimiter=". ">\n      <!-- Monographic sources repeat main reference elements -->\n      <choose>\n        <if variable="container-title">\n          <group delimiter=", ">\n            <group delimiter=" ">\n              <text macro="source-monographic-preposition-bib"/>\n              <text macro="source-monographic-title-specific-title-first"/>\n            </group>\n            <text macro="source-monographic-description"/>\n            <text macro="source-monographic-identifier-bib"/>\n            <text macro="source-monographic-locator"/>\n          </group>\n        </if>\n      </choose>\n      <text macro="source-monographic-identifier-contributors-bib-container-author"/>\n      <text macro="source-series-bib"/>\n      <choose>\n        <!-- show event information here only if not collapsed with `issued` (CMOS18 14.167) -->\n        <if match="any" variable="event-date original-date original-publisher original-publisher-place publisher status">\n          <text macro="source-event-bib"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <!-- Monographic source title -->\n  <macro name="source-monographic-preposition-bib">\n    <choose>\n      <if match="any" type="broadcast motion_picture"/>\n      <else-if type="chapter" variable="container-title genre">\n        <text value="to"/>\n      </else-if>\n      <else-if type="article-journal" variable="container-title genre volume-title">\n        <text value="to"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="author composer">\n            <!-- Give preposition only for signed entries; otherwise, title is substituted -->\n            <text term="in" text-case="capitalize-first"/>\n          </if>\n        </choose>\n      </else-if>\n      <!-- if printing chapter page numbers (CMOS17/classic):\n      <else-if variable="chapter-number page title"><text term="in" text-case="capitalize-first"/></else-if>\n      -->\n      <else-if variable="chapter-number">\n        <group delimiter=" ">\n          <text macro="label-chapter-number-capitalized"/>\n          <choose>\n            <if type="song">\n              <text term="on"/>\n            </if>\n            <else>\n              <text term="in"/>\n            </else>\n          </choose>\n        </group>\n      </else-if>\n      <else>\n        <text term="in" text-case="capitalize-first"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-monographic-preposition-note">\n    <choose>\n      <if match="any" type="broadcast motion_picture"/>\n      <else-if type="chapter" variable="container-title genre">\n        <text value="to"/>\n      </else-if>\n      <else-if type="article-journal" variable="container-title genre volume-title">\n        <text value="to"/>\n      </else-if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="author composer">\n            <!-- Give preposition only for signed entries; otherwise, title is substituted -->\n            <text term="in"/>\n          </if>\n        </choose>\n      </else-if>\n      <!-- if printing chapter page numbers (CMOS17/classic):\n      <else-if variable="chapter-number page title"><text term="in"/></else-if>\n      -->\n      <else-if variable="chapter-number">\n        <group delimiter=" ">\n          <text macro="label-chapter-number"/>\n          <choose>\n            <if type="song">\n              <text term="on"/>\n            </if>\n            <else>\n              <text term="in"/>\n            </else>\n          </choose>\n        </group>\n      </else-if>\n      <else>\n        <text term="in"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-monographic-title-specific-title-first">\n    <choose>\n      <if variable="part-title">\n        <text macro="title-part"/>\n      </if>\n      <else-if variable="volume-title">\n        <text macro="title-volume"/>\n      </else-if>\n      <else>\n        <text font-style="italic" text-case="title" variable="container-title"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- Monographic source description -->\n  <macro name="source-monographic-description">\n    <choose>\n      <if match="any" type="document report software standard">\n        <!-- place description after `container-title` -->\n        <text macro="description-format-note"/>\n      </if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director issue page supplement-number volume"/>\n      <else-if match="any" type="event paper-conference performance speech">\n        <!-- unpublished conference presentations should describe the session -->\n        <text macro="description-format-note"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- Monographic source identifier -->\n  <macro name="source-monographic-identifier-bib">\n    <!-- Based on `identifier-bib` -->\n    <choose>\n      <if variable="container-title">\n        <group delimiter=", ">\n          <choose>\n            <if match="none" type="broadcast graphic map motion_picture song">\n              <!-- For audiovisual media, number information comes after `title`, not `container-title`; `song` places album catalogue `number` with `publisher` (CMOS18 14.163-164) -->\n              <text macro="identifier-number-bib"/>\n            </if>\n          </choose>\n          <text macro="label-version"/>\n          <!-- use note form as `edition` is not capitalized here -->\n          <text macro="identifier-edition-note"/>\n          <text macro="source-monographic-identifier-contributors-and-volume-bib-specific-title-first"/>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-monographic-identifier-contributors-bib">\n    <choose>\n      <if variable="container-author container-title">\n        <!-- set off `container-author` from other contributors in the bibliography (CMOS18 14.12; for page location, CMOS17 14.110) -->\n        <names variable="container-author">\n          <label form="verb" suffix=" "/>\n          <name and="text" initialize="false"/>\n        </names>\n        <!-- other contributors shift to `source-monographic-identifier-contributors-bib-container-author` -->\n      </if>\n      <else>\n        <group delimiter=", ">\n          <names variable="editor-translator">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="editor translator">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="guest">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="host">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="chair organizer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="illustrator narrator compiler curator">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=", " variable="series-creator executive-producer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="producer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editorial-director">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="any" type="broadcast performance">\n              <names variable="script-writer">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="director">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="performer">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" type="song thesis">\n              <!-- Song contributors attached to album (CMOS18 14.163) -->\n              <names variable="contributor">\n                <label form="verb" suffix=" "/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-monographic-identifier-contributors-bib-container-author">\n    <!-- set off `container-author` from other contributors in the bibliography (CMOS18 14.12; for page location, CMOS17 14.110) -->\n    <choose>\n      <if variable="container-author container-title">\n        <group delimiter=". ">\n          <names variable="editor-translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="editor translator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="guest">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="host">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="chair organizer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="illustrator narrator compiler curator">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names delimiter=". " variable="series-creator executive-producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="producer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="editorial-director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="any" type="broadcast performance">\n              <names variable="script-writer">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n          <names variable="director">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <names variable="performer">\n            <label form="verb" suffix=" " text-case="capitalize-first"/>\n            <name and="text" initialize="false"/>\n          </names>\n          <choose>\n            <if match="none" type="song thesis">\n              <!-- Song contributors attached to album (CMOS18 14.163) -->\n              <names variable="contributor">\n                <label form="verb" suffix=" " text-case="capitalize-first"/>\n                <name and="text" initialize="false"/>\n              </names>\n            </if>\n          </choose>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-monographic-identifier-contributors-and-volume-bib-specific-title-first">\n    <group delimiter=", ">\n      <text macro="source-monographic-identifier-contributors-bib"/>\n      <text macro="source-monographic-identifier-volume-bib-specific-title-first"/>\n      <choose>\n        <if match="any" variable="number-of-volumes part-number part-title volume volume-title">\n          <!-- cite multivolume `collection-editor`; otherwise it belongs with `collection-title` -->\n          <names variable="collection-editor">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n        </if>\n      </choose>\n      <choose>\n        <if match="any" variable="part-number part-title volume volume-title"/>\n        <else-if variable="page"/>\n        <else>\n          <text macro="label-number-of-volumes"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-monographic-identifier-volume-bib-specific-title-first">\n    <!-- based on `identifier-volume-bib-specific-title-first` without capitalization; giving `container-title` rather than `title-primary`; and ensuring volume number -->\n    <group delimiter=", ">\n      <choose>\n        <if variable="part-number part-title volume volume-title">\n          <!-- part and title with individual titles -->\n          <group delimiter=" ">\n            <text macro="label-part-number"/>\n            <text value="of"/>\n            <text macro="title-volume"/>\n          </group>\n          <group delimiter=" ">\n            <text macro="label-volume"/>\n            <text value="of"/>\n            <text font-style="italic" text-case="title" variable="container-title"/>\n          </group>\n        </if>\n        <else-if match="any" variable="part-title volume-title">\n          <group delimiter=" ">\n            <choose>\n              <if variable="part-number volume">\n                <group delimiter=", ">\n                  <text macro="label-volume"/>\n                  <text macro="label-part-number"/>\n                  <text value="of"/>\n                </group>\n              </if>\n              <else-if variable="part-number">\n                <text macro="label-part-number"/>\n                <text value="of"/>\n              </else-if>\n              <else-if variable="volume">\n                <text macro="label-volume"/>\n                <text value="of"/>\n              </else-if>\n            </choose>\n            <text font-style="italic" text-case="title" variable="container-title"/>\n          </group>\n        </else-if>\n        <else-if variable="part-number">\n          <text macro="label-volume"/>\n          <text macro="label-part-number"/>\n        </else-if>\n        <else-if is-numeric="volume" match="none">\n          <text macro="label-volume"/>\n        </else-if>\n        <else-if variable="container-title">\n          <!-- remove condition in styles that print chapter page numbers (CMOS17/classic) -->\n          <text macro="label-volume"/>\n        </else-if>\n        <else-if is-numeric="volume" variable="page">\n          <choose>\n            <!-- check for variables that might come between the volume and page number -->\n            <if variable="collection-editor">\n              <text macro="label-volume"/>\n            </if>\n          </choose>\n        </else-if>\n        <else>\n          <text macro="label-volume"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Monographic source locator -->\n  <macro name="source-monographic-locator">\n    <choose>\n      <!-- archival locators appear after the shelfmark (CMOS18 14.127) -->\n      <if locator="column" variable="archive archive_location"/>\n      <else-if locator="folio" variable="archive archive_location"/>\n      <else-if locator="page" variable="archive archive_location"/>\n      <else-if is-numeric="volume" locator="page">\n        <!-- separate a volume and page number with a colon (CMOS18 14.18) -->\n        <group delimiter=":">\n          <choose>\n            <if match="any" variable="part-number part-title volume-title"/>\n            <else-if variable="collection-editor"/>\n            <else>\n              <text variable="volume"/>\n            </else>\n          </choose>\n          <text variable="locator"/>\n        </group>\n      </else-if>\n      <else-if variable="locator">\n        <text macro="label-locator"/>\n      </else-if>\n      <!-- remove `container-title` condition in styles that print chapter page numbers (CMOS17/classic) -->\n      <else-if variable="container-title"/>\n      <else-if is-numeric="volume" variable="page">\n        <!-- collapse the volume and page number if adjacent (CMOS18 14.18) -->\n        <group delimiter=":">\n          <choose>\n            <!-- check for variables that might come between the volume and page number -->\n            <if match="any" variable="part-number part-title volume-title"/>\n            <else-if variable="collection-editor"/>\n            <else>\n              <text variable="volume"/>\n            </else>\n          </choose>\n          <text variable="page"/>\n        </group>\n      </else-if>\n      <!-- archival locators appear after the shelfmark (CMOS18 14.127) -->\n      <else-if variable="archive archive_location page"/>\n      <else>\n        <text variable="page"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.3. Series -->\n  <macro name="source-series-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" variable="number-of-volumes part-number part-title volume volume-title">\n          <text macro="source-series-title"/>\n        </if>\n        <else-if variable="collection-editor collection-title">\n          <!-- `collection-editor` belongs with `collection-title` if the item is not multivolume -->\n          <text text-case="title" variable="collection-title"/>\n          <names variable="collection-editor">\n            <label form="verb" suffix=" "/>\n            <name and="text" initialize="false"/>\n          </names>\n          <text macro="label-collection-number"/>\n          <text macro="label-issue"/>\n        </else-if>\n        <else>\n          <text macro="source-series-title"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-series-title">\n    <group delimiter=", ">\n      <choose>\n        <if variable="issue">\n          <text text-case="title" variable="collection-title"/>\n          <text macro="label-collection-number"/>\n          <text macro="label-issue"/>\n        </if>\n        <else-if is-numeric="collection-number" variable="collection-title">\n          <group delimiter=" ">\n            <text text-case="title" variable="collection-title"/>\n            <text variable="collection-number"/>\n          </group>\n        </else-if>\n        <else-if variable="collection-title">\n          <text text-case="title" variable="collection-title"/>\n          <text variable="collection-number"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <!-- 4.4. Event -->\n  <macro name="source-event-bib">\n    <group delimiter=" ">\n      <choose>\n        <!-- omit types that provide event information in description  -->\n        <if match="any" type="interview" variable="interviewer"/>\n        <else-if type="personal_communication" variable="recipient"/>\n        <else-if match="any" type="review review-book" variable="reviewed-author reviewed-genre reviewed-title"/>\n        <else-if match="any" variable="event event-date event-title">\n          <!-- TODO: To prevent Zotero from printing `event-place`, due to its double-mapping of `publisher-place` and `event-place`. Remove this when that is changed. -->\n          <choose>\n            <if type="paper-conference">\n              <choose>\n                <if match="none" variable="collection-editor compiler editor editorial-director issue page supplement-number volume">\n                  <!-- Don\'t print event info for conference papers published in proceedings -->\n                  <text macro="source-event-status-bib"/>\n                  <text macro="source-event-description-bib"/>\n                </if>\n              </choose>\n            </if>\n            <else>\n              <!-- For other item types, print event info even if published (e.g. collection catalogs, performance programs). -->\n              <text macro="source-event-status-bib"/>\n              <text macro="source-event-description-bib"/>\n            </else>\n          </choose>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-event-place-first">\n    <!-- for descriptive elements for interviews, reviews, letters -->\n    <choose>\n      <if match="any" variable="event event-date event-title">\n        <group delimiter=", ">\n          <text variable="event-title"/>\n          <text variable="event-place"/>\n          <text macro="date-event-full"/>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-event-status-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="broadcast" variable="status">\n          <!-- \'aired\', \'performed\', etc. (CMOS18 14.165) -->\n          <text text-case="capitalize-first" variable="status"/>\n        </if>\n        <else-if type="paper-conference">\n          <choose>\n            <if variable="genre">\n              <text text-case="capitalize-first" value="presented"/>\n            </if>\n            <else>\n              <text form="short" term="paper-conference" text-case="capitalize-first"/>\n              <text value="presented"/>\n            </else>\n          </choose>\n          <choose>\n            <if variable="event-title">\n              <text term="at"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if type="song">\n          <text text-case="capitalize-first" value="recorded"/>\n          <choose>\n            <if variable="event-title">\n              <text term="at"/>\n            </if>\n          </choose>\n        </else-if>\n        <else-if variable="event-date issued"/>\n        <else-if variable="issued"/>\n        <else>\n          <text text-case="capitalize-first" variable="status"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-event-title">\n    <choose>\n      <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated yet. This macro ensures that either `event` or `event-title` can be accepted. Remove if processor logic and application adoption can handle this. -->\n      <if variable="event-title">\n        <text variable="event-title"/>\n      </if>\n      <else>\n        <text variable="event"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-event-title-capitalized">\n    <choose>\n      <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated yet. This macro ensures that either `event` or `event-title` can be accepted. Remove if processor logic and application adoption can handle this. -->\n      <if variable="event-title">\n        <text text-case="capitalize-first" variable="event-title"/>\n      </if>\n      <else>\n        <text text-case="capitalize-first" variable="event"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-event-description-bib">\n    <group delimiter=", ">\n      <choose>\n        <if type="song">\n          <text macro="source-event-title"/>\n        </if>\n        <else-if type="paper-conference" variable="genre">\n          <text macro="source-event-title-capitalized"/>\n        </else-if>\n        <else-if type="paper-conference">\n          <text macro="source-event-title"/>\n        </else-if>\n        <else>\n          <text macro="source-event-title-capitalized"/>\n        </else>\n      </choose>\n      <text macro="date-event-full"/>\n      <text variable="event-place"/>\n    </group>\n  </macro>\n  <!-- 4.5. Facts of publication -->\n  <macro name="source-monographic-publication-bib">\n    <group delimiter=". ">\n      <choose>\n        <!-- `patent` date in identification (CMOS18 14.158) -->\n        <if type="patent"/>\n        <!-- omit serial types -->\n        <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book"/>\n        <else-if match="any" variable="collection-editor compiler editor editorial-director">\n          <!-- monographic types -->\n          <text macro="source-publication-and-date-bib"/>\n        </else-if>\n        <!-- omit serial types -->\n        <else-if match="any" type="interview paper-conference"/>\n        <else>\n          <!-- monographic types -->\n          <text macro="source-publication-and-date-bib"/>\n        </else>\n      </choose>\n      <text macro="source-publication-original-title-bib"/>\n    </group>\n  </macro>\n  <macro name="source-publication-and-date-bib">\n    <group delimiter=", ">\n      <choose>\n        <if match="any" type="post webpage">\n          <!-- print `container-title` on `post` or `webpage` in the same way as `publisher` (CMOS18 14.104-106) -->\n          <!-- avoid possible repetition of `container-title` with author-date: -->\n          <choose>\n            <if variable="publisher">\n              <text text-case="title" variable="container-title"/>\n            </if>\n            <else-if type="webpage" variable="container-title container-title-short"/>\n            <else>\n              <text text-case="title" variable="container-title"/>\n            </else>\n          </choose>\n        </if>\n      </choose>\n      <choose>\n        <if type="broadcast" variable="DOI">\n          <!-- a podcast publisher appears before the date, whereas the network of an aired show appears after (CMOS18 14.165); unfortunately CSL stores both in `publisher` -->\n          <!-- TODO: `DOI` or `URL` detection is the only way to distinguish radio/TV from podcasts, but it is obviously imprecise; modify if CSL provides a `podcast` type -->\n          <text macro="source-publication-history-bib"/>\n        </if>\n        <else-if type="broadcast" variable="URL">\n          <text macro="source-publication-history-bib"/>\n        </else-if>\n        <else-if type="broadcast"/>\n        <else>\n          <text macro="source-publication-history-bib"/>\n        </else>\n      </choose>\n      <group delimiter=" ">\n        <text macro="source-date-status-bib"/>\n        <text macro="source-date-specific-title-first"/>\n      </group>\n      <choose>\n        <if type="broadcast" variable="URL"/>\n        <else-if type="broadcast">\n          <group delimiter=" ">\n            <text term="on"/>\n            <text macro="source-publication-history-bib"/>\n          </group>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <!-- Facts of publication elements -->\n  <macro name="source-publication-description-bib">\n    <choose>\n      <if type="article" variable="genre"/>\n      <else-if type="article">\n        <!-- `preprint` term attached to repository name, but specific working paper descriptors appear in description (CMOS18 14.76, 14.116) -->\n        <text term="preprint" text-case="capitalize-first"/>\n      </else-if>\n      <else-if type="thesis">\n        <!-- thesis type appears with university name (CMOS18 14.113) -->\n        <text text-case="capitalize-first" variable="genre"/>\n      </else-if>\n      <else-if match="any" variable="original-publisher original-publisher-place">\n        <choose>\n          <!-- `edition` provides an alternative label to `reprint` (CMOS18 14.16) -->\n          <if match="any" variable="edition original-title"/>\n          <else-if match="none" type="book chapter classic entry entry-dictionary entry-encyclopedia interview musical_score pamphlet paper-conference report thesis"/>\n          <else-if variable="issued original-date">\n            <text text-case="capitalize-first" value="reprint"/>\n          </else-if>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-publication-history-bib">\n    <choose>\n      <if variable="original-title">\n        <!-- `original-title` is covered in `source-publication-original-title-bib` -->\n        <group delimiter=", ">\n          <text macro="source-publication-description-bib"/>\n          <text macro="source-publication-publisher-bib"/>\n        </group>\n      </if>\n      <else-if match="any" variable="edition original-publisher original-publisher-place">\n        <group delimiter=". ">\n          <!-- full stop to separate original date if `original-publisher` (CMOS18 14.16) -->\n          <group delimiter=", ">\n            <text macro="source-publication-publisher-original-bib"/>\n            <text macro="source-date-original"/>\n          </group>\n          <group delimiter=". ">\n            <choose>\n              <if variable="issued original-date">\n                <text macro="label-edition-capitalized"/>\n              </if>\n            </choose>\n            <group delimiter=", ">\n              <text macro="source-publication-description-bib"/>\n              <text macro="source-publication-publisher-bib"/>\n            </group>\n          </group>\n        </group>\n      </else-if>\n      <else>\n        <group delimiter="; ">\n          <!-- semicolon to separate original date if no publisher (CMOS18 14.165) -->\n          <text macro="source-date-original"/>\n          <group delimiter=", ">\n            <text macro="source-publication-description-bib"/>\n            <text macro="source-publication-publisher-bib"/>\n          </group>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-publication-original-title-bib">\n    <!-- Work originally published under a different title (CMOS18 13.101) -->\n    <choose>\n      <if variable="original-title">\n        <group delimiter=" ">\n          <text term="original-work-published" text-case="capitalize-first"/>\n          <group delimiter=", ">\n            <names variable="original-author">\n              <name and="text" initialize="false"/>\n            </names>\n            <text font-style="italic" text-case="title" variable="original-title"/>\n          </group>\n          <group delimiter=", " prefix="(" suffix=")">\n            <text macro="source-publication-publisher-original-bib"/>\n            <text macro="source-date-original"/>\n          </group>\n        </group>\n      </if>\n    </choose>\n  </macro>\n  <macro name="source-publication-publisher-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="thesis" variable="publisher">\n          <text text-case="capitalize-first" variable="publisher"/>\n        </if>\n        <else-if variable="publisher">\n          <group delimiter=": ">\n            <!-- <text text-case="capitalize-first" variable="publisher-place"/> -->\n            <text text-case="capitalize-first" variable="publisher"/>\n          </group>\n        </else-if>\n        <!-- TODO: remove conditional when Zotero fixes double-mapping of `event-place` -->\n        <else-if match="any" variable="event-date event-title"/>\n        <else>\n          <text text-case="capitalize-first" variable="publisher-place"/>\n        </else>\n      </choose>\n      <choose>\n        <if type="song">\n          <!-- Album catalogue number follows label name (CMOS18 14.163-164) -->\n          <text variable="number"/>\n        </if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="source-publication-publisher-original-bib">\n    <choose>\n      <if variable="original-publisher">\n        <group delimiter=": ">\n          <!-- <text text-case="capitalize-first" variable="original-publisher-place"/> -->\n          <text text-case="capitalize-first" variable="original-publisher"/>\n        </group>\n      </if>\n      <else>\n        <text text-case="capitalize-first" variable="original-publisher-place"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.6. Date -->\n  <macro name="source-date-specific-title-first">\n    <!-- date for the last-mentioned title, for author-date or notes and bibliography leading with volume title (CMOS18 14.21) -->\n    <choose>\n      <if variable="available-date volume-title">\n        <!-- TODO: Is there a better CSL variable for a date of a multivolume work (CMOS18 14.21)? -->\n        <date date-parts="year" form="numeric" variable="available-date"/>\n      </if>\n      <else-if variable="available-date part-title">\n        <date date-parts="year" form="numeric" variable="available-date"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <!-- serial types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for CMOS17 author-date: -->\n        <!-- <text macro="source-date-issued-full-serial"/> -->\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else-if>\n      <else-if match="any" variable="collection-editor compiler editor editorial-director">\n        <!-- monographic types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for CMOS17 author-date: -->\n        <!-- <text macro="source-date-issued-full-serial"/> -->\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else-if>\n      <else>\n        <!-- monographic types -->\n        <text macro="source-date-issued-month-day"/>\n        <!-- for notes and bibliography leading with volume title (CMOS18 14.21): -->\n        <!-- <text macro="source-date-issued-or-status"/> -->\n      </else>\n    </choose>\n  </macro>\n  <!-- Date elements -->\n  <macro name="source-date-issued-month-day">\n    <!-- Use with author-date -->\n    <!-- Give full date for more ephemeral types -->\n    <!-- NB: any changes must also be applied to `source-date-original-month-day` -->\n    <choose>\n      <if type="personal_communication" variable="event-date issued">\n        <!-- Provide issue date for letters listed under event-date -->\n        <text macro="date-issued-year"/>\n      </if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="DOI URL">\n            <!-- Online reference works use full dates (CMOS18 14.131) -->\n            <text macro="date-issued-month-day"/>\n          </if>\n        </choose>\n      </else-if>\n      <else-if match="any" type="article broadcast collection dataset document event graphic manuscript map patent performance personal_communication post software song speech standard webpage">\n        <text macro="date-issued-month-day"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <text macro="source-date-issued-month-day-serial"/>\n      </else-if>\n      <!-- omit monographic types -->\n      <else-if match="any" variable="collection-editor compiler editor editorial-director"/>\n      <else-if match="any" type="interview paper-conference">\n        <!-- serial types -->\n        <text macro="source-date-issued-month-day-serial"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-date-issued-month-day-serial">\n    <choose>\n      <if match="any" type="article-magazine article-newspaper">\n        <!-- magazines and newspapers provide the full date in place of volume/issue numbers (CMOS18 14.87, 14.89) -->\n        <text macro="date-issued-month-day"/>\n      </if>\n      <else-if match="any" variable="issue supplement-number volume">\n        <text macro="date-issued-month"/>\n      </else-if>\n      <else>\n        <text macro="date-issued-month-day"/>\n      </else>\n    </choose>\n  </macro>\n  <macro name="source-date-original">\n    <text macro="source-date-original-month-day"/>\n  </macro>\n  <macro name="source-date-original-month-day">\n    <!-- Give full date for more ephemeral types -->\n    <!-- Macro derived from `source-date-issued-month-day` -->\n    <choose>\n      <if type="personal_communication" variable="event-date original-date">\n        <!-- Provide original date for letters listed under event-date -->\n        <text macro="date-original-year"/>\n      </if>\n      <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="DOI URL">\n            <!-- Online reference works use full dates (CMOS18 14.131) -->\n            <text macro="date-original-month-day"/>\n          </if>\n        </choose>\n      </else-if>\n      <else-if match="any" type="article broadcast collection dataset document event graphic manuscript map patent performance personal_communication post software song speech standard webpage">\n        <text macro="date-original-month-day"/>\n      </else-if>\n      <else-if match="any" type="article-journal article-magazine article-newspaper periodical post-weblog review review-book">\n        <choose>\n          <if match="any" variable="issue supplement-number volume">\n            <text macro="date-original-month"/>\n          </if>\n          <else>\n            <text macro="date-original-month-day"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if match="any" type="interview paper-conference">\n        <choose>\n          <if match="any" variable="collection-editor compiler editor editorial-director"/>\n          <else-if match="any" variable="issue supplement-number volume">\n            <text macro="date-original-month"/>\n          </else-if>\n          <else>\n            <text macro="date-original-month-day"/>\n          </else>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-date-status-bib">\n    <choose>\n      <if type="broadcast" variable="event-title issued status"/>\n      <!-- on a `broadcast`, if there is an `event-title`, `status` appears with `event-date` as part of `source-event` (CMOS18 14.165) -->\n      <else-if variable="issued status">\n        <!-- `status` specifies date type, e.g. \'effective\', \'last modified\', \'approved\' (CMOS18 14.104 for `webpage`; CMOS18 14.159 for `standard`) -->\n        <choose>\n          <if type="webpage" variable="container-title">\n            <text variable="status"/>\n          </if>\n          <else-if type="webpage" variable="author publisher">\n            <text variable="status"/>\n          </else-if>\n          <else-if type="webpage" variable="translator publisher">\n            <text variable="status"/>\n          </else-if>\n          <else-if type="webpage">\n            <!-- capitalize `status` if there is nothing else after the `title` (either no website title or substituted publisher) -->\n            <text text-case="capitalize-first" variable="status"/>\n          </else-if>\n          <else-if match="any" variable="original-date original-publisher original-publisher-place original-title publisher">\n            <text variable="status"/>\n          </else-if>\n          <else>\n            <text text-case="capitalize-first" variable="status"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if type="broadcast" variable="issued URL"/>\n      <else-if type="broadcast" variable="issued">\n        <!-- `status` of a radio or TV broadcast is \'aired\' if unspecified (CMOS18 14.165) -->\n        <text text-case="capitalize-first" value="aired"/>\n      </else-if>\n      <else-if type="software" variable="issued publisher">\n        <!-- `status` of software is \'released\' if unspecified (CMOS18 14.169) -->\n        <choose>\n          <if match="any" variable="author chair collection-editor compiler composer contributor curator director editor editor-translator editorial-director executive-producer guest host illustrator organizer producer series-creator translator">\n            <!-- lowercase if `publisher` is adjacent -->\n            <text value="released"/>\n          </if>\n          <else>\n            <text text-case="capitalize-first" value="released"/>\n          </else>\n        </choose>\n      </else-if>\n      <else-if type="software" variable="original-date">\n        <!-- lowercase if `original-date` is adjacent -->\n        <text value="released"/>\n      </else-if>\n      <else-if type="software" variable="issued">\n        <!-- capitalize if `publisher` is not present -->\n        <text text-case="capitalize-first" value="released"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 4.7. Locator (including page references) -->\n  <macro name="source-locator-author-date">\n    <choose>\n      <if match="any" type="entry entry-dictionary entry-encyclopedia">\n        <choose>\n          <if match="any" variable="author locator">\n            <text macro="label-locator"/>\n          </if>\n          <else-if variable="container-title title">\n            <!-- unsigned reference entry title appears in the locator (CMOS18 13.130) -->\n            <group delimiter=" ">\n              <choose>\n                <if match="none" variable="DOI URL">\n                  <!-- Only print reference entries use `sub-verbo` (CMOS18 14.131) -->\n                  <text form="short" term="sub-verbo"/>\n                </if>\n              </choose>\n              <text form="short" quotes="true" variable="title"/>\n            </group>\n          </else-if>\n        </choose>\n      </if>\n      <else>\n        <text macro="label-locator"/>\n      </else>\n    </choose>\n  </macro>\n  <!-- 4.8. Medium -->\n  <macro name="source-medium-bib">\n    <group delimiter=", ">\n      <text text-case="capitalize-first" variable="medium"/>\n      <text variable="scale"/>\n      <text variable="dimensions"/>\n    </group>\n  </macro>\n  <macro name="source-medium-note">\n    <group delimiter=", ">\n      <text variable="medium"/>\n      <text variable="scale"/>\n      <text variable="dimensions"/>\n    </group>\n  </macro>\n  <!-- 4.9. Archival location -->\n  <macro name="source-archive-bib">\n    <group delimiter=" ">\n      <choose>\n        <if type="graphic">\n          <text macro="source-archive-reference-institution-first"/>\n        </if>\n        <else>\n          <text macro="source-archive-reference-location-first-bib"/>\n        </else>\n      </choose>\n      <text macro="source-archive-database-number" prefix="(" suffix=")"/>\n    </group>\n  </macro>\n  <macro name="source-archive-note">\n    <group delimiter=" ">\n      <choose>\n        <if type="graphic">\n          <text macro="source-archive-reference-institution-first"/>\n        </if>\n        <else>\n          <text macro="source-archive-reference-location-first-note"/>\n        </else>\n      </choose>\n      <text macro="source-archive-database-number" prefix="(" suffix=")"/>\n    </group>\n  </macro>\n  <!-- Archival elements -->\n  <macro name="source-archive-database-number">\n    <!-- database identifier, if not included elsewhere (CMOS18 14.113) -->\n    <choose>\n      <if match="any" variable="archive_collection archive_location archive-place"/>\n      <!-- `number` never shown elsewhere with a thesis -->\n      <else-if type="thesis">\n        <text variable="number"/>\n      </else-if>\n      <!-- `number` shown with `genre` -->\n      <else-if match="any" type="dataset entry song" variable="genre"/>\n      <else-if variable="archive">\n        <text variable="number"/>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-archive-locator">\n    <choose>\n      <!-- physical locators with archival references appear after the shelfmark (CMOS18 14.127) -->\n      <if locator="column" variable="archive archive_location">\n        <!-- archival locators must always be labelled to avoid confusion with `archive_location` (CMOS18 14.123) -->\n        <text macro="label-locator-all"/>\n      </if>\n      <else-if locator="folio" variable="archive archive_location">\n        <text macro="label-locator-all"/>\n      </else-if>\n      <else-if locator="page" variable="archive archive_location">\n        <text macro="label-locator-all"/>\n      </else-if>\n      <else-if variable="archive archive_location page">\n        <choose>\n          <if is-numeric="page">\n            <!-- TODO: remove this conditional when `page` parsing is fixed for different locator types -->\n            <text macro="label-page"/>\n          </if>\n          <else>\n            <text variable="page"/>\n          </else>\n        </choose>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="source-archive-reference-institution-first">\n    <!-- Archive (gallery) name first for art (CMOS18 14.133) -->\n    <group delimiter=", ">\n      <text variable="archive"/>\n      <text variable="archive-place"/>\n      <text variable="archive_collection"/>\n      <text variable="archive_location"/>\n      <text macro="source-archive-locator"/>\n    </group>\n  </macro>\n  <macro name="source-archive-reference-location-first-bib">\n    <!-- Order of elements begins with the most specific (CMOS18 14.128) -->\n    <group delimiter=". ">\n      <group delimiter=", ">\n        <text text-case="capitalize-first" variable="archive_location"/>\n        <text macro="source-archive-locator"/>\n      </group>\n      <text variable="archive_collection"/>\n      <group delimiter=", ">\n        <text variable="archive"/>\n        <text variable="archive-place"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="source-archive-reference-location-first-note">\n    <!-- Order of elements begins with the most specific (CMOS18 14.127) -->\n    <group delimiter=", ">\n      <text variable="archive_location"/>\n      <text macro="source-archive-locator"/>\n      <text variable="archive_collection"/>\n      <text variable="archive"/>\n      <text variable="archive-place"/>\n    </group>\n  </macro>\n  <!-- 4.10. URL or persistent identifier -->\n  <macro name="source-date-accessed-DOI-URL-bib">\n    <group delimiter=". ">\n      <choose>\n        <if variable="DOI"/>\n        <else-if match="any" variable="available-date event-date issued status"/>\n        <else-if variable="accessed URL">\n          <group delimiter=" ">\n            <text term="accessed" text-case="capitalize-first"/>\n            <date form="text" variable="accessed"/>\n          </group>\n        </else-if>\n      </choose>\n      <text macro="source-DOI-URL"/>\n    </group>\n  </macro>\n  <macro name="source-DOI-URL">\n    <choose>\n      <if variable="DOI">\n        <text prefix="https://doi.org/" variable="DOI"/>\n      </if>\n      <else-if variable="URL">\n        <text variable="URL"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 5. Notes -->\n  <!-- TODO: add variables for distributor and exhibitions if available in CSL -->\n  <!-- 6. Legal references: Bluebook style (shared with APA) -->\n  <!-- Where APA or Chicago diverge from Bluebook, the official manual is followed -->\n  <macro name="legal-reference">\n    <!-- Type usage:\n\n         `bill`\n         : bills, resolutions, federal reports\n\n         `legal_case`\n         : all legal and court cases\n\n         `hearing`\n         : hearings and testimony\n\n         `legislation`\n         : statutes, constitutional items, and charters\n\n         `regulation`\n         : codified regulations, uncodified regulations, executive orders\n\n         `treaty`\n         : treaties\n    -->\n    <group delimiter=", ">\n      <choose>\n        <if type="treaty">\n          <text macro="legal-title"/>\n          <names variable="author">\n            <!-- Treaty parties should be included at least for bilateral treaties (Bluebook 21.4.2) -->\n            <name delimiter="-" et-al-min="100" et-al-use-first="99" form="short" initialize="false"/>\n          </names>\n          <text macro="legal-date"/>\n          <!-- treaty source/report in addition to URL (Bluebook 21.4.5) -->\n          <text macro="legal-source"/>\n        </if>\n        <else>\n          <group delimiter=" ">\n            <group delimiter=", ">\n              <text macro="legal-title"/>\n              <text macro="legal-source"/>\n            </group>\n            <text macro="legal-date"/>\n            <text macro="legal-identifier"/>\n          </group>\n        </else>\n      </choose>\n      <group delimiter=" ">\n        <!-- locator for use in notes -->\n        <choose>\n          <if locator="page" variable="page">\n            <text term="at"/>\n          </if>\n        </choose>\n        <text macro="label-locator"/>\n      </group>\n    </group>\n  </macro>\n  <!-- 6.1. Legal date -->\n  <macro name="legal-date">\n    <choose>\n      <if type="treaty">\n        <text macro="date-issued-full"/>\n      </if>\n      <else-if type="legal_case">\n        <text macro="legal-date-case"/>\n      </else-if>\n      <else-if match="any" type="bill hearing legislation regulation">\n        <group delimiter=" " prefix="(" suffix=")">\n          <group delimiter=" ">\n            <text macro="date-original-year"/>\n            <text form="symbol" term="and"/>\n          </group>\n          <choose>\n            <if variable="issued">\n              <text macro="date-issued-year"/>\n            </if>\n            <else>\n              <!-- Show proposal date for uncodified regulations. Assume date is entered literally ala "proposed May 23, 2016". -->\n              <!-- TODO: Add `proposed` date here if that becomes available -->\n              <date form="text" variable="submitted"/>\n            </else>\n          </choose>\n        </group>\n      </else-if>\n    </choose>\n  </macro>\n  <macro name="legal-date-case">\n    <group delimiter=" " prefix="(" suffix=")">\n      <text variable="authority"/>\n      <choose>\n        <if variable="container-title">\n          <!-- Print only year for cases published in reporters-->\n          <text macro="date-issued-year"/>\n        </if>\n        <else>\n          <text macro="date-issued-full"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- 6.2.1. Legal title -->\n  <macro name="legal-title">\n    <choose>\n      <if match="any" type="bill legal_case legislation regulation treaty">\n        <text text-case="title" variable="title"/>\n      </if>\n      <else-if type="hearing">\n        <!-- use standard format (Bluebook 13.3) -->\n        <group delimiter=": " font-style="italic">\n          <text text-case="capitalize-first" variable="title"/>\n          <group delimiter=" ">\n            <text term="hearing" text-case="capitalize-first"/>\n            <group delimiter=" ">\n              <text term="on"/>\n              <text variable="number"/>\n            </group>\n            <group delimiter=" ">\n              <text value="before the"/>\n              <text variable="section"/>\n            </group>\n          </group>\n        </group>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- 6.2.2. Legal identifier -->\n  <macro name="legal-identifier">\n    <group delimiter=" " prefix="(" suffix=")">\n      <choose>\n        <if type="hearing">\n          <!-- Use the \'verb\' form of the hearing term to hold \'testimony of\' -->\n          <text form="verb" term="hearing"/>\n          <names variable="author">\n            <name and="symbol" initialize="false"/>\n          </names>\n        </if>\n        <else-if match="any" type="bill legislation regulation">\n          <!-- For uncodified regulations, assume future code section is in `status`. -->\n          <text variable="status"/>\n        </else-if>\n      </choose>\n    </group>\n  </macro>\n  <macro name="legal-identifier-bill-report">\n    <group delimiter=" ">\n      <text variable="genre"/>\n      <choose>\n        <if match="any" variable="authority chapter-number container-title">\n          <text variable="number"/>\n        </if>\n        <else>\n          <!-- If there is no legislative body, session number, or code/record title, assume the item is a congressional report and include \'No.\' label. -->\n          <text macro="label-number-capitalized"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- 6.3. Legal source -->\n  <macro name="legal-source">\n    <!-- Expect legal item `container-title` to be stored in short form -->\n    <choose>\n      <if type="bill">\n        <text macro="legal-source-bill"/>\n      </if>\n      <else-if type="hearing">\n        <text macro="legal-source-hearing"/>\n      </else-if>\n      <else-if type="legal_case">\n        <text macro="legal-source-case"/>\n      </else-if>\n      <else-if type="legislation">\n        <text macro="legal-source-legislation"/>\n      </else-if>\n      <else-if type="regulation">\n        <text macro="legal-source-regulation"/>\n      </else-if>\n      <else-if type="treaty">\n        <text macro="legal-source-treaty"/>\n      </else-if>\n    </choose>\n  </macro>\n  <!-- Legal source types -->\n  <macro name="legal-source-bill">\n    <group delimiter=", ">\n      <text macro="legal-identifier-bill-report"/>\n      <group delimiter=" ">\n        <text variable="authority"/>\n        <!-- `chapter-number` is a session number -->\n        <text variable="chapter-number"/>\n      </group>\n      <group delimiter=" ">\n        <text variable="volume"/>\n        <text variable="container-title"/>\n        <text variable="page-first"/>\n      </group>\n    </group>\n  </macro>\n  <macro name="legal-source-case">\n    <group delimiter=" ">\n      <choose>\n        <if variable="container-title">\n          <text variable="volume"/>\n          <text variable="container-title"/>\n          <text macro="label-section-symbol"/>\n          <choose>\n            <if match="any" variable="page page-first">\n              <text variable="page-first"/>\n            </if>\n            <else>\n              <text value="___"/>\n            </else>\n          </choose>\n        </if>\n        <else>\n          <text macro="label-number-capitalized"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <macro name="legal-source-hearing">\n    <group delimiter=" ">\n      <text variable="authority"/>\n      <!-- `chapter-number` is a session number -->\n      <text variable="chapter-number"/>\n    </group>\n  </macro>\n  <macro name="legal-source-legislation">\n    <choose>\n      <if variable="number">\n        <!-- `number` is a public law number -->\n        <group delimiter=", ">\n          <group delimiter=" ">\n            <choose>\n              <if variable="genre">\n                <text text-case="capitalize-first" variable="genre"/>\n              </if>\n              <else>\n                <text form="short" term="legislation" text-case="capitalize-first"/>\n              </else>\n            </choose>\n            <text macro="label-number-capitalized"/>\n          </group>\n          <group delimiter=" ">\n            <text variable="volume"/>\n            <text variable="container-title"/>\n            <text variable="page-first"/>\n          </group>\n        </group>\n      </if>\n      <else>\n        <group delimiter=" ">\n          <text variable="volume"/>\n          <text variable="container-title"/>\n          <choose>\n            <if variable="section">\n              <text macro="label-section-symbol"/>\n            </if>\n            <else>\n              <text variable="page-first"/>\n            </else>\n          </choose>\n        </group>\n      </else>\n    </choose>\n  </macro>\n  <macro name="legal-source-regulation">\n    <group delimiter=", ">\n      <group delimiter=" ">\n        <text variable="genre"/>\n        <text macro="label-number-capitalized"/>\n      </group>\n      <group delimiter=" ">\n        <text variable="volume"/>\n        <text variable="container-title"/>\n        <choose>\n          <if variable="section">\n            <text macro="label-section-symbol"/>\n          </if>\n          <else>\n            <text variable="page-first"/>\n          </else>\n        </choose>\n      </group>\n    </group>\n  </macro>\n  <macro name="legal-source-treaty">\n    <group delimiter=" ">\n      <number variable="volume"/>\n      <text variable="container-title"/>\n      <choose>\n        <if match="any" variable="page page-first">\n          <text variable="page-first"/>\n        </if>\n        <else>\n          <text macro="label-number-capitalized"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <!-- Citation -->\n  <macro name="citation-author-date-item">\n    <group delimiter=", ">\n      <choose>\n        <if type="classic">\n          <text macro="author-inline"/>\n          <choose>\n            <if variable="author">\n              <text macro="title-and-descriptions-short"/>\n            </if>\n          </choose>\n        </if>\n        <else-if match="any" type="interview personal_communication">\n          <choose>\n            <if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n              <!-- accessible `interview` or `personal_communication` uses standard format -->\n              <choose>\n                <if match="any" variable="event-date issued">\n                  <group delimiter=" ">\n                    <text macro="author-inline"/>\n                    <text macro="date-short"/>\n                  </group>\n                </if>\n                <else>\n                  <text macro="author-inline"/>\n                  <text macro="date-short"/>\n                </else>\n              </choose>\n            </if>\n            <else>\n              <!-- inaccessible `interview` or `personal_communication` uses in-text format (CMOS18 14.111) -->\n              <text macro="author-inline"/>\n              <text macro="title-and-descriptions-short"/>\n              <choose>\n                <if position="first">\n                  <choose>\n                    <if type="interview">\n                      <text macro="date-short"/>\n                    </if>\n                  </choose>\n                  <text macro="source-medium-note"/>\n                </if>\n              </choose>\n            </else>\n          </choose>\n        </else-if>\n        <else-if match="any" variable="event-date issued">\n          <group delimiter=" ">\n            <text macro="author-inline"/>\n            <text macro="date-short"/>\n          </group>\n        </else-if>\n        <else>\n          <!--- comma with forthcoming or n.d. -->\n          <text macro="author-inline"/>\n          <text macro="date-short"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <citation collapse="year" disambiguate-add-givenname="true" disambiguate-add-names="true" disambiguate-add-year-suffix="true" et-al-min="3" et-al-use-first="1" givenname-disambiguation-rule="primary-name">\n    <layout delimiter="; " prefix="(" suffix=")">\n      <group delimiter=", ">\n        <choose>\n          <if match="none" type="classic">\n            <text macro="citation-author-date-item"/>\n            <text macro="source-locator-author-date"/>\n          </if>\n          <!-- with `classic`, a non-numeric canonical reference or identifying number is separated by a space rather than a comma (CMOS18 14.145) -->\n          <else-if is-numeric="locator">\n            <text macro="citation-author-date-item"/>\n            <text macro="source-locator-author-date"/>\n          </else-if>\n          <else-if locator="chapter line verse" match="any">\n            <group delimiter=" ">\n              <text macro="citation-author-date-item"/>\n              <text macro="source-locator-author-date"/>\n            </group>\n          </else-if>\n          <else>\n            <text macro="citation-author-date-item"/>\n            <text macro="source-locator-author-date"/>\n          </else>\n        </choose>\n      </group>\n    </layout>\n  </citation>\n  <!-- Bibliography -->\n  <macro name="bibliography-author-date">\n    <group delimiter=". ">\n      <choose>\n        <if match="any" type="bill hearing legal_case legislation regulation treaty">\n          <!-- Legal items have different orders and delimiters -->\n          <text macro="legal-reference"/>\n          <text macro="source-date-accessed-DOI-URL-bib"/>\n          <text variable="references"/>\n        </if>\n        <else>\n          <group delimiter=" ">\n            <text macro="author-bib"/>\n            <choose>\n              <!-- give key to abbreviations (CMOS18 13.127, 14.104) -->\n              <!-- TODO: add `authority` and `publisher` if it becomes possible to test for short forms -->\n              <if type="webpage" variable="publisher"/>\n              <else-if type="webpage" variable="container-title container-title-short">\n                <text prefix="(" suffix=")" text-case="title" variable="container-title"/>\n              </else-if>\n            </choose>\n          </group>\n          <text macro="date"/>\n          <text macro="title-and-source-bib"/>\n          <text variable="references"/>\n        </else>\n      </choose>\n    </group>\n  </macro>\n  <bibliography et-al-min="7" et-al-use-first="3" hanging-indent="true">\n    <sort>\n      <key macro="author-sort"/>\n      <key macro="date-sort-group"/>\n      <key macro="date-sort-year"/>\n      <key macro="date"/>\n      <key macro="title-and-descriptions-bib"/>\n      <key macro="source-bib"/>\n      <key variable="volume"/>\n      <key variable="part-number"/>\n      <key variable="event-date"/>\n      <key variable="issued"/>\n      <key macro="source-archive-bib"/>\n    </sort>\n    <layout suffix=".">\n      <choose>\n        <if type="classic">\n          <choose>\n            <if match="any" variable="archive editor translator publisher">\n              <text macro="bibliography-author-date"/>\n            </if>\n          </choose>\n        </if>\n        <else-if match="any" type="entry entry-dictionary entry-encyclopedia">\n          <choose>\n            <if variable="author">\n              <!-- Signed reference entries appear in the bibliography (CMOS18 14.132) -->\n              <text macro="bibliography-author-date"/>\n            </if>\n            <else-if match="any" variable="DOI URL">\n              <!-- Provide a bibliography if necessary identifying information is not in text -->\n              <text macro="bibliography-author-date"/>\n            </else-if>\n          </choose>\n        </else-if>\n        <!-- Personal communications only appear in the bibliography if the reader can retrieve them (CMOS18 14.13, 14.111) -->\n        <else-if match="any" variable="archive archive-place container-title DOI number publisher references URL">\n          <text macro="bibliography-author-date"/>\n        </else-if>\n        <else-if match="any" type="interview personal_communication"/>\n        <else>\n          <text macro="bibliography-author-date"/>\n        </else>\n      </choose>\n    </layout>\n  </bibliography>\n</style>\n';
 
-  // node_modules/@popperjs/core/lib/enums.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/enums.js
   var top = "top";
   var bottom = "bottom";
   var right = "right";
@@ -22543,12 +24980,12 @@
   var afterWrite = "afterWrite";
   var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
 
-  // node_modules/@popperjs/core/lib/dom-utils/getNodeName.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getNodeName.js
   function getNodeName(element) {
     return element ? (element.nodeName || "").toLowerCase() : null;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getWindow.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getWindow.js
   function getWindow(node) {
     if (node == null) {
       return window;
@@ -22560,7 +24997,7 @@
     return node;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
   function isElement(node) {
     var OwnElement = getWindow(node).Element;
     return node instanceof OwnElement || node instanceof Element;
@@ -22577,7 +25014,7 @@
     return node instanceof OwnElement || node instanceof ShadowRoot;
   }
 
-  // node_modules/@popperjs/core/lib/modifiers/applyStyles.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/applyStyles.js
   function applyStyles(_ref) {
     var state = _ref.state;
     Object.keys(state.elements).forEach(function(name) {
@@ -22645,17 +25082,17 @@
     requires: ["computeStyles"]
   };
 
-  // node_modules/@popperjs/core/lib/utils/getBasePlacement.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getBasePlacement.js
   function getBasePlacement(placement) {
     return placement.split("-")[0];
   }
 
-  // node_modules/@popperjs/core/lib/utils/math.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/math.js
   var max = Math.max;
   var min = Math.min;
   var round = Math.round;
 
-  // node_modules/@popperjs/core/lib/utils/userAgent.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/userAgent.js
   function getUAString() {
     var uaData = navigator.userAgentData;
     if (uaData != null && uaData.brands && Array.isArray(uaData.brands)) {
@@ -22666,12 +25103,12 @@
     return navigator.userAgent;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
   function isLayoutViewport() {
     return !/^((?!chrome|android).)*safari/i.test(getUAString());
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
   function getBoundingClientRect(element, includeScale, isFixedStrategy) {
     if (includeScale === void 0) {
       includeScale = false;
@@ -22704,7 +25141,7 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getLayoutRect.js
   function getLayoutRect(element) {
     var clientRect = getBoundingClientRect(element);
     var width = element.offsetWidth;
@@ -22723,7 +25160,7 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/contains.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/contains.js
   function contains(parent, child) {
     var rootNode = child.getRootNode && child.getRootNode();
     if (parent.contains(child)) {
@@ -22740,17 +25177,17 @@
     return false;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getComputedStyle.js
   function getComputedStyle(element) {
     return getWindow(element).getComputedStyle(element);
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/isTableElement.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/isTableElement.js
   function isTableElement(element) {
     return ["table", "td", "th"].indexOf(getNodeName(element)) >= 0;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getDocumentElement.js
   function getDocumentElement(element) {
     return ((isElement(element) ? element.ownerDocument : (
       // $FlowFixMe[prop-missing]
@@ -22758,7 +25195,7 @@
     )) || window.document).documentElement;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getParentNode.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getParentNode.js
   function getParentNode(element) {
     if (getNodeName(element) === "html") {
       return element;
@@ -22775,7 +25212,7 @@
     );
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getOffsetParent.js
   function getTrueOffsetParent(element) {
     if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
     getComputedStyle(element).position === "fixed") {
@@ -22818,12 +25255,12 @@
     return offsetParent || getContainingBlock(element) || window2;
   }
 
-  // node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getMainAxisFromPlacement.js
   function getMainAxisFromPlacement(placement) {
     return ["top", "bottom"].indexOf(placement) >= 0 ? "x" : "y";
   }
 
-  // node_modules/@popperjs/core/lib/utils/within.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/within.js
   function within(min2, value, max2) {
     return max(min2, min(value, max2));
   }
@@ -22832,7 +25269,7 @@
     return v > max2 ? max2 : v;
   }
 
-  // node_modules/@popperjs/core/lib/utils/getFreshSideObject.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getFreshSideObject.js
   function getFreshSideObject() {
     return {
       top: 0,
@@ -22842,12 +25279,12 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/utils/mergePaddingObject.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/mergePaddingObject.js
   function mergePaddingObject(paddingObject) {
     return Object.assign({}, getFreshSideObject(), paddingObject);
   }
 
-  // node_modules/@popperjs/core/lib/utils/expandToHashMap.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/expandToHashMap.js
   function expandToHashMap(value, keys) {
     return keys.reduce(function(hashMap, key) {
       hashMap[key] = value;
@@ -22855,7 +25292,7 @@
     }, {});
   }
 
-  // node_modules/@popperjs/core/lib/modifiers/arrow.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/arrow.js
   var toPaddingObject = function toPaddingObject2(padding, state) {
     padding = typeof padding === "function" ? padding(Object.assign({}, state.rects, {
       placement: state.placement
@@ -22864,7 +25301,7 @@
   };
   function arrow(_ref) {
     var _state$modifiersData$;
-    var state = _ref.state, name = _ref.name, options2 = _ref.options;
+    var state = _ref.state, name = _ref.name, options3 = _ref.options;
     var arrowElement = state.elements.arrow;
     var popperOffsets2 = state.modifiersData.popperOffsets;
     var basePlacement = getBasePlacement(state.placement);
@@ -22874,7 +25311,7 @@
     if (!arrowElement || !popperOffsets2) {
       return;
     }
-    var paddingObject = toPaddingObject(options2.padding, state);
+    var paddingObject = toPaddingObject(options3.padding, state);
     var arrowRect = getLayoutRect(arrowElement);
     var minProp = axis === "y" ? top : left;
     var maxProp = axis === "y" ? bottom : right;
@@ -22891,8 +25328,8 @@
     state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
   }
   function effect2(_ref2) {
-    var state = _ref2.state, options2 = _ref2.options;
-    var _options$element = options2.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
+    var state = _ref2.state, options3 = _ref2.options;
+    var _options$element = options3.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
     if (arrowElement == null) {
       return;
     }
@@ -22917,12 +25354,12 @@
     requiresIfExists: ["preventOverflow"]
   };
 
-  // node_modules/@popperjs/core/lib/utils/getVariation.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getVariation.js
   function getVariation(placement) {
     return placement.split("-")[1];
   }
 
-  // node_modules/@popperjs/core/lib/modifiers/computeStyles.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/computeStyles.js
   var unsetSides = {
     top: "auto",
     right: "auto",
@@ -23005,8 +25442,8 @@
     return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : "", _Object$assign2[sideX] = hasX ? x + "px" : "", _Object$assign2.transform = "", _Object$assign2));
   }
   function computeStyles(_ref5) {
-    var state = _ref5.state, options2 = _ref5.options;
-    var _options$gpuAccelerat = options2.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options2.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options2.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
+    var state = _ref5.state, options3 = _ref5.options;
+    var _options$gpuAccelerat = options3.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options3.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options3.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
     var commonStyles = {
       placement: getBasePlacement(state.placement),
       variation: getVariation(state.placement),
@@ -23043,13 +25480,13 @@
     data: {}
   };
 
-  // node_modules/@popperjs/core/lib/modifiers/eventListeners.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/eventListeners.js
   var passive = {
     passive: true
   };
   function effect3(_ref) {
-    var state = _ref.state, instance = _ref.instance, options2 = _ref.options;
-    var _options$scroll = options2.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options2.resize, resize = _options$resize === void 0 ? true : _options$resize;
+    var state = _ref.state, instance = _ref.instance, options3 = _ref.options;
+    var _options$scroll = options3.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options3.resize, resize = _options$resize === void 0 ? true : _options$resize;
     var window2 = getWindow(state.elements.popper);
     var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
     if (scroll) {
@@ -23081,7 +25518,7 @@
     data: {}
   };
 
-  // node_modules/@popperjs/core/lib/utils/getOppositePlacement.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getOppositePlacement.js
   var hash = {
     left: "right",
     right: "left",
@@ -23094,7 +25531,7 @@
     });
   }
 
-  // node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getOppositeVariationPlacement.js
   var hash2 = {
     start: "end",
     end: "start"
@@ -23105,7 +25542,7 @@
     });
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
   function getWindowScroll(node) {
     var win = getWindow(node);
     var scrollLeft = win.pageXOffset;
@@ -23116,12 +25553,12 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getWindowScrollBarX.js
   function getWindowScrollBarX(element) {
     return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getViewportRect.js
   function getViewportRect(element, strategy) {
     var win = getWindow(element);
     var html = getDocumentElement(element);
@@ -23147,7 +25584,7 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getDocumentRect.js
   function getDocumentRect(element) {
     var _element$ownerDocumen;
     var html = getDocumentElement(element);
@@ -23168,13 +25605,13 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/isScrollParent.js
   function isScrollParent(element) {
     var _getComputedStyle = getComputedStyle(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
     return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getScrollParent.js
   function getScrollParent(node) {
     if (["html", "body", "#document"].indexOf(getNodeName(node)) >= 0) {
       return node.ownerDocument.body;
@@ -23185,24 +25622,24 @@
     return getScrollParent(getParentNode(node));
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
-  function listScrollParents(element, list6) {
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
+  function listScrollParents(element, list11) {
     var _element$ownerDocumen;
-    if (list6 === void 0) {
-      list6 = [];
+    if (list11 === void 0) {
+      list11 = [];
     }
     var scrollParent = getScrollParent(element);
     var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
     var win = getWindow(scrollParent);
     var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
-    var updatedList = list6.concat(target);
+    var updatedList = list11.concat(target);
     return isBody ? updatedList : (
       // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
       updatedList.concat(listScrollParents(getParentNode(target)))
     );
   }
 
-  // node_modules/@popperjs/core/lib/utils/rectToClientRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/rectToClientRect.js
   function rectToClientRect(rect) {
     return Object.assign({}, rect, {
       left: rect.x,
@@ -23212,7 +25649,7 @@
     });
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getClippingRect.js
   function getInnerBoundingClientRect(element, strategy) {
     var rect = getBoundingClientRect(element, false, strategy === "fixed");
     rect.top = rect.top + element.clientTop;
@@ -23258,7 +25695,7 @@
     return clippingRect;
   }
 
-  // node_modules/@popperjs/core/lib/utils/computeOffsets.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/computeOffsets.js
   function computeOffsets(_ref) {
     var reference2 = _ref.reference, element = _ref.element, placement = _ref.placement;
     var basePlacement = placement ? getBasePlacement(placement) : null;
@@ -23313,12 +25750,12 @@
     return offsets;
   }
 
-  // node_modules/@popperjs/core/lib/utils/detectOverflow.js
-  function detectOverflow(state, options2) {
-    if (options2 === void 0) {
-      options2 = {};
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/detectOverflow.js
+  function detectOverflow(state, options3) {
+    if (options3 === void 0) {
+      options3 = {};
     }
-    var _options = options2, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
+    var _options = options3, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
     var paddingObject = mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
     var altContext = elementContext === popper ? reference : popper;
     var popperRect = state.rects.popper;
@@ -23351,12 +25788,12 @@
     return overflowOffsets;
   }
 
-  // node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
-  function computeAutoPlacement(state, options2) {
-    if (options2 === void 0) {
-      options2 = {};
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
+  function computeAutoPlacement(state, options3) {
+    if (options3 === void 0) {
+      options3 = {};
     }
-    var _options = options2, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
+    var _options = options3, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
     var variation = getVariation(placement);
     var placements2 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function(placement2) {
       return getVariation(placement2) === variation;
@@ -23381,7 +25818,7 @@
     });
   }
 
-  // node_modules/@popperjs/core/lib/modifiers/flip.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/flip.js
   function getExpandedFallbackPlacements(placement) {
     if (getBasePlacement(placement) === auto) {
       return [];
@@ -23390,11 +25827,11 @@
     return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
   }
   function flip(_ref) {
-    var state = _ref.state, options2 = _ref.options, name = _ref.name;
+    var state = _ref.state, options3 = _ref.options, name = _ref.name;
     if (state.modifiersData[name]._skip) {
       return;
     }
-    var _options$mainAxis = options2.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options2.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options2.fallbackPlacements, padding = options2.padding, boundary = options2.boundary, rootBoundary = options2.rootBoundary, altBoundary = options2.altBoundary, _options$flipVariatio = options2.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options2.allowedAutoPlacements;
+    var _options$mainAxis = options3.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options3.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options3.fallbackPlacements, padding = options3.padding, boundary = options3.boundary, rootBoundary = options3.rootBoundary, altBoundary = options3.altBoundary, _options$flipVariatio = options3.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options3.allowedAutoPlacements;
     var preferredPlacement = state.options.placement;
     var basePlacement = getBasePlacement(preferredPlacement);
     var isBasePlacement = basePlacement === preferredPlacement;
@@ -23486,7 +25923,7 @@
     }
   };
 
-  // node_modules/@popperjs/core/lib/modifiers/hide.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/hide.js
   function getSideOffsets(overflow, rect, preventedOffsets) {
     if (preventedOffsets === void 0) {
       preventedOffsets = {
@@ -23540,7 +25977,7 @@
     fn: hide
   };
 
-  // node_modules/@popperjs/core/lib/modifiers/offset.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/offset.js
   function distanceAndSkiddingToXY(placement, rects, offset2) {
     var basePlacement = getBasePlacement(placement);
     var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
@@ -23558,18 +25995,18 @@
     };
   }
   function offset(_ref2) {
-    var state = _ref2.state, options2 = _ref2.options, name = _ref2.name;
-    var _options$offset = options2.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
-    var data2 = placements.reduce(function(acc, placement) {
+    var state = _ref2.state, options3 = _ref2.options, name = _ref2.name;
+    var _options$offset = options3.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
+    var data3 = placements.reduce(function(acc, placement) {
       acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
       return acc;
     }, {});
-    var _data$state$placement = data2[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
+    var _data$state$placement = data3[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
     if (state.modifiersData.popperOffsets != null) {
       state.modifiersData.popperOffsets.x += x;
       state.modifiersData.popperOffsets.y += y;
     }
-    state.modifiersData[name] = data2;
+    state.modifiersData[name] = data3;
   }
   var offset_default = {
     name: "offset",
@@ -23579,7 +26016,7 @@
     fn: offset
   };
 
-  // node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
   function popperOffsets(_ref) {
     var state = _ref.state, name = _ref.name;
     state.modifiersData[name] = computeOffsets({
@@ -23597,15 +26034,15 @@
     data: {}
   };
 
-  // node_modules/@popperjs/core/lib/utils/getAltAxis.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/getAltAxis.js
   function getAltAxis(axis) {
     return axis === "x" ? "y" : "x";
   }
 
-  // node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
   function preventOverflow(_ref) {
-    var state = _ref.state, options2 = _ref.options, name = _ref.name;
-    var _options$mainAxis = options2.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options2.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options2.boundary, rootBoundary = options2.rootBoundary, altBoundary = options2.altBoundary, padding = options2.padding, _options$tether = options2.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options2.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+    var state = _ref.state, options3 = _ref.options, name = _ref.name;
+    var _options$mainAxis = options3.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options3.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options3.boundary, rootBoundary = options3.rootBoundary, altBoundary = options3.altBoundary, padding = options3.padding, _options$tether = options3.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options3.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
     var overflow = detectOverflow(state, {
       boundary,
       rootBoundary,
@@ -23631,7 +26068,7 @@
       altAxis: 0
     }, tetherOffsetValue);
     var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
-    var data2 = {
+    var data3 = {
       x: 0,
       y: 0
     };
@@ -23667,7 +26104,7 @@
       var tetherMax = offset2 + maxOffset - offsetModifierValue;
       var preventedOffset = within(tether ? min(min2, tetherMin) : min2, offset2, tether ? max(max2, tetherMax) : max2);
       popperOffsets2[mainAxis] = preventedOffset;
-      data2[mainAxis] = preventedOffset - offset2;
+      data3[mainAxis] = preventedOffset - offset2;
     }
     if (checkAltAxis) {
       var _offsetModifierState$2;
@@ -23683,9 +26120,9 @@
       var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
       var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
       popperOffsets2[altAxis] = _preventedOffset;
-      data2[altAxis] = _preventedOffset - _offset;
+      data3[altAxis] = _preventedOffset - _offset;
     }
-    state.modifiersData[name] = data2;
+    state.modifiersData[name] = data3;
   }
   var preventOverflow_default = {
     name: "preventOverflow",
@@ -23695,7 +26132,7 @@
     requiresIfExists: ["offset"]
   };
 
-  // node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
   function getHTMLElementScroll(element) {
     return {
       scrollLeft: element.scrollLeft,
@@ -23703,7 +26140,7 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getNodeScroll.js
   function getNodeScroll(node) {
     if (node === getWindow(node) || !isHTMLElement(node)) {
       return getWindowScroll(node);
@@ -23712,7 +26149,7 @@
     }
   }
 
-  // node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/getCompositeRect.js
   function isElementScaled(element) {
     var rect = element.getBoundingClientRect();
     var scaleX = round(rect.width) / element.offsetWidth || 1;
@@ -23756,7 +26193,7 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/utils/orderModifiers.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/orderModifiers.js
   function order(modifiers) {
     var map = /* @__PURE__ */ new Map();
     var visited = /* @__PURE__ */ new Set();
@@ -23764,14 +26201,14 @@
     modifiers.forEach(function(modifier) {
       map.set(modifier.name, modifier);
     });
-    function sort2(modifier) {
+    function sort3(modifier) {
       visited.add(modifier.name);
       var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
       requires.forEach(function(dep) {
         if (!visited.has(dep)) {
           var depModifier = map.get(dep);
           if (depModifier) {
-            sort2(depModifier);
+            sort3(depModifier);
           }
         }
       });
@@ -23779,7 +26216,7 @@
     }
     modifiers.forEach(function(modifier) {
       if (!visited.has(modifier.name)) {
-        sort2(modifier);
+        sort3(modifier);
       }
     });
     return result;
@@ -23793,7 +26230,7 @@
     }, []);
   }
 
-  // node_modules/@popperjs/core/lib/utils/debounce.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/debounce.js
   function debounce(fn2) {
     var pending;
     return function() {
@@ -23809,7 +26246,7 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/utils/mergeByName.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/mergeByName.js
   function mergeByName(modifiers) {
     var merged = modifiers.reduce(function(merged2, current) {
       var existing = merged2[current.name];
@@ -23824,7 +26261,7 @@
     });
   }
 
-  // node_modules/@popperjs/core/lib/createPopper.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/createPopper.js
   var DEFAULT_OPTIONS = {
     placement: "bottom",
     modifiers: [],
@@ -23842,15 +26279,15 @@
     if (generatorOptions === void 0) {
       generatorOptions = {};
     }
-    var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions2 = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
-    return function createPopper2(reference2, popper2, options2) {
-      if (options2 === void 0) {
-        options2 = defaultOptions2;
+    var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions3 = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+    return function createPopper2(reference2, popper2, options3) {
+      if (options3 === void 0) {
+        options3 = defaultOptions3;
       }
       var state = {
         placement: "bottom",
         orderedModifiers: [],
-        options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions2),
+        options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions3),
         modifiersData: {},
         elements: {
           reference: reference2,
@@ -23864,9 +26301,9 @@
       var instance = {
         state,
         setOptions: function setOptions(setOptionsAction) {
-          var options3 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
+          var options4 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
           cleanupModifierEffects();
-          state.options = Object.assign({}, defaultOptions2, state.options, options3);
+          state.options = Object.assign({}, defaultOptions3, state.options, options4);
           state.scrollParents = {
             reference: isElement(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
             popper: listScrollParents(popper2)
@@ -23933,20 +26370,20 @@
       if (!areValidElements(reference2, popper2)) {
         return instance;
       }
-      instance.setOptions(options2).then(function(state2) {
-        if (!isDestroyed && options2.onFirstUpdate) {
-          options2.onFirstUpdate(state2);
+      instance.setOptions(options3).then(function(state2) {
+        if (!isDestroyed && options3.onFirstUpdate) {
+          options3.onFirstUpdate(state2);
         }
       });
       function runModifierEffects() {
         state.orderedModifiers.forEach(function(_ref) {
-          var name = _ref.name, _ref$options = _ref.options, options3 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
+          var name = _ref.name, _ref$options = _ref.options, options4 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
           if (typeof effect5 === "function") {
             var cleanupFn = effect5({
               state,
               name,
               instance,
-              options: options3
+              options: options4
             });
             var noopFn = function noopFn2() {
             };
@@ -23964,13 +26401,13 @@
     };
   }
 
-  // node_modules/@popperjs/core/lib/popper.js
+  // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/popper.js
   var defaultModifiers = [eventListeners_default, popperOffsets_default, computeStyles_default, applyStyles_default, offset_default, flip_default, preventOverflow_default, arrow_default, hide_default];
   var createPopper = /* @__PURE__ */ popperGenerator({
     defaultModifiers
   });
 
-  // node_modules/tippy.js/dist/tippy.esm.js
+  // node_modules/.pnpm/tippy.js@6.3.7/node_modules/tippy.js/dist/tippy.esm.js
   var BOX_CLASS = "tippy-box";
   var CONTENT_CLASS = "tippy-content";
   var BACKDROP_CLASS = "tippy-backdrop";
@@ -23993,9 +26430,9 @@
     }
     return value;
   }
-  function isType(value, type2) {
+  function isType(value, type3) {
     var str = {}.toString.call(value);
-    return str.indexOf("[object") === 0 && str.indexOf(type2 + "]") > -1;
+    return str.indexOf("[object") === 0 && str.indexOf(type3 + "]") > -1;
   }
   function invokeWithArgsOrReturn(value, args) {
     return typeof value === "function" ? value.apply(void 0, args) : value;
@@ -24053,8 +26490,8 @@
     return document.createElement("div");
   }
   function isElement2(value) {
-    return ["Element", "Fragment"].some(function(type2) {
-      return isType(value, type2);
+    return ["Element", "Fragment"].some(function(type3) {
+      return isType(value, type3);
     });
   }
   function isNodeList(value) {
@@ -24724,18 +27161,18 @@
       updateTransitionEndListener(box, "add", listener);
       currentTransitionEndListener = listener;
     }
-    function on(eventType, handler, options2) {
-      if (options2 === void 0) {
-        options2 = false;
+    function on(eventType, handler, options3) {
+      if (options3 === void 0) {
+        options3 = false;
       }
       var nodes = normalizeToArray(instance.props.triggerTarget || reference2);
       nodes.forEach(function(node) {
-        node.addEventListener(eventType, handler, options2);
+        node.addEventListener(eventType, handler, options3);
         listeners.push({
           node,
           eventType,
           handler,
-          options: options2
+          options: options3
         });
       });
     }
@@ -24768,8 +27205,8 @@
     }
     function removeListeners() {
       listeners.forEach(function(_ref) {
-        var node = _ref.node, eventType = _ref.eventType, handler = _ref.handler, options2 = _ref.options;
-        node.removeEventListener(eventType, handler, options2);
+        var node = _ref.node, eventType = _ref.eventType, handler = _ref.handler, options3 = _ref.options;
+        node.removeEventListener(eventType, handler, options3);
       });
       listeners = [];
     }
@@ -25251,11 +27688,11 @@
   });
   var tippy_esm_default = tippy;
 
-  // node_modules/tippy.js/dist/tippy.css
+  // node_modules/.pnpm/tippy.js@6.3.7/node_modules/tippy.js/dist/tippy.css
   var tippy_default = '.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}';
 
   // src/script.js
-  var API_BASE = `${"https://staging.commons.libretexts.org"}/api/v1/reference`;
+  var API_BASE = `${"https://commons.libretexts.org"}/api/v1/reference`;
   var CACHE_PREFIX = "libretexts-references:";
   var DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
   var LIBRARY = extractLibrary(window.location.hostname);
@@ -25390,7 +27827,7 @@
       const {
         projectID,
         lastUpdatedAt,
-        format: format3,
+        format: format5,
         displayLocation,
         backmatterPageID,
         backmatterReferenceList,
@@ -25401,7 +27838,7 @@
         projectID,
         lastUpdatedAt
       );
-      const config = getFormatConfig(format3);
+      const config = getFormatConfig(format5);
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
@@ -25465,9 +27902,9 @@
       headers: { "x-deki-token": token, "x-requested-with": "XMLHttpRequest" }
     });
     if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
-    const data2 = await response.json();
-    if (!data2?.["@id"]) throw new Error("Deki pages response missing @id");
-    return String(data2["@id"]);
+    const data3 = await response.json();
+    if (!data3?.["@id"]) throw new Error("Deki pages response missing @id");
+    return String(data3["@id"]);
   }
   async function fetchJSON(url) {
     const response = await fetch(url);
@@ -25497,12 +27934,12 @@
     if (isCacheValid(cached, lastUpdatedAt)) {
       return { referenceItems: cached.referenceItems, toc: cached.toc };
     }
-    const data2 = await fetchJSON(`${API_BASE}/projects/${projectID}`);
+    const data3 = await fetchJSON(`${API_BASE}/projects/${projectID}`);
     setCachedReferences(projectID, lastUpdatedAt, {
-      referenceItems: data2.referenceItems,
-      toc: data2.toc
+      referenceItems: data3.referenceItems,
+      toc: data3.toc
     });
-    return { referenceItems: data2.referenceItems, toc: data2.toc };
+    return { referenceItems: data3.referenceItems, toc: data3.toc };
   }
   function loadCslStyle(styleName) {
     if (loadedCslStyles.has(styleName)) return;
@@ -25622,7 +28059,7 @@
     const refs = /* @__PURE__ */ new Set();
     (function visit(node) {
       if (members.has(String(node.id))) {
-        for (const ref2 of node.refs ?? []) refs.add(ref2);
+        for (const ref3 of node.refs ?? []) refs.add(ref3);
       }
       for (const child of node.children ?? []) visit(child);
     })(toc);
@@ -25636,7 +28073,7 @@
     const queue = [root];
     while (queue.length > 0) {
       const node = queue.shift();
-      for (const ref2 of node.refs ?? []) refs.add(ref2);
+      for (const ref3 of node.refs ?? []) refs.add(ref3);
       for (const child of node.children ?? []) queue.push(child);
     }
     return [...refs];
@@ -25799,8 +28236,8 @@
     const heading = document.createElement("h2");
     heading.textContent = config.heading;
     container.appendChild(heading);
-    const list6 = document.createElement(config.listType);
-    list6.className = "references-list";
+    const list11 = document.createElement(config.listType);
+    list11.className = "references-list";
     bibEntries.forEach((entryHtml, i) => {
       const key = entryIds[i]?.[0];
       const li = document.createElement("li");
@@ -25842,9 +28279,9 @@
           });
         }
       }
-      list6.appendChild(li);
+      list11.appendChild(li);
     });
-    container.appendChild(list6);
+    container.appendChild(list11);
   }
   function toCslJson(item) {
     return {
@@ -25886,8 +28323,8 @@
     const parts = hostname.split(".");
     return parts[0]?.toLowerCase() ?? "dev";
   }
-  function getFormatConfig(format3) {
-    return FORMAT_CONFIG[format3] ?? FORMAT_CONFIG.IEEE;
+  function getFormatConfig(format5) {
+    return FORMAT_CONFIG[format5] ?? FORMAT_CONFIG.IEEE;
   }
   function termAnchorId(term) {
     return "gt-anchor-" + String(term).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
