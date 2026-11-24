@@ -9,6 +9,10 @@ export interface PageInfo {
   /** Citation style: "APA" | "MLA" | "Chicago" | "Harvard" | "Vancouver" |
    *  "IEEE" | "AMA" | "CSM" | "ASN" | "ANSI" */
   format: string;
+  /** The book's style; custom styles are fetched from `/styles/:id`. */
+  style?: StyleDescriptor | null;
+  /** "footnote" renders citations as numbered footnotes; default "inline". */
+  citationPlacement?: "inline" | "footnote";
   /** Where to render the bibliography section. */
   displayLocation: "endOfPage" | "backmatter" | "endOfChapter" | (string & {});
   pageTitle: string;
@@ -29,6 +33,21 @@ export interface ScopeGroup {
   groupID: string;
   pageIds: string[];
   targetPageId: string;
+  /** Keys listed in this group's bibliography although no page cites them. */
+  extraRefKeys?: string[];
+}
+
+/** How the API describes a book's citation style. */
+export interface StyleDescriptor {
+  id: string;
+  /** True for the styles bundled in this script. */
+  builtin: boolean;
+  styleClass?: "in-text" | "note";
+  heading?: string;
+  listType?: "ol" | "ul";
+  superscript?: boolean;
+  /** Changes when the CSL does; keys the localStorage copy. */
+  updatedAt?: string;
 }
 
 // ─── API – Project data ───────────────────────────────────────────────────────
@@ -102,6 +121,8 @@ export interface FormatConfig {
    * unless citeproc already emitted a `<sup>` tag itself.
    */
   superscript: boolean;
+  /** A note-class CSL style: its citations are footnotes. */
+  noteStyle?: boolean;
 }
 
 // ─── CSL-JSON ────────────────────────────────────────────────────────────────
@@ -140,11 +161,15 @@ export interface CslJson {
 export interface CitationInstance {
   /** Citation keys contained in this marker (may be multiple). */
   keys: string[];
+  /** Part of an invisible scope block, so never a footnote. */
+  hidden?: boolean;
 }
 
 /** Metadata attached to a single \librecite match within a text node. */
 export interface NodeCitationMeta {
   keys: string[];
+  /** Part of an invisible scope block, so never a footnote. */
+  hidden?: boolean;
   /** Character offset of the match start within the text node. */
   matchIndex: number;
   /** Length of the matched string (including \librecite{…} delimiters). */

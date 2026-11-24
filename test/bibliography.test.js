@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEKI_TOKEN_URL, jsonResponse, runMain } from './helpers.js'
 
@@ -35,12 +36,18 @@ const groups = [
  * Stub the network for `pageID` with the given page-info fields.
  * @param {string} pageID
  * @param {Record<string, unknown>} pageInfo
+ * @param {Record<string, unknown>} [styleResponse]  body for GET /styles/:id
  */
-function stubApi(pageID, pageInfo) {
+function stubApi(pageID, pageInfo, styleResponse) {
   vi.stubGlobal('fetch', vi.fn((url) => {
     url = String(url)
     if (url === DEKI_TOKEN_URL) return jsonResponse({ dev: 'token' })
     if (url.includes('/@api/deki/pages/')) return jsonResponse({ '@id': pageID })
+    if (url.includes('/styles/')) {
+      return styleResponse
+        ? jsonResponse({ err: false, data: styleResponse })
+        : jsonResponse({}, false)
+    }
     if (url.includes('/page/')) {
       return jsonResponse({
         err: false,
@@ -234,6 +241,170 @@ describe('bibliography rendering', () => {
 
       expect(document.querySelector('.reference-output')).toBeNull()
       expect(citationTexts().at(-1)).toBe('[2]')
+    })
+  })
+
+  describe('footnotes', () => {
+    const footnotes = () => [...document.querySelectorAll('.librecite-footnotes li')]
+
+    it('turns citations into numbered notes listed before the bibliography', async () => {
+      setPage('<p>One \\librecite{A} two \\librecite{B,C}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', citationPlacement: 'footnote' })
+
+      await runMain()
+
+      const markers = [...document.querySelectorAll('.librecite-fn')]
+      expect(markers.map((el) => el.textContent)).toEqual(['1', '2'])
+      expect(markers.every((el) => el.tagName === 'SUP')).toBe(true)
+      expect(footnotes().map((li) => li.id)).toEqual(['librecite-fn-1', 'librecite-fn-2'])
+      // One control per note: the link, not a focusable wrapper around it.
+      expect(markers.every((el) => !el.hasAttribute('tabindex') && !el.hasAttribute('role'))).toBe(true)
+      expect(markers[0].querySelector('a')?.getAttribute('href')).toBe('#librecite-fn-1')
+      expect(footnotes()[0].querySelector('.fn-back')?.getAttribute('href')).toBe('#librecite-fnref-1')
+      expect(footnotes()[0].textContent).toContain('Title A')
+      // A numeric style's own "[1]" label is not repeated inside the note.
+      expect(footnotes()[0].textContent).not.toContain('[1]')
+      expect(footnotes()[1].textContent).toContain('Title B')
+      expect(footnotes()[1].textContent).toContain('Title C')
+      const section = document.getElementById('footnotes-3')
+      expect(section?.nextElementSibling?.id).toBe('reference-output-3')
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A', 'ref-B', 'ref-C'])
+    })
+
+    it('does not make footnotes of the hidden scope markers', async () => {
+      setPage('<p>Text \\librecite{B}</p>')
+      stubApi('3', {
+        displayLocation: 'endOfChapter',
+        citationPlacement: 'footnote',
+        scope: { mode: 'CHAPTER', groups },
+        displayGroups: [],
+      })
+
+      await runMain()
+
+      expect(footnotes()).toHaveLength(1)
+      expect(footnotes()[0].textContent).toContain('Title B')
+    })
+
+    it('leaves citations in the text by default', async () => {
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', { displayLocation: 'endOfPage' })
+
+      await runMain()
+
+      expect(document.querySelector('.librecite-fn')).toBeNull()
+      expect(document.querySelector('.librecite-footnotes')).toBeNull()
+      expect(citationTexts().at(-1)).toBe('[1]')
+    })
+  })
+
+  describe('references assigned without a citation', () => {
+    it('lists them last in the chapter group\'s bibliography', async () => {
+      const group = { ...groups[0], extraRefKeys: ['D'] }
+      setPage('<p>Text \\librecite{C}</p><div class="reference-output" id="reference-output-4"></div>')
+      stubApi('4', {
+        displayLocation: 'endOfChapter',
+        scope: { mode: 'CHAPTER', groups: [group, groups[1]] },
+        displayGroups: [group],
+      })
+
+      await runMain()
+
+      // D follows the group's cited references, so their numbers don't shift.
+      expect(citationTexts().at(-1)).toBe('[3]')
+      expect(entryIds(document.getElementById('reference-output-4'))).toEqual(['ref-A', 'ref-B', 'ref-C', 'ref-D'])
+    })
+
+    it('lists them after the page\'s own citations at the end of a page', async () => {
+      setPage('<p>Text \\librecite{B}</p>')
+      stubApi('3', {
+        displayLocation: 'endOfPage',
+        scope: {
+          mode: 'PAGE',
+          groups: [{ groupID: 'p3', pageIds: ['3'], targetPageId: '3', extraRefKeys: ['D'] }],
+        },
+      })
+
+      await runMain()
+
+      // The page's own citation keeps [1]; D's hidden marker comes after it.
+      expect(citationTexts()[0]).toBe('[1]')
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-B', 'ref-D'])
+    })
+  })
+
+  describe('custom styles', () => {
+    const authorDate = readFileSync('src/csl/chicago-author-date.csl', 'utf8')
+    const customStyle = { id: 'my-style', builtin: false, styleClass: 'in-text', updatedAt: '2026-11-01T00:00:00.000Z' }
+    const customInfo = { format: 'my-style', style: customStyle, displayLocation: 'endOfPage' }
+    const cslResponse = (xml) => ({ styleID: 'my-style', cslXml: xml, updatedAt: customStyle.updatedAt })
+    const fetchedStyle = () =>
+      /** @type {import('vitest').Mock} */ (fetch).mock.calls.filter(([url]) => String(url).includes('/styles/my-style'))
+
+    it('fetches the CSL and renders with it', async () => {
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', customInfo, cslResponse(authorDate))
+
+      await runMain()
+
+      expect(fetchedStyle()).toHaveLength(1)
+      // Author-date, not the numeric default a failed lookup would give.
+      expect(citationTexts().at(-1)).toContain('2026')
+      expect(citationTexts().at(-1)).not.toBe('[1]')
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A'])
+    })
+
+    it('reuses its cached copy until the style changes', async () => {
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', customInfo, cslResponse(authorDate))
+      await runMain()
+
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', customInfo, cslResponse(authorDate))
+      await runMain()
+      expect(fetchedStyle()).toHaveLength(0)
+
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', { ...customInfo, style: { ...customStyle, updatedAt: '2026-11-02T00:00:00.000Z' } }, cslResponse(authorDate))
+      await runMain()
+      expect(fetchedStyle()).toHaveLength(1)
+    })
+
+    it('renders a note-class style as footnotes', async () => {
+      const noteStyle = `<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0" default-locale="en-US">
+  <info><id>http://example.com/styles/my-style</id><title>My Note Style</title><updated>2026-01-01T00:00:00+00:00</updated></info>
+  <citation><layout delimiter="; "><text variable="title"/></layout></citation>
+  <bibliography><layout><text variable="title"/></layout></bibliography>
+</style>`
+      // A fresh id: citeproc's style registry outlives the module reset.
+      const noteInfo = {
+        ...customInfo,
+        format: 'my-note',
+        style: { ...customStyle, id: 'my-note', styleClass: 'note' },
+      }
+      setPage('<p>One \\librecite{A} two \\librecite{B}</p>')
+      stubApi('3', noteInfo, cslResponse(noteStyle))
+
+      await runMain()
+
+      const notes = [...document.querySelectorAll('.librecite-footnotes li')]
+      expect(notes.map((li) => li.textContent)).toEqual([
+        expect.stringContaining('Title A'),
+        expect.stringContaining('Title B'),
+      ])
+      expect(document.querySelectorAll('.librecite-fn')).toHaveLength(2)
+    })
+
+    it('falls back to the default style when the CSL cannot be fetched', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      setPage('<p>Text \\librecite{A}</p>')
+      stubApi('3', customInfo)
+
+      await runMain()
+
+      expect(warn).toHaveBeenCalled()
+      expect(citationTexts().at(-1)).toBe('[1]')
     })
   })
 })

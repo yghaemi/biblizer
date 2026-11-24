@@ -32,6 +32,8 @@ const CACHE_PREFIX = "libretexts-references:";
 
 const DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
 
+const STYLE_CACHE_PREFIX = "libretexts-references-style:";
+
 const LIBRARY = extractLibrary(window.location.hostname);
 
 // CSL XML bundled at build time — keyed by the style name used in FORMAT_CONFIG
@@ -169,6 +171,18 @@ const ENTRY_TYPE_MAP = {
 .references-list li.csl-flush { list-style: none; }
 .csl-flush > .csl-left-margin { flex: none; min-width: 2.25em; }
 .csl-flush > .csl-right-inline { flex: 1; min-width: 0; }
+
+/* Footnote mode: numbered notes at the end of the page. */
+.librecite-fn a { text-decoration: none; color: inherit; }
+.librecite-footnotes {
+  margin-top: 2rem;
+  padding-top: .5rem;
+  border-top: 1px solid #d0d0d0;
+  font-size: .875rem;
+}
+.librecite-footnotes ol { margin: 0; padding-left: 1.5rem; }
+.librecite-footnotes li { margin: .25rem 0; }
+.librecite-footnotes .fn-back { margin-left: .4em; text-decoration: none; }
 `;
   document.head.appendChild(style);
 })();
@@ -204,14 +218,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       backmatterReferenceList,
       scope,
       displayGroups,
+      style,
+      citationPlacement,
     } = pageInfo;
     const { referenceItems, toc } = await getReferences(
       projectID,
       lastUpdatedAt,
     );
 
-    const config = getFormatConfig(format);
+    const config = await resolveFormatConfig(format, style);
     loadCslStyle(config.cslStyle);
+    // A note-class style always renders as footnotes; any other style does
+    // when the book asks for it.
+    const footnoteMode = config.noteStyle || citationPlacement === "footnote";
 
     const cslData = referenceItems.map(toCslJson);
     const engine = buildCiteprocEngine(cslData, config.cslStyle);
@@ -234,6 +253,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       scope?.groups,
     );
     if (scopeRefs.length > 0) injectCitationMarkers(scopeRefs);
+    // endOfPage has no injected scope, but references assigned to the page's
+    // group still belong in its bibliography. They go last so numeric styles
+    // number them after the page's own citations.
+    const pageExtras =
+      displayLocation === "endOfPage"
+        ? collectPageExtraRefs(pageID, scope?.groups)
+        : [];
+    if (pageExtras.length > 0) injectCitationMarkers(pageExtras, { atEnd: true });
 
     const { allInstances, nodeMap } = collectAllCitationInstances(
       document.body,
@@ -243,14 +270,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formattedCitations = processCitationsWithCiteproc(
       engine,
       allInstances,
+      { noteStyle: config.noteStyle },
     );
     const bibHtmlByKey = buildBibHtmlMap(engine);
+    const footnotes = footnoteMode
+      ? { notes: [], noteStyle: config.noteStyle }
+      : null;
     replaceAllCitationMarkers(
       nodeMap,
       formattedCitations,
       config,
       bibHtmlByKey,
+      footnotes,
     );
+    // Before the bibliography, so the notes sit between the text and it.
+    if (footnotes) renderFootnotes(pageID, footnotes.notes);
     const refUsageMap = buildRefUsageMap(toc);
     const render = (/** @type {HTMLElement} */ container) =>
       appendReferencesSection(engine, config, container, refUsageMap);
@@ -376,6 +410,74 @@ function loadCslStyle(styleName) {
   loadedCslStyles.add(styleName);
 }
 
+/**
+ * The rendering config for a book's style. A custom (admin-uploaded) style is
+ * fetched from the API and registered with citeproc; if that fails, or the
+ * style is unknown, the default config is used so citations still render.
+ *
+ * @param {string} format
+ * @param {import('./types').StyleDescriptor|null|undefined} style
+ * @returns {Promise<FormatConfig>}
+ */
+async function resolveFormatConfig(format, style) {
+  if (!style || style.builtin) return getFormatConfig(format);
+  try {
+    const cslStyle = await loadCustomStyle(style);
+    return {
+      cslStyle,
+      heading: style.heading ?? "References",
+      listType: style.listType ?? "ul",
+      superscript: style.superscript ?? false,
+      noteStyle: style.styleClass === "note",
+    };
+  } catch (err) {
+    console.warn(`Could not load citation style "${style.id}":`, err);
+    return getFormatConfig(format);
+  }
+}
+
+/** Name a custom style is registered under, apart from the bundled ones. */
+const customStyleName = (id) => `custom-${id}`;
+
+/**
+ * Fetches a custom style's CSL (cached in localStorage until it changes) and
+ * registers it with citeproc. Resolves with the registered style name.
+ *
+ * @param {import('./types').StyleDescriptor} style
+ * @returns {Promise<string>}
+ */
+async function loadCustomStyle(style) {
+  const name = customStyleName(style.id);
+  if (loadedCslStyles.has(name)) return name;
+
+  const cacheKey = `${STYLE_CACHE_PREFIX}${style.id}`;
+  let cached = null;
+  try {
+    cached = JSON.parse(localStorage.getItem(cacheKey) ?? "null");
+  } catch {
+    // An unreadable cache entry is just a miss.
+  }
+  let xml = cached?.updatedAt === style.updatedAt ? cached?.cslXml : undefined;
+  if (!xml) {
+    const data = await fetchJSON(
+      `${API_BASE}/styles/${encodeURIComponent(style.id)}`,
+    );
+    xml = data.cslXml;
+    try {
+      localStorage.setItem(
+        cacheKey,
+        JSON.stringify({ updatedAt: data.updatedAt ?? null, cslXml: xml }),
+      );
+    } catch {
+      // Storage full or unavailable: the style is simply fetched again.
+    }
+  }
+  if (!xml) throw new Error("Style has no CSL");
+  plugins.config.get("@csl").styles.add(name, xml);
+  loadedCslStyles.add(name);
+  return name;
+}
+
 function buildCiteprocEngine(cslData, styleName) {
   return plugins.config.get("@csl").engine(cslData, styleName, "en-US", "html");
 }
@@ -384,19 +486,31 @@ function buildCiteprocEngine(cslData, styleName) {
 // Calling processCitationCluster sequentially gives citeproc the context it
 // needs for correct numbering and author-date disambiguation (e.g. Smith 2020a
 // vs Smith 2020b).
-function processCitationsWithCiteproc(engine, allInstances) {
+//
+// For a note-class style each visible citation is a footnote, so it gets its
+// running note number (which drives "ibid." and short forms). Hidden scope
+// markers only register their items: counting them as notes would make the
+// first visible citation look like a repeat.
+function processCitationsWithCiteproc(
+  engine,
+  allInstances,
+  { noteStyle = false } = {},
+) {
   const uniqueIds = [...new Set(allInstances.flatMap((inst) => inst.keys))];
   engine.updateItems(uniqueIds);
 
   const citationTexts = new Array(allInstances.length).fill("?");
   const citationsPre = [];
+  let noteIndex = 0;
 
   for (let i = 0; i < allInstances.length; i++) {
+    if (noteStyle && allInstances[i].hidden) continue;
+    if (noteStyle) noteIndex += 1;
     const citationId = `cite-${i}`;
     const citation = {
       citationID: citationId,
       citationItems: allInstances[i].keys.map((id) => ({ id })),
-      properties: { noteIndex: 0 },
+      properties: { noteIndex },
     };
 
     const [, updates = []] = engine.processCitationCluster(
@@ -417,7 +531,7 @@ function processCitationsWithCiteproc(engine, allInstances) {
       }
     }
 
-    citationsPre.push([citationId, 0]);
+    citationsPre.push([citationId, noteIndex]);
   }
 
   return citationTexts;
@@ -455,13 +569,17 @@ function collectAllCitationInstances(root) {
 
     const nodeInstances = [];
     nodeMap.set(node, nodeInstances);
+    // Markers injected only to set the scope (see injectCitationMarkers) are
+    // invisible, so they are never footnotes.
+    const hidden = !!node.parentElement?.closest("[data-librecite-scope]");
 
     for (const match of text.matchAll(/\\librecite\{([^}]+)\}/g)) {
       const instanceIndex = allInstances.length;
       const keys = parseCitationKeys(match[1]);
-      allInstances.push({ keys });
+      allInstances.push({ keys, hidden });
       nodeInstances.push({
         keys,
+        hidden,
         matchIndex: match.index,
         matchLen: match[0].length,
         instanceIndex,
@@ -503,7 +621,9 @@ function collectScopeRefs(
   if (displayLocation === "endOfChapter") {
     const group = groups?.find((g) => g.pageIds.map(String).includes(pageID));
     // Without saved groups, fall back to the page's whole chapter subtree.
-    return group ? collectGroupRefs(toc, group.pageIds) : collectChapterRefs(toc, pageID);
+    return group
+      ? collectGroupRefs(toc, group.pageIds, group.extraRefKeys)
+      : collectChapterRefs(toc, pageID);
   }
   if (displayLocation === "backmatter") {
     // The API normally supplies the book-wide list; fall back to walking the
@@ -568,12 +688,16 @@ function collectChapterRefs(toc, pageId) {
  * the pages in a group, first-seen order.  Every page of the group gets the
  * same key order, so numeric citation numbers match the group bibliography.
  *
+ * Keys assigned to the group without being cited anywhere come last, so they
+ * never change the numbers of cited references.
+ *
  * @param {TocNode|null|undefined} toc
  * @param {string[]} pageIds
+ * @param {string[]|null|undefined} [extraRefKeys]  uncited keys to list too
  * @returns {string[]}
  */
-function collectGroupRefs(toc, pageIds) {
-  if (!toc) return [];
+function collectGroupRefs(toc, pageIds, extraRefKeys) {
+  if (!toc) return [...new Set(extraRefKeys ?? [])];
   const members = new Set(pageIds.map(String));
   /** @type {Set<string>} */
   const refs = new Set();
@@ -583,7 +707,21 @@ function collectGroupRefs(toc, pageIds) {
     }
     for (const child of node.children ?? []) visit(child);
   })(toc);
+  for (const key of extraRefKeys ?? []) refs.add(key);
   return [...refs];
+}
+
+/**
+ * Uncited keys assigned to the group that contains `pageID`, for the
+ * end-of-page scope (which otherwise lists only what the page cites).
+ *
+ * @param {string} pageID
+ * @param {ScopeGroup[]|null|undefined} groups
+ * @returns {string[]}
+ */
+function collectPageExtraRefs(pageID, groups) {
+  const group = groups?.find((g) => g.pageIds.map(String).includes(pageID));
+  return [...new Set(group?.extraRefKeys ?? [])];
 }
 
 /**
@@ -659,13 +797,14 @@ function buildRefUsageMap(toc) {
 // The block goes first so citeproc assigns numbers in the scope's order before
 // it reaches any visible citation, giving every page in the scope the same
 // key → number mapping.
-function injectCitationMarkers(referenceList) {
+function injectCitationMarkers(referenceList, { atEnd = false } = {}) {
   const container = document.querySelector("section.mt-content-container");
   if (!container) return;
 
   const block = document.createElement("div");
   block.style.display = "none";
   block.setAttribute("aria-hidden", "true");
+  block.setAttribute("data-librecite-scope", "");
 
   for (const key of referenceList) {
     const span = document.createElement("span");
@@ -673,7 +812,8 @@ function injectCitationMarkers(referenceList) {
     block.appendChild(span);
   }
 
-  container.insertBefore(block, container.firstChild);
+  if (atEnd) container.appendChild(block);
+  else container.insertBefore(block, container.firstChild);
 }
 
 function replaceAllCitationMarkers(
@@ -681,7 +821,9 @@ function replaceAllCitationMarkers(
   formattedCitations,
   config,
   bibHtmlByKey,
+  footnotes = null,
 ) {
+  // The map is in document order, so footnotes are numbered as they read.
   for (const [textNode, instances] of nodeMap) {
     replaceNodeCitations(
       textNode,
@@ -689,8 +831,20 @@ function replaceAllCitationMarkers(
       formattedCitations,
       config,
       bibHtmlByKey,
+      footnotes,
     );
   }
+}
+
+/**
+ * The text of a bibliography entry without its numeric label ("[1]"), for use
+ * as a footnote.
+ * @param {string} entryHtml
+ */
+function footnoteEntryHtml(entryHtml) {
+  const temp = document.createElement("div");
+  temp.innerHTML = entryHtml;
+  return temp.querySelector(".csl-right-inline")?.innerHTML ?? entryHtml;
 }
 
 function replaceNodeCitations(
@@ -699,12 +853,13 @@ function replaceNodeCitations(
   formattedCitations,
   config,
   bibHtmlByKey,
+  footnotes = null,
 ) {
   const text = textNode.textContent;
   const fragment = document.createDocumentFragment();
   let lastIndex = 0;
 
-  for (const { keys, matchIndex, matchLen, instanceIndex } of instances) {
+  for (const { keys, hidden, matchIndex, matchLen, instanceIndex } of instances) {
     if (matchIndex > lastIndex) {
       fragment.appendChild(
         document.createTextNode(text.slice(lastIndex, matchIndex)),
@@ -717,13 +872,36 @@ function replaceNodeCitations(
     // Only add a <sup> wrapper when the format wants superscript AND citeproc
     // hasn't already produced one (avoids double-nesting).
     const hasSup = formattedHtml.includes("<sup");
-    const tag = config.superscript && !hasSup ? "sup" : "span";
+    // In footnote mode a visible citation becomes a numbered superscript and
+    // its text moves to the footnote list. Hidden scope markers stay as is.
+    const note = footnotes && !hidden ? footnotes.notes.length + 1 : 0;
+    const tag = note || (config.superscript && !hasSup) ? "sup" : "span";
     const elem = document.createElement(tag);
-    elem.className = "librecite";
+    elem.className = note ? "librecite librecite-fn" : "librecite";
     elem.dataset.citationKeys = keys.join(",");
-    elem.innerHTML = formattedHtml;
-    elem.setAttribute("tabindex", "0");
-    elem.setAttribute("role", "button");
+    if (note) {
+      const body = footnotes.noteStyle
+        ? formattedHtml
+        : keys
+            .map((k) => bibHtmlByKey?.get(k))
+            .filter(Boolean)
+            .map(footnoteEntryHtml)
+            .join(" ") || escapeHtml(keys.join(", "));
+      footnotes.notes.push({ n: note, keys, html: body });
+      // The link itself is the one control: it jumps to the note natively.
+      const link = document.createElement("a");
+      link.id = footnoteRefId(note);
+      link.href = `#${footnoteId(note)}`;
+      link.setAttribute("aria-label", `Footnote ${note}`);
+      link.textContent = String(note);
+      elem.appendChild(link);
+    } else {
+      elem.innerHTML = formattedHtml;
+      elem.setAttribute("tabindex", "0");
+      elem.setAttribute("role", "button");
+    }
+    /** The element that takes focus, hover and keys. */
+    const control = note ? /** @type {HTMLElement} */ (elem.firstChild) : elem;
 
     const scrollToRef = () => {
       for (const key of keys) {
@@ -735,7 +913,7 @@ function replaceNodeCitations(
       }
     };
 
-    elem.addEventListener("click", scrollToRef);
+    if (!note) elem.addEventListener("click", scrollToRef);
 
     // Build tooltip content from bibliography entries for each cited key
     const tooltipHtml = keys
@@ -751,7 +929,7 @@ function replaceNodeCitations(
     // control visibility explicitly (Space to show, Escape to hide) while
     // mouse users still get the hover tooltip.
     const instance = tooltipHtml
-      ? tippy(elem, {
+      ? tippy(control, {
           content: tooltipHtml,
           allowHTML: true,
           theme: "librecite",
@@ -765,8 +943,10 @@ function replaceNodeCitations(
         })
       : null;
 
-    elem.addEventListener("keydown", (e) => {
+    control.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
+        // A footnote link follows its href on its own.
+        if (note) return;
         e.preventDefault();
         scrollToRef();
       } else if (e.key === " ") {
@@ -790,6 +970,54 @@ function replaceNodeCitations(
   }
 
   textNode.parentNode.replaceChild(fragment, textNode);
+}
+
+// ─── Footnotes ───────────────────────────────────────────────────────────────
+
+// Prefixed so they can't clash with a page's own (e.g. MindTouch) footnotes.
+/** @param {number} n */
+const footnoteId = (n) => `librecite-fn-${n}`;
+/** @param {number} n */
+const footnoteRefId = (n) => `librecite-fnref-${n}`;
+
+/**
+ * Lists a page's footnotes as <section class="librecite-footnotes"> just
+ * before the page's bibliography container (or last on the page).
+ *
+ * @param {string} pageID
+ * @param {{n: number, html: string}[]} notes
+ */
+function renderFootnotes(pageID, notes) {
+  if (notes.length === 0) return;
+  const id = `footnotes-${pageID}`;
+  document.getElementById(id)?.remove();
+
+  const section = document.createElement("section");
+  section.className = "librecite-footnotes";
+  section.id = id;
+  section.setAttribute("aria-label", "Footnotes");
+  const list = document.createElement("ol");
+  for (const { n, html } of notes) {
+    const li = document.createElement("li");
+    li.id = footnoteId(n);
+    li.value = n;
+    li.innerHTML =
+      html +
+      `<a class="fn-back" href="#${footnoteRefId(n)}" aria-label="Back to citation ${n}">↩</a>`;
+    list.appendChild(li);
+  }
+  section.appendChild(list);
+
+  const output = document.getElementById(referenceOutputId(pageID));
+  if (output?.parentNode) {
+    output.parentNode.insertBefore(section, output);
+    return;
+  }
+  const parent =
+    document.querySelector("#elm-main-content > section") ??
+    document.querySelector("section.mt-content-container") ??
+    document.body;
+  parent.appendChild(section);
 }
 
 // ─── Bibliography containers ────────────────────────────────────────────────
@@ -1010,7 +1238,7 @@ function extractLibrary(hostname) {
 }
 
 function getFormatConfig(format) {
-  return FORMAT_CONFIG[format] ?? FORMAT_CONFIG.IEEE;
+  return { noteStyle: false, ...(FORMAT_CONFIG[format] ?? FORMAT_CONFIG.IEEE) };
 }
 
 // Stable anchor id for a term. Must match termAnchorId() in glossarizer.js.

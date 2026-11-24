@@ -28002,9 +28002,10 @@
   var tippy_default = '.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}';
 
   // src/script.js
-  var API_BASE = `${"https://commons.libretexts.org"}/api/v1/reference`;
+  var API_BASE = `${"https://knitcanvas.fun"}/api/v1/reference`;
   var CACHE_PREFIX = "libretexts-references:";
   var DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
+  var STYLE_CACHE_PREFIX = "libretexts-references-style:";
   var LIBRARY = extractLibrary(window.location.hostname);
   var BUNDLED_CSL_STYLES = {
     ieee: ieee_default,
@@ -28125,6 +28126,18 @@
 .references-list li.csl-flush { list-style: none; }
 .csl-flush > .csl-left-margin { flex: none; min-width: 2.25em; }
 .csl-flush > .csl-right-inline { flex: 1; min-width: 0; }
+
+/* Footnote mode: numbered notes at the end of the page. */
+.librecite-fn a { text-decoration: none; color: inherit; }
+.librecite-footnotes {
+  margin-top: 2rem;
+  padding-top: .5rem;
+  border-top: 1px solid #d0d0d0;
+  font-size: .875rem;
+}
+.librecite-footnotes ol { margin: 0; padding-left: 1.5rem; }
+.librecite-footnotes li { margin: .25rem 0; }
+.librecite-footnotes .fn-back { margin-left: .4em; text-decoration: none; }
 `;
     document.head.appendChild(style);
   })();
@@ -28149,14 +28162,17 @@
         backmatterPageID,
         backmatterReferenceList,
         scope,
-        displayGroups
+        displayGroups,
+        style,
+        citationPlacement
       } = pageInfo;
       const { referenceItems, toc } = await getReferences(
         projectID,
         lastUpdatedAt
       );
-      const config = getFormatConfig(format5);
+      const config = await resolveFormatConfig(format5, style);
       loadCslStyle(config.cslStyle);
+      const footnoteMode = config.noteStyle || citationPlacement === "footnote";
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
       const scopeRefs = collectScopeRefs(
@@ -28167,21 +28183,27 @@
         scope?.groups
       );
       if (scopeRefs.length > 0) injectCitationMarkers(scopeRefs);
+      const pageExtras = displayLocation === "endOfPage" ? collectPageExtraRefs(pageID, scope?.groups) : [];
+      if (pageExtras.length > 0) injectCitationMarkers(pageExtras, { atEnd: true });
       const { allInstances, nodeMap } = collectAllCitationInstances(
         document.body
       );
       if (allInstances.length === 0) return;
       const formattedCitations = processCitationsWithCiteproc(
         engine,
-        allInstances
+        allInstances,
+        { noteStyle: config.noteStyle }
       );
       const bibHtmlByKey = buildBibHtmlMap(engine);
+      const footnotes = footnoteMode ? { notes: [], noteStyle: config.noteStyle } : null;
       replaceAllCitationMarkers(
         nodeMap,
         formattedCitations,
         config,
-        bibHtmlByKey
+        bibHtmlByKey,
+        footnotes
       );
+      if (footnotes) renderFootnotes(pageID, footnotes.notes);
       const refUsageMap = buildRefUsageMap(toc);
       const render2 = (container) => appendReferencesSection(engine, config, container, refUsageMap);
       switch (displayLocation) {
@@ -28269,20 +28291,68 @@
     plugins_exports.config.get("@csl").styles.add(styleName, xml);
     loadedCslStyles.add(styleName);
   }
+  async function resolveFormatConfig(format5, style) {
+    if (!style || style.builtin) return getFormatConfig(format5);
+    try {
+      const cslStyle = await loadCustomStyle(style);
+      return {
+        cslStyle,
+        heading: style.heading ?? "References",
+        listType: style.listType ?? "ul",
+        superscript: style.superscript ?? false,
+        noteStyle: style.styleClass === "note"
+      };
+    } catch (err) {
+      console.warn(`Could not load citation style "${style.id}":`, err);
+      return getFormatConfig(format5);
+    }
+  }
+  var customStyleName = (id) => `custom-${id}`;
+  async function loadCustomStyle(style) {
+    const name = customStyleName(style.id);
+    if (loadedCslStyles.has(name)) return name;
+    const cacheKey = `${STYLE_CACHE_PREFIX}${style.id}`;
+    let cached = null;
+    try {
+      cached = JSON.parse(localStorage.getItem(cacheKey) ?? "null");
+    } catch {
+    }
+    let xml = cached?.updatedAt === style.updatedAt ? cached?.cslXml : void 0;
+    if (!xml) {
+      const data3 = await fetchJSON(
+        `${API_BASE}/styles/${encodeURIComponent(style.id)}`
+      );
+      xml = data3.cslXml;
+      try {
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ updatedAt: data3.updatedAt ?? null, cslXml: xml })
+        );
+      } catch {
+      }
+    }
+    if (!xml) throw new Error("Style has no CSL");
+    plugins_exports.config.get("@csl").styles.add(name, xml);
+    loadedCslStyles.add(name);
+    return name;
+  }
   function buildCiteprocEngine(cslData, styleName) {
     return plugins_exports.config.get("@csl").engine(cslData, styleName, "en-US", "html");
   }
-  function processCitationsWithCiteproc(engine, allInstances) {
+  function processCitationsWithCiteproc(engine, allInstances, { noteStyle = false } = {}) {
     const uniqueIds = [...new Set(allInstances.flatMap((inst) => inst.keys))];
     engine.updateItems(uniqueIds);
     const citationTexts = new Array(allInstances.length).fill("?");
     const citationsPre = [];
+    let noteIndex = 0;
     for (let i = 0; i < allInstances.length; i++) {
+      if (noteStyle && allInstances[i].hidden) continue;
+      if (noteStyle) noteIndex += 1;
       const citationId = `cite-${i}`;
       const citation2 = {
         citationID: citationId,
         citationItems: allInstances[i].keys.map((id) => ({ id })),
-        properties: { noteIndex: 0 }
+        properties: { noteIndex }
       };
       const [, updates = []] = engine.processCitationCluster(
         citation2,
@@ -28298,7 +28368,7 @@
           }
         }
       }
-      citationsPre.push([citationId, 0]);
+      citationsPre.push([citationId, noteIndex]);
     }
     return citationTexts;
   }
@@ -28324,12 +28394,14 @@
       if (!text.includes("\\librecite{")) continue;
       const nodeInstances = [];
       nodeMap.set(node, nodeInstances);
+      const hidden = !!node.parentElement?.closest("[data-librecite-scope]");
       for (const match of text.matchAll(/\\librecite\{([^}]+)\}/g)) {
         const instanceIndex = allInstances.length;
         const keys = parseCitationKeys(match[1]);
-        allInstances.push({ keys });
+        allInstances.push({ keys, hidden });
         nodeInstances.push({
           keys,
+          hidden,
           matchIndex: match.index,
           matchLen: match[0].length,
           instanceIndex
@@ -28344,7 +28416,7 @@
   function collectScopeRefs(displayLocation, toc, pageID, backmatterReferenceList, groups) {
     if (displayLocation === "endOfChapter") {
       const group = groups?.find((g) => g.pageIds.map(String).includes(pageID));
-      return group ? collectGroupRefs(toc, group.pageIds) : collectChapterRefs(toc, pageID);
+      return group ? collectGroupRefs(toc, group.pageIds, group.extraRefKeys) : collectChapterRefs(toc, pageID);
     }
     if (displayLocation === "backmatter") {
       return backmatterReferenceList?.length ? [...backmatterReferenceList] : collectAllTocRefs(toc);
@@ -28370,8 +28442,8 @@
     }
     return subtreeRefs(node);
   }
-  function collectGroupRefs(toc, pageIds) {
-    if (!toc) return [];
+  function collectGroupRefs(toc, pageIds, extraRefKeys) {
+    if (!toc) return [...new Set(extraRefKeys ?? [])];
     const members = new Set(pageIds.map(String));
     const refs = /* @__PURE__ */ new Set();
     (function visit(node) {
@@ -28380,7 +28452,12 @@
       }
       for (const child of node.children ?? []) visit(child);
     })(toc);
+    for (const key of extraRefKeys ?? []) refs.add(key);
     return [...refs];
+  }
+  function collectPageExtraRefs(pageID, groups) {
+    const group = groups?.find((g) => g.pageIds.map(String).includes(pageID));
+    return [...new Set(group?.extraRefKeys ?? [])];
   }
   function collectAllTocRefs(toc) {
     return toc ? subtreeRefs(toc) : [];
@@ -28415,35 +28492,43 @@
     }
     return result;
   }
-  function injectCitationMarkers(referenceList) {
+  function injectCitationMarkers(referenceList, { atEnd = false } = {}) {
     const container = document.querySelector("section.mt-content-container");
     if (!container) return;
     const block = document.createElement("div");
     block.style.display = "none";
     block.setAttribute("aria-hidden", "true");
+    block.setAttribute("data-librecite-scope", "");
     for (const key of referenceList) {
       const span = document.createElement("span");
       span.textContent = `\\librecite{${key}}`;
       block.appendChild(span);
     }
-    container.insertBefore(block, container.firstChild);
+    if (atEnd) container.appendChild(block);
+    else container.insertBefore(block, container.firstChild);
   }
-  function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey) {
+  function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey, footnotes = null) {
     for (const [textNode, instances] of nodeMap) {
       replaceNodeCitations(
         textNode,
         instances,
         formattedCitations,
         config,
-        bibHtmlByKey
+        bibHtmlByKey,
+        footnotes
       );
     }
   }
-  function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey) {
+  function footnoteEntryHtml(entryHtml) {
+    const temp = document.createElement("div");
+    temp.innerHTML = entryHtml;
+    return temp.querySelector(".csl-right-inline")?.innerHTML ?? entryHtml;
+  }
+  function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey, footnotes = null) {
     const text = textNode.textContent;
     const fragment = document.createDocumentFragment();
     let lastIndex = 0;
-    for (const { keys, matchIndex, matchLen, instanceIndex } of instances) {
+    for (const { keys, hidden, matchIndex, matchLen, instanceIndex } of instances) {
       if (matchIndex > lastIndex) {
         fragment.appendChild(
           document.createTextNode(text.slice(lastIndex, matchIndex))
@@ -28451,13 +28536,29 @@
       }
       const formattedHtml = formattedCitations[instanceIndex] ?? "?";
       const hasSup = formattedHtml.includes("<sup");
-      const tag = config.superscript && !hasSup ? "sup" : "span";
+      const note = footnotes && !hidden ? footnotes.notes.length + 1 : 0;
+      const tag = note || config.superscript && !hasSup ? "sup" : "span";
       const elem = document.createElement(tag);
-      elem.className = "librecite";
+      elem.className = note ? "librecite librecite-fn" : "librecite";
       elem.dataset.citationKeys = keys.join(",");
-      elem.innerHTML = formattedHtml;
-      elem.setAttribute("tabindex", "0");
-      elem.setAttribute("role", "button");
+      if (note) {
+        const body = footnotes.noteStyle ? formattedHtml : keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map(footnoteEntryHtml).join(" ") || escapeHtml(keys.join(", "));
+        footnotes.notes.push({ n: note, keys, html: body });
+        const link = document.createElement("a");
+        link.id = footnoteRefId(note);
+        link.href = `#${footnoteId(note)}`;
+        link.setAttribute("aria-label", `Footnote ${note}`);
+        link.textContent = String(note);
+        elem.appendChild(link);
+      } else {
+        elem.innerHTML = formattedHtml;
+        elem.setAttribute("tabindex", "0");
+        elem.setAttribute("role", "button");
+      }
+      const control = note ? (
+        /** @type {HTMLElement} */
+        elem.firstChild
+      ) : elem;
       const scrollToRef = () => {
         for (const key of keys) {
           const target = document.getElementById(`ref-${key}`);
@@ -28467,12 +28568,12 @@
           }
         }
       };
-      elem.addEventListener("click", scrollToRef);
+      if (!note) elem.addEventListener("click", scrollToRef);
       const tooltipHtml = keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map((html) => {
         const flush = html.includes("csl-left-margin") ? " csl-flush" : "";
         return `<div class="bib-entry${flush}">${html}</div>`;
       }).join("");
-      const instance = tooltipHtml ? tippy_esm_default(elem, {
+      const instance = tooltipHtml ? tippy_esm_default(control, {
         content: tooltipHtml,
         allowHTML: true,
         theme: "librecite",
@@ -28486,8 +28587,9 @@
         // mouse hover only; keyboard handled below
         delay: [500, 0]
       }) : null;
-      elem.addEventListener("keydown", (e) => {
+      control.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
+          if (note) return;
           e.preventDefault();
           scrollToRef();
         } else if (e.key === " ") {
@@ -28506,6 +28608,33 @@
       fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
     }
     textNode.parentNode.replaceChild(fragment, textNode);
+  }
+  var footnoteId = (n) => `librecite-fn-${n}`;
+  var footnoteRefId = (n) => `librecite-fnref-${n}`;
+  function renderFootnotes(pageID, notes) {
+    if (notes.length === 0) return;
+    const id = `footnotes-${pageID}`;
+    document.getElementById(id)?.remove();
+    const section = document.createElement("section");
+    section.className = "librecite-footnotes";
+    section.id = id;
+    section.setAttribute("aria-label", "Footnotes");
+    const list11 = document.createElement("ol");
+    for (const { n, html } of notes) {
+      const li = document.createElement("li");
+      li.id = footnoteId(n);
+      li.value = n;
+      li.innerHTML = html + `<a class="fn-back" href="#${footnoteRefId(n)}" aria-label="Back to citation ${n}">\u21A9</a>`;
+      list11.appendChild(li);
+    }
+    section.appendChild(list11);
+    const output = document.getElementById(referenceOutputId(pageID));
+    if (output?.parentNode) {
+      output.parentNode.insertBefore(section, output);
+      return;
+    }
+    const parent = document.querySelector("#elm-main-content > section") ?? document.querySelector("section.mt-content-container") ?? document.body;
+    parent.appendChild(section);
   }
   function referenceOutputId(pageID) {
     return `reference-output-${pageID}`;
@@ -28641,7 +28770,7 @@
     return parts[0]?.toLowerCase() ?? "dev";
   }
   function getFormatConfig(format5) {
-    return FORMAT_CONFIG[format5] ?? FORMAT_CONFIG.IEEE;
+    return { noteStyle: false, ...FORMAT_CONFIG[format5] ?? FORMAT_CONFIG.IEEE };
   }
   function termAnchorId(term) {
     return "gt-anchor-" + String(term).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
