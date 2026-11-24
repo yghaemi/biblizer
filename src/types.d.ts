@@ -11,8 +11,11 @@ export interface PageInfo {
   format: string;
   /** The book's style; custom styles are fetched from `/styles/:id`. */
   style?: StyleDescriptor | null;
-  /** "footnote" renders citations as numbered footnotes; default "inline". */
-  citationPlacement?: "inline" | "footnote";
+  /**
+   * The book's footnote entries, placed with `\librefn{key}`. Any other
+   * `\librefn{…}` is an inline note whose text is written on the page.
+   */
+  footnotes?: FootnoteEntry[];
   /** Where to render the bibliography section. */
   displayLocation: "endOfPage" | "backmatter" | "endOfChapter" | (string & {});
   pageTitle: string;
@@ -26,6 +29,24 @@ export interface PageInfo {
   scope?: { mode: string; groups: ScopeGroup[] };
   /** Groups whose bibliography this page renders (it is their target). */
   displayGroups?: ScopeGroup[];
+}
+
+/** An author's note; not a reference, never in a bibliography. */
+export interface FootnoteEntry {
+  key: string;
+  /** Plain text. */
+  text: string;
+}
+
+/**
+ * One numbered note on the page: an author footnote (plain `text`) or a
+ * note-class style's citation (citeproc's `html`). `link` is its superscript
+ * link in the text; the number is set once all notes are known.
+ */
+export interface PageNote {
+  link: HTMLAnchorElement;
+  text?: string;
+  html?: string;
 }
 
 /** Pages sharing one bibliography, rendered on `targetPageId`. */

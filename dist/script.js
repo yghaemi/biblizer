@@ -28127,8 +28127,9 @@
 .csl-flush > .csl-left-margin { flex: none; min-width: 2.25em; }
 .csl-flush > .csl-right-inline { flex: 1; min-width: 0; }
 
-/* Footnote mode: numbered notes at the end of the page. */
-.librecite-fn a { text-decoration: none; color: inherit; }
+/* Numbered notes at the end of the page: author footnotes (\\librefn) and
+   the citations of a note-class style. */
+.librecite-fn a, .librefn a { text-decoration: none; }
 .librecite-footnotes {
   margin-top: 2rem;
   padding-top: .5rem;
@@ -28150,6 +28151,8 @@
       return;
     }
     removeForeignReferenceOutputs(pageID);
+    const notes = [];
+    let footnotesCollected = false;
     try {
       const pageInfo = await fetchJSON(
         `${API_BASE}/page/${pageID}/library/${LIBRARY}`
@@ -28164,15 +28167,16 @@
         scope,
         displayGroups,
         style,
-        citationPlacement
+        footnotes
       } = pageInfo;
+      collectAuthorFootnotes(document.body, footnotes, notes);
+      footnotesCollected = true;
       const { referenceItems, toc } = await getReferences(
         projectID,
         lastUpdatedAt
       );
       const config = await resolveFormatConfig(format5, style);
       loadCslStyle(config.cslStyle);
-      const footnoteMode = config.noteStyle || citationPlacement === "footnote";
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
       const scopeRefs = collectScopeRefs(
@@ -28195,15 +28199,13 @@
         { noteStyle: config.noteStyle }
       );
       const bibHtmlByKey = buildBibHtmlMap(engine);
-      const footnotes = footnoteMode ? { notes: [], noteStyle: config.noteStyle } : null;
       replaceAllCitationMarkers(
         nodeMap,
         formattedCitations,
         config,
         bibHtmlByKey,
-        footnotes
+        config.noteStyle ? notes : null
       );
-      if (footnotes) renderFootnotes(pageID, footnotes.notes);
       const refUsageMap = buildRefUsageMap(toc);
       const render2 = (container) => appendReferencesSection(engine, config, container, refUsageMap);
       switch (displayLocation) {
@@ -28226,6 +28228,9 @@
       }
     } catch (err) {
       console.error("Failed to load citations:", err);
+    } finally {
+      if (!footnotesCollected) collectAuthorFootnotes(document.body, [], notes);
+      renderPageNotes(pageID, notes);
     }
   });
   async function fetchCurrentPageId(library) {
@@ -28507,7 +28512,7 @@
     if (atEnd) container.appendChild(block);
     else container.insertBefore(block, container.firstChild);
   }
-  function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey, footnotes = null) {
+  function replaceAllCitationMarkers(nodeMap, formattedCitations, config, bibHtmlByKey, notes = null) {
     for (const [textNode, instances] of nodeMap) {
       replaceNodeCitations(
         textNode,
@@ -28515,16 +28520,11 @@
         formattedCitations,
         config,
         bibHtmlByKey,
-        footnotes
+        notes
       );
     }
   }
-  function footnoteEntryHtml(entryHtml) {
-    const temp = document.createElement("div");
-    temp.innerHTML = entryHtml;
-    return temp.querySelector(".csl-right-inline")?.innerHTML ?? entryHtml;
-  }
-  function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey, footnotes = null) {
+  function replaceNodeCitations(textNode, instances, formattedCitations, config, bibHtmlByKey, notes = null) {
     const text = textNode.textContent;
     const fragment = document.createDocumentFragment();
     let lastIndex = 0;
@@ -28536,29 +28536,21 @@
       }
       const formattedHtml = formattedCitations[instanceIndex] ?? "?";
       const hasSup = formattedHtml.includes("<sup");
-      const note = footnotes && !hidden ? footnotes.notes.length + 1 : 0;
+      const noteLink = notes && !hidden ? document.createElement("a") : null;
+      const note = !!noteLink;
       const tag = note || config.superscript && !hasSup ? "sup" : "span";
       const elem = document.createElement(tag);
       elem.className = note ? "librecite librecite-fn" : "librecite";
       elem.dataset.citationKeys = keys.join(",");
-      if (note) {
-        const body = footnotes.noteStyle ? formattedHtml : keys.map((k) => bibHtmlByKey?.get(k)).filter(Boolean).map(footnoteEntryHtml).join(" ") || escapeHtml(keys.join(", "));
-        footnotes.notes.push({ n: note, keys, html: body });
-        const link = document.createElement("a");
-        link.id = footnoteRefId(note);
-        link.href = `#${footnoteId(note)}`;
-        link.setAttribute("aria-label", `Footnote ${note}`);
-        link.textContent = String(note);
-        elem.appendChild(link);
+      if (noteLink) {
+        notes.push({ link: noteLink, html: formattedHtml });
+        elem.appendChild(noteLink);
       } else {
         elem.innerHTML = formattedHtml;
         elem.setAttribute("tabindex", "0");
         elem.setAttribute("role", "button");
       }
-      const control = note ? (
-        /** @type {HTMLElement} */
-        elem.firstChild
-      ) : elem;
+      const control = noteLink ?? elem;
       const scrollToRef = () => {
         for (const key of keys) {
           const target = document.getElementById(`ref-${key}`);
@@ -28611,6 +28603,71 @@
   }
   var footnoteId = (n) => `librecite-fn-${n}`;
   var footnoteRefId = (n) => `librecite-fnref-${n}`;
+  var LIBREFN_PATTERN = /\\librefn\{((?:[^{}]|\{[^{}]*\})*)\}/g;
+  function collectAuthorFootnotes(root, entries, notes) {
+    const textByKey = new Map((entries ?? []).map((e) => [e.key, e.text]));
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (!node.textContent?.includes("\\librefn{")) continue;
+      if (node.parentElement?.closest("[data-librecite-scope], script, style")) {
+        continue;
+      }
+      nodes.push(
+        /** @type {Text} */
+        node
+      );
+    }
+    for (const node of nodes) {
+      const text = node.textContent ?? "";
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+      for (const match of text.matchAll(LIBREFN_PATTERN)) {
+        const content = match[1].trim();
+        if (!content) continue;
+        const index = match.index ?? 0;
+        if (index > lastIndex) {
+          fragment.appendChild(document.createTextNode(text.slice(lastIndex, index)));
+        }
+        const noteText = textByKey.get(content) ?? content;
+        const sup = document.createElement("sup");
+        sup.className = "librefn";
+        const link = document.createElement("a");
+        sup.appendChild(link);
+        notes.push({ link, text: noteText });
+        tippy_esm_default(link, {
+          content: noteText,
+          // text, not HTML (allowHTML is off)
+          theme: "librecite",
+          placement: "top",
+          maxWidth: 420,
+          appendTo: document.body,
+          delay: [500, 0]
+        });
+        fragment.appendChild(sup);
+        lastIndex = index + match[0].length;
+      }
+      if (lastIndex === 0) continue;
+      if (lastIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+      }
+      node.parentNode?.replaceChild(fragment, node);
+    }
+  }
+  function renderPageNotes(pageID, notes) {
+    if (notes.length === 0) return;
+    notes.sort(
+      (a, b) => a.link.compareDocumentPosition(b.link) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1
+    );
+    notes.forEach((note, i) => {
+      const n = i + 1;
+      note.link.id = footnoteRefId(n);
+      note.link.href = `#${footnoteId(n)}`;
+      note.link.setAttribute("aria-label", `Footnote ${n}`);
+      note.link.textContent = String(n);
+    });
+    renderFootnotes(pageID, notes);
+  }
   function renderFootnotes(pageID, notes) {
     if (notes.length === 0) return;
     const id = `footnotes-${pageID}`;
@@ -28620,13 +28677,21 @@
     section.id = id;
     section.setAttribute("aria-label", "Footnotes");
     const list11 = document.createElement("ol");
-    for (const { n, html } of notes) {
+    notes.forEach((note, i) => {
+      const n = i + 1;
       const li = document.createElement("li");
       li.id = footnoteId(n);
       li.value = n;
-      li.innerHTML = html + `<a class="fn-back" href="#${footnoteRefId(n)}" aria-label="Back to citation ${n}">\u21A9</a>`;
+      if (note.html !== void 0) li.innerHTML = note.html;
+      else li.textContent = note.text ?? "";
+      const back = document.createElement("a");
+      back.className = "fn-back";
+      back.href = `#${footnoteRefId(n)}`;
+      back.setAttribute("aria-label", `Back to footnote ${n} in the text`);
+      back.textContent = "\u21A9";
+      li.appendChild(back);
       list11.appendChild(li);
-    }
+    });
     section.appendChild(list11);
     const output = document.getElementById(referenceOutputId(pageID));
     if (output?.parentNode) {

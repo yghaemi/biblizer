@@ -246,55 +246,92 @@ describe('bibliography rendering', () => {
 
   describe('footnotes', () => {
     const footnotes = () => [...document.querySelectorAll('.librecite-footnotes li')]
+    const markers = () => [...document.querySelectorAll('sup.librefn')]
+    const entries = [{ key: 'temp', text: 'Measured at 25 °C.' }]
 
-    it('turns citations into numbered notes listed before the bibliography', async () => {
-      setPage('<p>One \\librecite{A} two \\librecite{B,C}</p>')
-      stubApi('3', { displayLocation: 'endOfPage', citationPlacement: 'footnote' })
+    it('numbers \\librefn notes and lists them before the bibliography', async () => {
+      setPage('<p>One \\librefn{temp} cite \\librecite{A} two \\librefn{An inline note.}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', footnotes: entries })
 
       await runMain()
 
-      const markers = [...document.querySelectorAll('.librecite-fn')]
-      expect(markers.map((el) => el.textContent)).toEqual(['1', '2'])
-      expect(markers.every((el) => el.tagName === 'SUP')).toBe(true)
+      expect(markers().map((el) => el.textContent)).toEqual(['1', '2'])
+      expect(markers()[0].querySelector('a')?.getAttribute('href')).toBe('#librecite-fn-1')
       expect(footnotes().map((li) => li.id)).toEqual(['librecite-fn-1', 'librecite-fn-2'])
-      // One control per note: the link, not a focusable wrapper around it.
-      expect(markers.every((el) => !el.hasAttribute('tabindex') && !el.hasAttribute('role'))).toBe(true)
-      expect(markers[0].querySelector('a')?.getAttribute('href')).toBe('#librecite-fn-1')
+      // A saved entry by key, then the inline note's own text.
+      expect(footnotes()[0].textContent).toBe('Measured at 25 °C.↩')
+      expect(footnotes()[1].textContent).toBe('An inline note.↩')
       expect(footnotes()[0].querySelector('.fn-back')?.getAttribute('href')).toBe('#librecite-fnref-1')
-      expect(footnotes()[0].textContent).toContain('Title A')
-      // A numeric style's own "[1]" label is not repeated inside the note.
-      expect(footnotes()[0].textContent).not.toContain('[1]')
-      expect(footnotes()[1].textContent).toContain('Title B')
-      expect(footnotes()[1].textContent).toContain('Title C')
-      const section = document.getElementById('footnotes-3')
-      expect(section?.nextElementSibling?.id).toBe('reference-output-3')
-      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A', 'ref-B', 'ref-C'])
+      // Footnotes are not references: the citation stays in the text and
+      // the bibliography lists only the reference.
+      expect(citationTexts()).toEqual(['[1]'])
+      expect(document.getElementById('footnotes-3')?.nextElementSibling?.id).toBe('reference-output-3')
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A'])
     })
 
-    it('does not make footnotes of the hidden scope markers', async () => {
+    it('uses the text as written when no entry has that key', async () => {
+      setPage('<p>Text \\librefn{Ibid.}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', footnotes: entries })
+
+      await runMain()
+
+      expect(footnotes().map((li) => li.textContent)).toEqual(['Ibid.↩'])
+    })
+
+    it('keeps a \\librecite inside a footnote as plain text', async () => {
+      setPage('<p>Text \\librefn{See \\librecite{B} too.} and \\librecite{A}</p>')
+      stubApi('3', { displayLocation: 'endOfPage' })
+
+      await runMain()
+
+      expect(footnotes()[0].textContent).toBe('See \\librecite{B} too.↩')
+      expect(citationTexts()).toEqual(['[1]'])
+      expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A'])
+    })
+
+    it('inserts note text as text, never as markup', async () => {
+      setPage('<p>Text \\librefn{x}</p>')
+      stubApi('3', {
+        displayLocation: 'endOfPage',
+        footnotes: [{ key: 'x', text: '<img src=x onerror=alert(1)>' }],
+      })
+
+      await runMain()
+
+      expect(footnotes()[0].querySelector('img')).toBeNull()
+      expect(footnotes()[0].textContent).toContain('<img')
+    })
+
+    it('renders notes on a page without citations', async () => {
+      setPage('<p>Only a note \\librefn{temp}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', footnotes: entries })
+      await runMain()
+      expect(footnotes().map((li) => li.textContent)).toEqual(['Measured at 25 °C.↩'])
+    })
+
+    it('still renders inline notes when the API fails', async () => {
+      setPage('<p>Only a note \\librefn{Inline.}</p>')
+      stubApi('3', { displayLocation: 'endOfPage' })
+      const stubbed = fetch
+      vi.stubGlobal('fetch', vi.fn((url) =>
+        String(url).includes('/page/') ? jsonResponse({}, false) : stubbed(url)))
+      await runMain()
+      expect(footnotes().map((li) => li.textContent)).toEqual(['Inline.↩'])
+    })
+
+    it('does not make notes of citations with an in-text style', async () => {
       setPage('<p>Text \\librecite{B}</p>')
       stubApi('3', {
         displayLocation: 'endOfChapter',
-        citationPlacement: 'footnote',
         scope: { mode: 'CHAPTER', groups },
         displayGroups: [],
       })
 
       await runMain()
 
-      expect(footnotes()).toHaveLength(1)
-      expect(footnotes()[0].textContent).toContain('Title B')
-    })
-
-    it('leaves citations in the text by default', async () => {
-      setPage('<p>Text \\librecite{A}</p>')
-      stubApi('3', { displayLocation: 'endOfPage' })
-
-      await runMain()
-
       expect(document.querySelector('.librecite-fn')).toBeNull()
       expect(document.querySelector('.librecite-footnotes')).toBeNull()
-      expect(citationTexts().at(-1)).toBe('[1]')
+      expect(citationTexts().at(-1)).toBe('[2]')
     })
   })
 
@@ -383,16 +420,20 @@ describe('bibliography rendering', () => {
         format: 'my-note',
         style: { ...customStyle, id: 'my-note', styleClass: 'note' },
       }
-      setPage('<p>One \\librecite{A} two \\librecite{B}</p>')
+      setPage('<p>One \\librecite{A} aside \\librefn{An author note.} two \\librecite{B}</p>')
       stubApi('3', noteInfo, cslResponse(noteStyle))
 
       await runMain()
 
+      // Citations and the author note share one sequence, in reading order.
       const notes = [...document.querySelectorAll('.librecite-footnotes li')]
       expect(notes.map((li) => li.textContent)).toEqual([
         expect.stringContaining('Title A'),
+        'An author note.↩',
         expect.stringContaining('Title B'),
       ])
+      expect([...document.querySelectorAll('.librecite-fn a, .librefn a')].map((a) => a.textContent))
+        .toEqual(['1', '2', '3'])
       expect(document.querySelectorAll('.librecite-fn')).toHaveLength(2)
     })
 

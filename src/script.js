@@ -13,6 +13,8 @@
  * @typedef {import('./types').CitationInstance}  CitationInstance
  * @typedef {import('./types').NodeCitationMeta}  NodeCitationMeta
  * @typedef {import('./types').CiteprocEngine}    CiteprocEngine
+ * @typedef {import('./types').FootnoteEntry}     FootnoteEntry
+ * @typedef {import('./types').PageNote}          PageNote
  */
 
 import { plugins } from "@citation-js/core";
@@ -172,8 +174,9 @@ const ENTRY_TYPE_MAP = {
 .csl-flush > .csl-left-margin { flex: none; min-width: 2.25em; }
 .csl-flush > .csl-right-inline { flex: 1; min-width: 0; }
 
-/* Footnote mode: numbered notes at the end of the page. */
-.librecite-fn a { text-decoration: none; color: inherit; }
+/* Numbered notes at the end of the page: author footnotes (\\librefn) and
+   the citations of a note-class style. */
+.librecite-fn a, .librefn a { text-decoration: none; }
 .librecite-footnotes {
   margin-top: 2rem;
   padding-top: .5rem;
@@ -205,6 +208,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // pages, not this one.
   removeForeignReferenceOutputs(pageID);
 
+  // The page's numbered notes: author footnotes (`\librefn{…}`) and, for a
+  // note-class style, its citations. Numbered together in document order.
+  /** @type {PageNote[]} */
+  const notes = [];
+  let footnotesCollected = false;
   try {
     const pageInfo = await fetchJSON(
       `${API_BASE}/page/${pageID}/library/${LIBRARY}`,
@@ -219,8 +227,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       scope,
       displayGroups,
       style,
-      citationPlacement,
+      footnotes,
     } = pageInfo;
+    // Footnotes go first: a `\librecite` written inside one is part of the
+    // note's text and must never become a citation.
+    collectAuthorFootnotes(document.body, footnotes, notes);
+    footnotesCollected = true;
+
     const { referenceItems, toc } = await getReferences(
       projectID,
       lastUpdatedAt,
@@ -228,9 +241,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const config = await resolveFormatConfig(format, style);
     loadCslStyle(config.cslStyle);
-    // A note-class style always renders as footnotes; any other style does
-    // when the book asks for it.
-    const footnoteMode = config.noteStyle || citationPlacement === "footnote";
 
     const cslData = referenceItems.map(toCslJson);
     const engine = buildCiteprocEngine(cslData, config.cslStyle);
@@ -273,18 +283,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       { noteStyle: config.noteStyle },
     );
     const bibHtmlByKey = buildBibHtmlMap(engine);
-    const footnotes = footnoteMode
-      ? { notes: [], noteStyle: config.noteStyle }
-      : null;
+    // Only a note-class style makes notes of citations; any other style
+    // keeps them in the text.
     replaceAllCitationMarkers(
       nodeMap,
       formattedCitations,
       config,
       bibHtmlByKey,
-      footnotes,
+      config.noteStyle ? notes : null,
     );
-    // Before the bibliography, so the notes sit between the text and it.
-    if (footnotes) renderFootnotes(pageID, footnotes.notes);
     const refUsageMap = buildRefUsageMap(toc);
     const render = (/** @type {HTMLElement} */ container) =>
       appendReferencesSection(engine, config, container, refUsageMap);
@@ -312,6 +319,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   } catch (err) {
     console.error("Failed to load citations:", err);
+  } finally {
+    // Inline notes don't need the API, so they render even when it fails.
+    if (!footnotesCollected) collectAuthorFootnotes(document.body, [], notes);
+    // Placed before the page's bibliography container when there is one.
+    renderPageNotes(pageID, notes);
   }
 });
 
@@ -816,14 +828,17 @@ function injectCitationMarkers(referenceList, { atEnd = false } = {}) {
   else container.insertBefore(block, container.firstChild);
 }
 
+/**
+ * @param {PageNote[]|null} notes  set for a note-class style: each visible
+ *   citation becomes a numbered note, collected here
+ */
 function replaceAllCitationMarkers(
   nodeMap,
   formattedCitations,
   config,
   bibHtmlByKey,
-  footnotes = null,
+  notes = null,
 ) {
-  // The map is in document order, so footnotes are numbered as they read.
   for (const [textNode, instances] of nodeMap) {
     replaceNodeCitations(
       textNode,
@@ -831,20 +846,9 @@ function replaceAllCitationMarkers(
       formattedCitations,
       config,
       bibHtmlByKey,
-      footnotes,
+      notes,
     );
   }
-}
-
-/**
- * The text of a bibliography entry without its numeric label ("[1]"), for use
- * as a footnote.
- * @param {string} entryHtml
- */
-function footnoteEntryHtml(entryHtml) {
-  const temp = document.createElement("div");
-  temp.innerHTML = entryHtml;
-  return temp.querySelector(".csl-right-inline")?.innerHTML ?? entryHtml;
 }
 
 function replaceNodeCitations(
@@ -853,7 +857,7 @@ function replaceNodeCitations(
   formattedCitations,
   config,
   bibHtmlByKey,
-  footnotes = null,
+  notes = null,
 ) {
   const text = textNode.textContent;
   const fragment = document.createDocumentFragment();
@@ -872,36 +876,27 @@ function replaceNodeCitations(
     // Only add a <sup> wrapper when the format wants superscript AND citeproc
     // hasn't already produced one (avoids double-nesting).
     const hasSup = formattedHtml.includes("<sup");
-    // In footnote mode a visible citation becomes a numbered superscript and
-    // its text moves to the footnote list. Hidden scope markers stay as is.
-    const note = footnotes && !hidden ? footnotes.notes.length + 1 : 0;
+    // With a note-class style a visible citation becomes a numbered
+    // superscript and citeproc's note text moves to the page's notes (the
+    // number is set once every note on the page is known). Hidden scope
+    // markers stay as is.
+    const noteLink = notes && !hidden ? document.createElement("a") : null;
+    const note = !!noteLink;
     const tag = note || (config.superscript && !hasSup) ? "sup" : "span";
     const elem = document.createElement(tag);
     elem.className = note ? "librecite librecite-fn" : "librecite";
     elem.dataset.citationKeys = keys.join(",");
-    if (note) {
-      const body = footnotes.noteStyle
-        ? formattedHtml
-        : keys
-            .map((k) => bibHtmlByKey?.get(k))
-            .filter(Boolean)
-            .map(footnoteEntryHtml)
-            .join(" ") || escapeHtml(keys.join(", "));
-      footnotes.notes.push({ n: note, keys, html: body });
+    if (noteLink) {
+      notes.push({ link: noteLink, html: formattedHtml });
       // The link itself is the one control: it jumps to the note natively.
-      const link = document.createElement("a");
-      link.id = footnoteRefId(note);
-      link.href = `#${footnoteId(note)}`;
-      link.setAttribute("aria-label", `Footnote ${note}`);
-      link.textContent = String(note);
-      elem.appendChild(link);
+      elem.appendChild(noteLink);
     } else {
       elem.innerHTML = formattedHtml;
       elem.setAttribute("tabindex", "0");
       elem.setAttribute("role", "button");
     }
     /** The element that takes focus, hover and keys. */
-    const control = note ? /** @type {HTMLElement} */ (elem.firstChild) : elem;
+    const control = noteLink ?? elem;
 
     const scrollToRef = () => {
       for (const key of keys) {
@@ -981,11 +976,102 @@ const footnoteId = (n) => `librecite-fn-${n}`;
 const footnoteRefId = (n) => `librecite-fnref-${n}`;
 
 /**
- * Lists a page's footnotes as <section class="librecite-footnotes"> just
- * before the page's bibliography container (or last on the page).
+ * A `\librefn{…}` footnote. Group 1 is a footnote entry's key or the note's
+ * own plain text; one level of braces is allowed inside, so a literal
+ * `\librecite{x}` stays part of the note. Mirrors the server's pattern.
+ */
+const LIBREFN_PATTERN = /\\librefn\{((?:[^{}]|\{[^{}]*\})*)\}/g;
+
+/**
+ * Replaces every `\librefn{…}` on the page with a numbered superscript link
+ * and collects its note. `\librefn{key}` uses the book's footnote entry with
+ * that key; anything else is the note's text as written. Notes are plain
+ * text, so they are always inserted with textContent.
+ *
+ * @param {Element} root
+ * @param {FootnoteEntry[]|null|undefined} entries
+ * @param {PageNote[]} notes
+ */
+function collectAuthorFootnotes(root, entries, notes) {
+  const textByKey = new Map((entries ?? []).map((e) => [e.key, e.text]));
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  /** @type {Text[]} */
+  const nodes = [];
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (!node.textContent?.includes("\\librefn{")) continue;
+    if (node.parentElement?.closest("[data-librecite-scope], script, style")) {
+      continue;
+    }
+    nodes.push(/** @type {Text} */ (node));
+  }
+
+  for (const node of nodes) {
+    const text = node.textContent ?? "";
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+    for (const match of text.matchAll(LIBREFN_PATTERN)) {
+      const content = match[1].trim();
+      if (!content) continue; // `\librefn{}` is left as written
+      const index = match.index ?? 0;
+      if (index > lastIndex) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex, index)));
+      }
+      const noteText = textByKey.get(content) ?? content;
+      const sup = document.createElement("sup");
+      sup.className = "librefn";
+      const link = document.createElement("a");
+      sup.appendChild(link);
+      notes.push({ link, text: noteText });
+      tippy(link, {
+        content: noteText, // text, not HTML (allowHTML is off)
+        theme: "librecite",
+        placement: "top",
+        maxWidth: 420,
+        appendTo: document.body,
+        delay: [500, 0],
+      });
+      fragment.appendChild(sup);
+      lastIndex = index + match[0].length;
+    }
+    if (lastIndex === 0) continue;
+    if (lastIndex < text.length) {
+      fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+    node.parentNode?.replaceChild(fragment, node);
+  }
+}
+
+/**
+ * Numbers the page's notes in document order (author footnotes and a
+ * note-class style's citations share one sequence) and lists them.
  *
  * @param {string} pageID
- * @param {{n: number, html: string}[]} notes
+ * @param {PageNote[]} notes
+ */
+function renderPageNotes(pageID, notes) {
+  if (notes.length === 0) return;
+  notes.sort((a, b) =>
+    a.link.compareDocumentPosition(b.link) & Node.DOCUMENT_POSITION_FOLLOWING
+      ? -1
+      : 1,
+  );
+  notes.forEach((note, i) => {
+    const n = i + 1;
+    note.link.id = footnoteRefId(n);
+    note.link.href = `#${footnoteId(n)}`;
+    note.link.setAttribute("aria-label", `Footnote ${n}`);
+    note.link.textContent = String(n);
+  });
+  renderFootnotes(pageID, notes);
+}
+
+/**
+ * Lists a page's notes as <section class="librecite-footnotes"> just before
+ * the page's bibliography container (or last on the page). Notes must be
+ * numbered already (see renderPageNotes), in order.
+ *
+ * @param {string} pageID
+ * @param {PageNote[]} notes
  */
 function renderFootnotes(pageID, notes) {
   if (notes.length === 0) return;
@@ -997,15 +1083,22 @@ function renderFootnotes(pageID, notes) {
   section.id = id;
   section.setAttribute("aria-label", "Footnotes");
   const list = document.createElement("ol");
-  for (const { n, html } of notes) {
+  notes.forEach((note, i) => {
+    const n = i + 1;
     const li = document.createElement("li");
     li.id = footnoteId(n);
     li.value = n;
-    li.innerHTML =
-      html +
-      `<a class="fn-back" href="#${footnoteRefId(n)}" aria-label="Back to citation ${n}">↩</a>`;
+    // Citeproc's note HTML for a citation; an author note is plain text.
+    if (note.html !== undefined) li.innerHTML = note.html;
+    else li.textContent = note.text ?? "";
+    const back = document.createElement("a");
+    back.className = "fn-back";
+    back.href = `#${footnoteRefId(n)}`;
+    back.setAttribute("aria-label", `Back to footnote ${n} in the text`);
+    back.textContent = "↩";
+    li.appendChild(back);
     list.appendChild(li);
-  }
+  });
   section.appendChild(list);
 
   const output = document.getElementById(referenceOutputId(pageID));
