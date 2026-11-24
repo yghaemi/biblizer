@@ -28153,6 +28153,7 @@
     removeForeignReferenceOutputs(pageID);
     const notes = [];
     let footnotesCollected = false;
+    let footnoteEntries = [];
     try {
       const pageInfo = await fetchJSON(
         `${API_BASE}/page/${pageID}/library/${LIBRARY}`
@@ -28169,12 +28170,18 @@
         style,
         footnotes
       } = pageInfo;
-      collectAuthorFootnotes(document.body, footnotes, notes);
-      footnotesCollected = true;
+      footnoteEntries = footnotes ?? [];
       const { referenceItems, toc } = await getReferences(
         projectID,
         lastUpdatedAt
       );
+      collectAuthorFootnotes(
+        document.body,
+        footnoteEntries,
+        notes,
+        new Set(referenceItems.map((item) => item.citationKey))
+      );
+      footnotesCollected = true;
       const config = await resolveFormatConfig(format5, style);
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
@@ -28199,6 +28206,7 @@
         { noteStyle: config.noteStyle }
       );
       const bibHtmlByKey = buildBibHtmlMap(engine);
+      resolveReferenceFootnotes(notes, bibHtmlByKey);
       replaceAllCitationMarkers(
         nodeMap,
         formattedCitations,
@@ -28229,7 +28237,9 @@
     } catch (err) {
       console.error("Failed to load citations:", err);
     } finally {
-      if (!footnotesCollected) collectAuthorFootnotes(document.body, [], notes);
+      if (!footnotesCollected) {
+        collectAuthorFootnotes(document.body, footnoteEntries, notes);
+      }
       renderPageNotes(pageID, notes);
     }
   });
@@ -28604,7 +28614,11 @@
   var footnoteId = (n) => `librecite-fn-${n}`;
   var footnoteRefId = (n) => `librecite-fnref-${n}`;
   var LIBREFN_PATTERN = /\\librefn\{((?:[^{}]|\{[^{}]*\})*)\}/g;
-  function collectAuthorFootnotes(root, entries, notes) {
+  function footnoteReferenceKeys(content, referenceKeys) {
+    const keys = content.split(",").map((part) => part.trim());
+    return keys.every((key) => key && referenceKeys.has(key)) ? keys : null;
+  }
+  function collectAuthorFootnotes(root, entries, notes, referenceKeys = /* @__PURE__ */ new Set()) {
     const textByKey = new Map((entries ?? []).map((e) => [e.key, e.text]));
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     const nodes = [];
@@ -28629,11 +28643,27 @@
         if (index > lastIndex) {
           fragment.appendChild(document.createTextNode(text.slice(lastIndex, index)));
         }
-        const noteText = textByKey.get(content) ?? content;
         const sup = document.createElement("sup");
         sup.className = "librefn";
         const link = document.createElement("a");
         sup.appendChild(link);
+        fragment.appendChild(sup);
+        lastIndex = index + match[0].length;
+        const entryText = textByKey.get(content);
+        const refKeys = entryText === void 0 ? footnoteReferenceKeys(content, referenceKeys) : null;
+        if (refKeys) {
+          sup.classList.add("librefn-ref");
+          sup.dataset.citationKeys = refKeys.join(",");
+          notes.push({ link, text: refKeys.join(", "), refKeys });
+          const marker = document.createElement("span");
+          marker.hidden = true;
+          marker.setAttribute("aria-hidden", "true");
+          marker.setAttribute("data-librecite-scope", "");
+          marker.textContent = `\\librecite{${refKeys.join(",")}}`;
+          fragment.appendChild(marker);
+          continue;
+        }
+        const noteText = entryText ?? content;
         notes.push({ link, text: noteText });
         tippy_esm_default(link, {
           content: noteText,
@@ -28644,14 +28674,38 @@
           appendTo: document.body,
           delay: [500, 0]
         });
-        fragment.appendChild(sup);
-        lastIndex = index + match[0].length;
       }
       if (lastIndex === 0) continue;
       if (lastIndex < text.length) {
         fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
       }
       node.parentNode?.replaceChild(fragment, node);
+    }
+  }
+  function footnoteEntryHtml(entryHtml) {
+    const temp = document.createElement("div");
+    temp.innerHTML = entryHtml;
+    return temp.querySelector(".csl-right-inline")?.innerHTML ?? entryHtml;
+  }
+  function resolveReferenceFootnotes(notes, bibHtmlByKey) {
+    for (const note of notes) {
+      if (!note.refKeys) continue;
+      const entries = note.refKeys.map((key) => bibHtmlByKey.get(key)).filter((html) => !!html);
+      if (entries.length === 0) continue;
+      note.html = entries.map(footnoteEntryHtml).join(" ");
+      tippy_esm_default(note.link, {
+        content: entries.map((html) => {
+          const flush = html.includes("csl-left-margin") ? " csl-flush" : "";
+          return `<div class="bib-entry${flush}">${html}</div>`;
+        }).join(""),
+        allowHTML: true,
+        theme: "librecite",
+        placement: "top",
+        maxWidth: 420,
+        interactive: true,
+        appendTo: document.body,
+        delay: [500, 0]
+      });
     }
   }
   function renderPageNotes(pageID, notes) {
@@ -28693,6 +28747,11 @@
       list11.appendChild(li);
     });
     section.appendChild(list11);
+    const footer = document.querySelector("footer.mt-content-footer");
+    if (footer) {
+      footer.prepend(section);
+      return;
+    }
     const output = document.getElementById(referenceOutputId(pageID));
     if (output?.parentNode) {
       output.parentNode.insertBefore(section, output);

@@ -47,6 +47,8 @@ export interface PageNote {
   link: HTMLAnchorElement;
   text?: string;
   html?: string;
+  /** Set when `\librefn{key}` placed references as this note. */
+  refKeys?: string[];
 }
 
 /** Pages sharing one bibliography, rendered on `targetPageId`. */

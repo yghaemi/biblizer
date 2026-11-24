@@ -269,6 +269,48 @@ describe('bibliography rendering', () => {
       expect(entryIds(document.getElementById('reference-output-3'))).toEqual(['ref-A'])
     })
 
+    it('lists the notes first inside footer.mt-content-footer when the page has one', async () => {
+      setPage('<p>One \\librefn{An inline note.}</p>')
+      document.body.insertAdjacentHTML('beforeend', '<footer class="mt-content-footer"><p id="tags">Tags</p></footer>')
+      stubApi('3', { displayLocation: 'endOfPage' })
+
+      await runMain()
+
+      const footer = document.querySelector('footer.mt-content-footer')
+      expect(footer?.firstElementChild?.id).toBe('footnotes-3')
+      expect(footer?.querySelectorAll('.librecite-footnotes li')).toHaveLength(1)
+      expect(document.querySelectorAll('.librecite-footnotes')).toHaveLength(1)
+    })
+
+    it('places a reference as a footnote and still lists it in the bibliography', async () => {
+      setPage('<p>First \\librecite{A} then \\librefn{B} and \\librefn{C, D}</p>')
+      stubApi('3', { displayLocation: 'endOfPage' })
+
+      await runMain()
+
+      expect(markers().map((el) => el.textContent)).toEqual(['1', '2'])
+      expect(markers()[0].classList.contains('librefn-ref')).toBe(true)
+      // The formatted reference, without the numeric style's "[2]" label.
+      expect(footnotes()[0].textContent).toContain('Title B')
+      expect(footnotes()[0].textContent).not.toContain('[2]')
+      expect(footnotes()[1].textContent).toContain('Title C')
+      expect(footnotes()[1].textContent).toContain('Title D')
+      // Numbered in reading order with the in-text citation, and listed.
+      expect(citationTexts()[0]).toBe('[1]')
+      expect(entryIds(document.getElementById('reference-output-3')))
+        .toEqual(['ref-A', 'ref-B', 'ref-C', 'ref-D'])
+    })
+
+    it('prefers a footnote entry over a reference with the same key', async () => {
+      setPage('<p>Text \\librefn{A}</p>')
+      stubApi('3', { displayLocation: 'endOfPage', footnotes: [{ key: 'A', text: 'Entry text.' }] })
+
+      await runMain()
+
+      expect(footnotes().map((li) => li.textContent)).toEqual(['Entry text.↩'])
+      expect(document.querySelector('.reference-output')).toBeNull()
+    })
+
     it('uses the text as written when no entry has that key', async () => {
       setPage('<p>Text \\librefn{Ibid.}</p>')
       stubApi('3', { displayLocation: 'endOfPage', footnotes: entries })
