@@ -21,6 +21,7 @@ import cslIeee from "./csl/ieee.csl";
 import cslAma from "./csl/american-medical-association.csl";
 import cslMla from "./csl/modern-language-association.csl";
 import cslChicago from "./csl/chicago-author-date.csl";
+import clsAcs from "./csl/american-chemical-society-template.csl"
 import tippy from "tippy.js";
 import tippyCss from "tippy.js/dist/tippy.css";
 
@@ -39,6 +40,7 @@ const BUNDLED_CSL_STYLES = {
   "american-medical-association": cslAma,
   "modern-language-association": cslMla,
   "chicago-author-date": cslChicago,
+  "american-chemical-society":clsAcs
 };
 
 // Styles shipped inside @citation-js/plugin-csl — already registered
@@ -65,6 +67,12 @@ const FORMAT_CONFIG = {
   },
   AMA: {
     cslStyle: "american-medical-association",
+    heading: "References",
+    listType: "ul",
+    superscript: true,
+  },
+  ACS:{
+    cslStyle: "american-chemical-society",
     heading: "References",
     listType: "ul",
     superscript: true,

@@ -10,3 +10,5 @@ package-lock.json
 .claude/*
 
 */CLAUDE.md
+./graphify-out
+graphify-out/*
