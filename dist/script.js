@@ -33,515 +33,8 @@
     mod
   ));
 
-  // node_modules/@citation-js/name/lib/input.js
-  var require_input = __commonJS({
-    "node_modules/@citation-js/name/lib/input.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.default = exports.parse = exports.types = exports.scope = void 0;
-      function _slicedToArray(arr, i) {
-        return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
-      }
-      function _nonIterableRest() {
-        throw new TypeError("Invalid attempt to destructure non-iterable instance");
-      }
-      function _iterableToArrayLimit(arr, i) {
-        var _arr = [];
-        var _n = true;
-        var _d = false;
-        var _e = void 0;
-        try {
-          for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-            _arr.push(_s.value);
-            if (i && _arr.length === i) break;
-          }
-        } catch (err) {
-          _d = true;
-          _e = err;
-        } finally {
-          try {
-            if (!_n && _i["return"] != null) _i["return"]();
-          } finally {
-            if (_d) throw _e;
-          }
-        }
-        return _arr;
-      }
-      function _arrayWithHoles(arr) {
-        if (Array.isArray(arr)) return arr;
-      }
-      var punctutationMatcher = (string) => string.replace(/$|( )|(?!^)(?=[A-Z])/g, "\\.?$1");
-      var getListMatcher = (list11) => `(?:${list11.join("|")})\\b`;
-      var getSplittingRegex = (matcher, flags) => new RegExp(`(?:^| )(${matcher}$)`, flags);
-      var titles = ["mr", "mrs", "ms", "miss", "dr", "herr", "monsieur", "hr", "frau", "a v m", "admiraal", "admiral", "air cdre", "air commodore", "air marshal", "air vice marshal", "alderman", "alhaji", "ambassador", "baron", "barones", "brig", "brig gen", "brig general", "brigadier", "brigadier general", "brother", "canon", "capt", "captain", "cardinal", "cdr", "chief", "cik", "cmdr", "coach", "col", "col dr", "colonel", "commandant", "commander", "commissioner", "commodore", "comte", "comtessa", "congressman", "conseiller", "consul", "conte", "contessa", "corporal", "councillor", "count", "countess", "crown prince", "crown princess", "dame", "datin", "dato", "datuk", "datuk seri", "deacon", "deaconess", "dean", "dhr", "dipl ing", "doctor", "dott", "dott sa", "dr", "dr ing", "dra", "drs", "embajador", "embajadora", "en", "encik", "eng", "eur ing", "exma sra", "exmo sr", "f o", "father", "first lieutient", "first officer", "flt lieut", "flying officer", "fr", "frau", "fraulein", "fru", "gen", "generaal", "general", "governor", "graaf", "gravin", "group captain", "grp capt", "h e dr", "h h", "h m", "h r h", "hajah", "haji", "hajim", "her highness", "her majesty", "herr", "high chief", "his highness", "his holiness", "his majesty", "hon", "hr", "hra", "ing", "ir", "jonkheer", "judge", "justice", "khun ying", "kolonel", "lady", "lcda", "lic", "lieut", "lieut cdr", "lieut col", "lieut gen", "lord", "m", "m l", "m r", "madame", "mademoiselle", "maj gen", "major", "master", "mevrouw", "miss", "mlle", "mme", "monsieur", "monsignor", "mr", "mrs", "ms", "mstr", "nti", "pastor", "president", "prince", "princess", "princesse", "prinses", "prof", "prof dr", "prof sir", "professor", "puan", "puan sri", "rabbi", "rear admiral", "rev", "rev canon", "rev dr", "rev mother", "reverend", "rva", "senator", "sergeant", "sheikh", "sheikha", "sig", "sig na", "sig ra", "sir", "sister", "sqn ldr", "sr", "sr d", "sra", "srta", "sultan", "tan sri", "tan sri dato", "tengku", "teuku", "than puying", "the hon dr", "the hon justice", "the hon miss", "the hon mr", "the hon mrs", "the hon ms", "the hon sir", "the very rev", "toh puan", "tun", "vice admiral", "viscount", "viscountess", "wg cdr"];
-      var suffixes = ["I", "II", "III", "IV", "V", "Senior", "Junior", "Jr", "Sr", "PhD", "Ph\\.D", "APR", "RPh", "PE", "MD", "MA", "DMD", "CME", "BVM", "CFRE", "CLU", "CPA", "CSC", "CSJ", "DC", "DD", "DDS", "DO", "DVM", "EdD", "Esq", "JD", "LLD", "OD", "OSB", "PC", "Ret", "RGS", "RN", "RNC", "SHCJ", "SJ", "SNJM", "SSMO", "USA", "USAF", "USAFR", "USAR", "USCG", "USMC", "USMCR", "USN", "USNR"];
-      var particles = ["Vere", "Von", "Van", "De", "Del", "Della", "Di", "Da", "Pietro", "Vanden", "Du", "St.", "St", "La", "Lo", "Ter", "O", "O'", "Mac", "Fitz"];
-      var titleMatcher = getListMatcher(titles.map(punctutationMatcher));
-      var suffixMatcher = getListMatcher(suffixes.map(punctutationMatcher));
-      var particleMatcher = getListMatcher(particles);
-      var titleSplitter = new RegExp(`^((?:${titleMatcher} )*)(.*)$`, "i");
-      var suffixSplitter = getSplittingRegex(`(?:${suffixMatcher}, )*(?:${suffixMatcher})`, "i");
-      var particleSplitter = getSplittingRegex(`${/(?:[A-Z\xC0-\xD6\xD8-\xDE\u0100\u0102\u0104\u0106\u0108\u010A\u010C\u010E\u0110\u0112\u0114\u0116\u0118\u011A\u011C\u011E\u0120\u0122\u0124\u0126\u0128\u012A\u012C\u012E\u0130\u0132\u0134\u0136\u0139\u013B\u013D\u013F\u0141\u0143\u0145\u0147\u014A\u014C\u014E\u0150\u0152\u0154\u0156\u0158\u015A\u015C\u015E\u0160\u0162\u0164\u0166\u0168\u016A\u016C\u016E\u0170\u0172\u0174\u0176\u0178\u0179\u017B\u017D\u0181\u0182\u0184\u0186\u0187\u0189-\u018B\u018E-\u0191\u0193\u0194\u0196-\u0198\u019C\u019D\u019F\u01A0\u01A2\u01A4\u01A6\u01A7\u01A9\u01AC\u01AE\u01AF\u01B1-\u01B3\u01B5\u01B7\u01B8\u01BC\u01C4\u01C7\u01CA\u01CD\u01CF\u01D1\u01D3\u01D5\u01D7\u01D9\u01DB\u01DE\u01E0\u01E2\u01E4\u01E6\u01E8\u01EA\u01EC\u01EE\u01F1\u01F4\u01F6-\u01F8\u01FA\u01FC\u01FE\u0200\u0202\u0204\u0206\u0208\u020A\u020C\u020E\u0210\u0212\u0214\u0216\u0218\u021A\u021C\u021E\u0220\u0222\u0224\u0226\u0228\u022A\u022C\u022E\u0230\u0232\u023A\u023B\u023D\u023E\u0241\u0243-\u0246\u0248\u024A\u024C\u024E\u0370\u0372\u0376\u037F\u0386\u0388-\u038A\u038C\u038E\u038F\u0391-\u03A1\u03A3-\u03AB\u03CF\u03D2-\u03D4\u03D8\u03DA\u03DC\u03DE\u03E0\u03E2\u03E4\u03E6\u03E8\u03EA\u03EC\u03EE\u03F4\u03F7\u03F9\u03FA\u03FD-\u042F\u0460\u0462\u0464\u0466\u0468\u046A\u046C\u046E\u0470\u0472\u0474\u0476\u0478\u047A\u047C\u047E\u0480\u048A\u048C\u048E\u0490\u0492\u0494\u0496\u0498\u049A\u049C\u049E\u04A0\u04A2\u04A4\u04A6\u04A8\u04AA\u04AC\u04AE\u04B0\u04B2\u04B4\u04B6\u04B8\u04BA\u04BC\u04BE\u04C0\u04C1\u04C3\u04C5\u04C7\u04C9\u04CB\u04CD\u04D0\u04D2\u04D4\u04D6\u04D8\u04DA\u04DC\u04DE\u04E0\u04E2\u04E4\u04E6\u04E8\u04EA\u04EC\u04EE\u04F0\u04F2\u04F4\u04F6\u04F8\u04FA\u04FC\u04FE\u0500\u0502\u0504\u0506\u0508\u050A\u050C\u050E\u0510\u0512\u0514\u0516\u0518\u051A\u051C\u051E\u0520\u0522\u0524\u0526\u0528\u052A\u052C\u052E\u0531-\u0556\u10A0-\u10C5\u10C7\u10CD\u13A0-\u13F5\u1C90-\u1CBA\u1CBD-\u1CBF\u1E00\u1E02\u1E04\u1E06\u1E08\u1E0A\u1E0C\u1E0E\u1E10\u1E12\u1E14\u1E16\u1E18\u1E1A\u1E1C\u1E1E\u1E20\u1E22\u1E24\u1E26\u1E28\u1E2A\u1E2C\u1E2E\u1E30\u1E32\u1E34\u1E36\u1E38\u1E3A\u1E3C\u1E3E\u1E40\u1E42\u1E44\u1E46\u1E48\u1E4A\u1E4C\u1E4E\u1E50\u1E52\u1E54\u1E56\u1E58\u1E5A\u1E5C\u1E5E\u1E60\u1E62\u1E64\u1E66\u1E68\u1E6A\u1E6C\u1E6E\u1E70\u1E72\u1E74\u1E76\u1E78\u1E7A\u1E7C\u1E7E\u1E80\u1E82\u1E84\u1E86\u1E88\u1E8A\u1E8C\u1E8E\u1E90\u1E92\u1E94\u1E9E\u1EA0\u1EA2\u1EA4\u1EA6\u1EA8\u1EAA\u1EAC\u1EAE\u1EB0\u1EB2\u1EB4\u1EB6\u1EB8\u1EBA\u1EBC\u1EBE\u1EC0\u1EC2\u1EC4\u1EC6\u1EC8\u1ECA\u1ECC\u1ECE\u1ED0\u1ED2\u1ED4\u1ED6\u1ED8\u1EDA\u1EDC\u1EDE\u1EE0\u1EE2\u1EE4\u1EE6\u1EE8\u1EEA\u1EEC\u1EEE\u1EF0\u1EF2\u1EF4\u1EF6\u1EF8\u1EFA\u1EFC\u1EFE\u1F08-\u1F0F\u1F18-\u1F1D\u1F28-\u1F2F\u1F38-\u1F3F\u1F48-\u1F4D\u1F59\u1F5B\u1F5D\u1F5F\u1F68-\u1F6F\u1FB8-\u1FBB\u1FC8-\u1FCB\u1FD8-\u1FDB\u1FE8-\u1FEC\u1FF8-\u1FFB\u2102\u2107\u210B-\u210D\u2110-\u2112\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u2130-\u2133\u213E\u213F\u2145\u2160-\u216F\u2183\u24B6-\u24CF\u2C00-\u2C2E\u2C60\u2C62-\u2C64\u2C67\u2C69\u2C6B\u2C6D-\u2C70\u2C72\u2C75\u2C7E-\u2C80\u2C82\u2C84\u2C86\u2C88\u2C8A\u2C8C\u2C8E\u2C90\u2C92\u2C94\u2C96\u2C98\u2C9A\u2C9C\u2C9E\u2CA0\u2CA2\u2CA4\u2CA6\u2CA8\u2CAA\u2CAC\u2CAE\u2CB0\u2CB2\u2CB4\u2CB6\u2CB8\u2CBA\u2CBC\u2CBE\u2CC0\u2CC2\u2CC4\u2CC6\u2CC8\u2CCA\u2CCC\u2CCE\u2CD0\u2CD2\u2CD4\u2CD6\u2CD8\u2CDA\u2CDC\u2CDE\u2CE0\u2CE2\u2CEB\u2CED\u2CF2\uA640\uA642\uA644\uA646\uA648\uA64A\uA64C\uA64E\uA650\uA652\uA654\uA656\uA658\uA65A\uA65C\uA65E\uA660\uA662\uA664\uA666\uA668\uA66A\uA66C\uA680\uA682\uA684\uA686\uA688\uA68A\uA68C\uA68E\uA690\uA692\uA694\uA696\uA698\uA69A\uA722\uA724\uA726\uA728\uA72A\uA72C\uA72E\uA732\uA734\uA736\uA738\uA73A\uA73C\uA73E\uA740\uA742\uA744\uA746\uA748\uA74A\uA74C\uA74E\uA750\uA752\uA754\uA756\uA758\uA75A\uA75C\uA75E\uA760\uA762\uA764\uA766\uA768\uA76A\uA76C\uA76E\uA779\uA77B\uA77D\uA77E\uA780\uA782\uA784\uA786\uA78B\uA78D\uA790\uA792\uA796\uA798\uA79A\uA79C\uA79E\uA7A0\uA7A2\uA7A4\uA7A6\uA7A8\uA7AA-\uA7AE\uA7B0-\uA7B4\uA7B6\uA7B8\uFF21-\uFF3A]|\uD801[\uDC00-\uDC27\uDCB0-\uDCD3]|\uD803[\uDC80-\uDCB2]|\uD806[\uDCA0-\uDCBF]|\uD81B[\uDE40-\uDE5F]|\uD835[\uDC00-\uDC19\uDC34-\uDC4D\uDC68-\uDC81\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB5\uDCD0-\uDCE9\uDD04\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD38\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD6C-\uDD85\uDDA0-\uDDB9\uDDD4-\uDDED\uDE08-\uDE21\uDE3C-\uDE55\uDE70-\uDE89\uDEA8-\uDEC0\uDEE2-\uDEFA\uDF1C-\uDF34\uDF56-\uDF6E\uDF90-\uDFA8\uDFCA]|\uD83A[\uDD00-\uDD21]|\uD83C[\uDD30-\uDD49\uDD50-\uDD69\uDD70-\uDD89])/.source}.*`);
-      var endSplitter = getSplittingRegex(`(?:${/(?:[a-z\xAA\xB5\xBA\xDF-\xF6\xF8-\xFF\u0101\u0103\u0105\u0107\u0109\u010B\u010D\u010F\u0111\u0113\u0115\u0117\u0119\u011B\u011D\u011F\u0121\u0123\u0125\u0127\u0129\u012B\u012D\u012F\u0131\u0133\u0135\u0137\u0138\u013A\u013C\u013E\u0140\u0142\u0144\u0146\u0148\u0149\u014B\u014D\u014F\u0151\u0153\u0155\u0157\u0159\u015B\u015D\u015F\u0161\u0163\u0165\u0167\u0169\u016B\u016D\u016F\u0171\u0173\u0175\u0177\u017A\u017C\u017E-\u0180\u0183\u0185\u0188\u018C\u018D\u0192\u0195\u0199-\u019B\u019E\u01A1\u01A3\u01A5\u01A8\u01AA\u01AB\u01AD\u01B0\u01B4\u01B6\u01B9\u01BA\u01BD-\u01BF\u01C6\u01C9\u01CC\u01CE\u01D0\u01D2\u01D4\u01D6\u01D8\u01DA\u01DC\u01DD\u01DF\u01E1\u01E3\u01E5\u01E7\u01E9\u01EB\u01ED\u01EF\u01F0\u01F3\u01F5\u01F9\u01FB\u01FD\u01FF\u0201\u0203\u0205\u0207\u0209\u020B\u020D\u020F\u0211\u0213\u0215\u0217\u0219\u021B\u021D\u021F\u0221\u0223\u0225\u0227\u0229\u022B\u022D\u022F\u0231\u0233-\u0239\u023C\u023F\u0240\u0242\u0247\u0249\u024B\u024D\u024F-\u0293\u0295-\u02B8\u02C0\u02C1\u02E0-\u02E4\u0345\u0371\u0373\u0377\u037A-\u037D\u0390\u03AC-\u03CE\u03D0\u03D1\u03D5-\u03D7\u03D9\u03DB\u03DD\u03DF\u03E1\u03E3\u03E5\u03E7\u03E9\u03EB\u03ED\u03EF-\u03F3\u03F5\u03F8\u03FB\u03FC\u0430-\u045F\u0461\u0463\u0465\u0467\u0469\u046B\u046D\u046F\u0471\u0473\u0475\u0477\u0479\u047B\u047D\u047F\u0481\u048B\u048D\u048F\u0491\u0493\u0495\u0497\u0499\u049B\u049D\u049F\u04A1\u04A3\u04A5\u04A7\u04A9\u04AB\u04AD\u04AF\u04B1\u04B3\u04B5\u04B7\u04B9\u04BB\u04BD\u04BF\u04C2\u04C4\u04C6\u04C8\u04CA\u04CC\u04CE\u04CF\u04D1\u04D3\u04D5\u04D7\u04D9\u04DB\u04DD\u04DF\u04E1\u04E3\u04E5\u04E7\u04E9\u04EB\u04ED\u04EF\u04F1\u04F3\u04F5\u04F7\u04F9\u04FB\u04FD\u04FF\u0501\u0503\u0505\u0507\u0509\u050B\u050D\u050F\u0511\u0513\u0515\u0517\u0519\u051B\u051D\u051F\u0521\u0523\u0525\u0527\u0529\u052B\u052D\u052F\u0560-\u0588\u10D0-\u10FA\u10FD-\u10FF\u13F8-\u13FD\u1C80-\u1C88\u1D00-\u1DBF\u1E01\u1E03\u1E05\u1E07\u1E09\u1E0B\u1E0D\u1E0F\u1E11\u1E13\u1E15\u1E17\u1E19\u1E1B\u1E1D\u1E1F\u1E21\u1E23\u1E25\u1E27\u1E29\u1E2B\u1E2D\u1E2F\u1E31\u1E33\u1E35\u1E37\u1E39\u1E3B\u1E3D\u1E3F\u1E41\u1E43\u1E45\u1E47\u1E49\u1E4B\u1E4D\u1E4F\u1E51\u1E53\u1E55\u1E57\u1E59\u1E5B\u1E5D\u1E5F\u1E61\u1E63\u1E65\u1E67\u1E69\u1E6B\u1E6D\u1E6F\u1E71\u1E73\u1E75\u1E77\u1E79\u1E7B\u1E7D\u1E7F\u1E81\u1E83\u1E85\u1E87\u1E89\u1E8B\u1E8D\u1E8F\u1E91\u1E93\u1E95-\u1E9D\u1E9F\u1EA1\u1EA3\u1EA5\u1EA7\u1EA9\u1EAB\u1EAD\u1EAF\u1EB1\u1EB3\u1EB5\u1EB7\u1EB9\u1EBB\u1EBD\u1EBF\u1EC1\u1EC3\u1EC5\u1EC7\u1EC9\u1ECB\u1ECD\u1ECF\u1ED1\u1ED3\u1ED5\u1ED7\u1ED9\u1EDB\u1EDD\u1EDF\u1EE1\u1EE3\u1EE5\u1EE7\u1EE9\u1EEB\u1EED\u1EEF\u1EF1\u1EF3\u1EF5\u1EF7\u1EF9\u1EFB\u1EFD\u1EFF-\u1F07\u1F10-\u1F15\u1F20-\u1F27\u1F30-\u1F37\u1F40-\u1F45\u1F50-\u1F57\u1F60-\u1F67\u1F70-\u1F7D\u1F80-\u1F87\u1F90-\u1F97\u1FA0-\u1FA7\u1FB0-\u1FB4\u1FB6\u1FB7\u1FBE\u1FC2-\u1FC4\u1FC6\u1FC7\u1FD0-\u1FD3\u1FD6\u1FD7\u1FE0-\u1FE7\u1FF2-\u1FF4\u1FF6\u1FF7\u2071\u207F\u2090-\u209C\u210A\u210E\u210F\u2113\u212F\u2134\u2139\u213C\u213D\u2146-\u2149\u214E\u2170-\u217F\u2184\u24D0-\u24E9\u2C30-\u2C5E\u2C61\u2C65\u2C66\u2C68\u2C6A\u2C6C\u2C71\u2C73\u2C74\u2C76-\u2C7D\u2C81\u2C83\u2C85\u2C87\u2C89\u2C8B\u2C8D\u2C8F\u2C91\u2C93\u2C95\u2C97\u2C99\u2C9B\u2C9D\u2C9F\u2CA1\u2CA3\u2CA5\u2CA7\u2CA9\u2CAB\u2CAD\u2CAF\u2CB1\u2CB3\u2CB5\u2CB7\u2CB9\u2CBB\u2CBD\u2CBF\u2CC1\u2CC3\u2CC5\u2CC7\u2CC9\u2CCB\u2CCD\u2CCF\u2CD1\u2CD3\u2CD5\u2CD7\u2CD9\u2CDB\u2CDD\u2CDF\u2CE1\u2CE3\u2CE4\u2CEC\u2CEE\u2CF3\u2D00-\u2D25\u2D27\u2D2D\uA641\uA643\uA645\uA647\uA649\uA64B\uA64D\uA64F\uA651\uA653\uA655\uA657\uA659\uA65B\uA65D\uA65F\uA661\uA663\uA665\uA667\uA669\uA66B\uA66D\uA681\uA683\uA685\uA687\uA689\uA68B\uA68D\uA68F\uA691\uA693\uA695\uA697\uA699\uA69B-\uA69D\uA723\uA725\uA727\uA729\uA72B\uA72D\uA72F-\uA731\uA733\uA735\uA737\uA739\uA73B\uA73D\uA73F\uA741\uA743\uA745\uA747\uA749\uA74B\uA74D\uA74F\uA751\uA753\uA755\uA757\uA759\uA75B\uA75D\uA75F\uA761\uA763\uA765\uA767\uA769\uA76B\uA76D\uA76F-\uA778\uA77A\uA77C\uA77F\uA781\uA783\uA785\uA787\uA78C\uA78E\uA791\uA793-\uA795\uA797\uA799\uA79B\uA79D\uA79F\uA7A1\uA7A3\uA7A5\uA7A7\uA7A9\uA7AF\uA7B5\uA7B7\uA7B9\uA7F8-\uA7FA\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABBF\uFB00-\uFB06\uFB13-\uFB17\uFF41-\uFF5A]|\uD801[\uDC28-\uDC4F\uDCD8-\uDCFB]|\uD803[\uDCC0-\uDCF2]|\uD806[\uDCC0-\uDCDF]|\uD81B[\uDE60-\uDE7F]|\uD835[\uDC1A-\uDC33\uDC4E-\uDC54\uDC56-\uDC67\uDC82-\uDC9B\uDCB6-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDCCF\uDCEA-\uDD03\uDD1E-\uDD37\uDD52-\uDD6B\uDD86-\uDD9F\uDDBA-\uDDD3\uDDEE-\uDE07\uDE22-\uDE3B\uDE56-\uDE6F\uDE8A-\uDEA5\uDEC2-\uDEDA\uDEDC-\uDEE1\uDEFC-\uDF14\uDF16-\uDF1B\uDF36-\uDF4E\uDF50-\uDF55\uDF70-\uDF88\uDF8A-\uDF8F\uDFAA-\uDFC2\uDFC4-\uDFC9\uDFCB]|\uD83A[\uDD22-\uDD43])/.source}.*|${particleMatcher}.*|\\S*)`);
-      var parseName3 = function parseName4(name = "") {
-        if (typeof name !== "string") {
-          name = name + "";
-        }
-        let start2 = "";
-        let mid = "";
-        let end2 = "";
-        if (/[^.], /.test(name)) {
-          const parts = name.split(", ");
-          end2 = parts.shift();
-          const suffixMatch = RegExp(suffixMatcher).exec(parts.join(", "));
-          start2 = parts.splice(suffixMatch && suffixMatch.index !== 0 ? 0 : -1, 1)[0];
-          mid = parts.join(", ");
-        } else {
-          const parts = name.split(suffixSplitter, 2);
-          const main2 = parts.shift().split(endSplitter, 2);
-          start2 = main2[0];
-          end2 = main2[1];
-          mid = parts.pop();
-        }
-        const _start$match = start2.match(titleSplitter), _start$match2 = _slicedToArray(_start$match, 3), droppingParticle = _start$match2[1], given = _start$match2[2];
-        const suffix = mid;
-        const _end$split$reverse = end2.split(particleSplitter, 2).reverse(), _end$split$reverse2 = _slicedToArray(_end$split$reverse, 2), family = _end$split$reverse2[0], nonDroppingParticle = _end$split$reverse2[1];
-        if (!given && family) {
-          return family.includes(" ") ? {
-            literal: family
-          } : {
-            family
-          };
-        } else if (family) {
-          const nameObject = {
-            "dropping-particle": droppingParticle,
-            given,
-            suffix,
-            "non-dropping-particle": nonDroppingParticle,
-            family
-          };
-          Object.keys(nameObject).forEach((key) => {
-            if (!nameObject[key]) {
-              delete nameObject[key];
-            }
-          });
-          return nameObject;
-        } else {
-          return {
-            literal: name
-          };
-        }
-      };
-      exports.default = exports.parse = parseName3;
-      var scope = "@name";
-      exports.scope = scope;
-      var types5 = "@name";
-      exports.types = types5;
-    }
-  });
-
-  // node_modules/@citation-js/name/lib/output.js
-  var require_output = __commonJS({
-    "node_modules/@citation-js/name/lib/output.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.default = void 0;
-      var startParts = ["dropping-particle", "given"];
-      var suffixParts = ["suffix"];
-      var endParts = ["non-dropping-particle", "family"];
-      var getName3 = function getName4(name, reversed = false) {
-        const get9 = (parts) => parts.map((entry) => name[entry] || "").filter(Boolean).join(" ");
-        if (name.literal) {
-          return name.literal;
-        } else if (reversed) {
-          const suffixPart = get9(suffixParts) ? `, ${get9(suffixParts)}` : "";
-          const startPart = get9(startParts) ? `, ${get9(startParts)}` : "";
-          return get9(endParts) + suffixPart + startPart;
-        } else {
-          return `${get9([...startParts, ...suffixParts, ...endParts])}`;
-        }
-      };
-      var _default = getName3;
-      exports.default = _default;
-    }
-  });
-
-  // node_modules/@citation-js/name/lib/index.js
-  var require_lib = __commonJS({
-    "node_modules/@citation-js/name/lib/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      Object.defineProperty(exports, "parse", {
-        enumerable: true,
-        get: function get9() {
-          return _input.default;
-        }
-      });
-      Object.defineProperty(exports, "format", {
-        enumerable: true,
-        get: function get9() {
-          return _output.default;
-        }
-      });
-      var _input = _interopRequireDefault(require_input());
-      var _output = _interopRequireDefault(require_output());
-      function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-      }
-    }
-  });
-
-  // node_modules/sync-fetch/browser.js
-  var require_browser = __commonJS({
-    "node_modules/sync-fetch/browser.js"(exports, module) {
-      var textEncoder = new TextEncoder();
-      var textDecoder = new TextDecoder();
-      function syncFetch3(...args) {
-        const request = new syncFetch3.Request(...args);
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials = request.credentials === "include";
-        xhr.timeout = request[INTERNALS].timeout;
-        xhr.open(request.method, request.url, false);
-        let useBinaryEncoding = false;
-        try {
-          xhr.responseType = "arraybuffer";
-        } catch (e) {
-          xhr.overrideMimeType("text/plain; charset=x-user-defined");
-          useBinaryEncoding = true;
-        }
-        for (const header of request.headers) {
-          xhr.setRequestHeader(...header);
-        }
-        xhr.send(request[INTERNALS].body || null);
-        let headers = xhr.getAllResponseHeaders();
-        headers = headers && headers.split("\r\n").filter(Boolean).map((header) => header.split(": ", 2));
-        let body = xhr.response;
-        if (useBinaryEncoding) {
-          const buffer = new Uint8Array(body.length);
-          for (let i = 0; i < body.length; i++) {
-            buffer[i] = body.charCodeAt(i) & 255;
-          }
-          body = buffer;
-        }
-        const response = new syncFetch3.Response(body, {
-          headers,
-          status: xhr.status,
-          statusText: xhr.statusText
-        });
-        response[INTERNALS].url = xhr.responseURL;
-        response[INTERNALS].redirected = xhr.responseURL !== request.url;
-        return response;
-      }
-      var INTERNALS = /* @__PURE__ */ Symbol("SyncFetch Internals");
-      var REQ_UNSUPPORTED = ["mode", "cache", "redirect", "referrer", "integrity"];
-      var HTTP_STATUS = {
-        100: "Continue",
-        101: "Switching Protocols",
-        200: "OK",
-        201: "Created",
-        202: "Accepted",
-        203: "Non-Authoritative Information",
-        204: "No Content",
-        205: "Reset Content",
-        206: "Partial Content",
-        300: "Multiple Choices",
-        301: "Moved Permanently",
-        302: "Found",
-        303: "See Other",
-        304: "Not Modified",
-        305: "Use Proxy",
-        307: "Temporary Redirect",
-        400: "Bad Request",
-        401: "Unauthorized",
-        402: "Payment Required",
-        403: "Forbidden",
-        404: "Not Found",
-        405: "Method Not Allowed",
-        406: "Not Acceptable",
-        407: "Proxy Authentication Required",
-        408: "Request Timeout",
-        409: "Conflict",
-        410: "Gone",
-        411: "Length Required",
-        412: "Precondition Failed",
-        413: "Payload Too Large",
-        414: "URI Too Long",
-        415: "Unsupported Media Type",
-        416: "Range Not Satisfiable",
-        417: "Expectation Failed",
-        426: "Upgrade Required",
-        500: "Internal Server Error",
-        501: "Not Implemented",
-        502: "Bad Gateway",
-        503: "Service Unavailable",
-        504: "Gateway Timeout",
-        505: "HTTP Version Not Supported"
-      };
-      var SyncRequest = class _SyncRequest {
-        constructor(resource, init = {}) {
-          for (const option of REQ_UNSUPPORTED) {
-            if (option in init) {
-              throw new TypeError(`option ${option} not supported`);
-            }
-          }
-          if (init.credentials === "same-origin") {
-            throw new TypeError("option credentials with value 'same-origin' not supported");
-          }
-          this[INTERNALS] = {
-            method: init.method || "GET",
-            headers: new syncFetch3.Headers(init.headers),
-            body: parseBody(init.body),
-            credentials: init.credentials || "omit",
-            // Non-spec
-            timeout: init.timeout || 0
-          };
-          if (typeof resource === "string") {
-            this[INTERNALS].url = resource;
-          } else if (resource instanceof _SyncRequest) {
-            this[INTERNALS].url = resource.url;
-            if (!init.method) {
-              this[INTERNALS].method = resource.method;
-            }
-            if (!init.headers) {
-              this[INTERNALS].headers = resource.headers;
-            }
-            if (!init.body) {
-              this[INTERNALS].body = resource[INTERNALS].body;
-            }
-            if (!init.credentials) {
-              this[INTERNALS].credentials = resource.credentials;
-            }
-          } else {
-            throw new TypeError("Request input should be a URL string or a Request object");
-          }
-        }
-        get cache() {
-          return "default";
-        }
-        get credentials() {
-          return this[INTERNALS].credentials;
-        }
-        get destination() {
-          return "";
-        }
-        get headers() {
-          return this[INTERNALS].headers;
-        }
-        get integrity() {
-          return "";
-        }
-        get method() {
-          return this[INTERNALS].method;
-        }
-        get mode() {
-          return "cors";
-        }
-        get priority() {
-          return "auto";
-        }
-        get redirect() {
-          return "follow";
-        }
-        get referrer() {
-          return "about:client";
-        }
-        get referrerPolicy() {
-          return "";
-        }
-        get url() {
-          return this[INTERNALS].url;
-        }
-        clone() {
-          checkBody(this);
-          return new _SyncRequest(this.url, this[INTERNALS]);
-        }
-      };
-      var SyncResponse = class _SyncResponse {
-        constructor(body, init = {}) {
-          this[INTERNALS] = {
-            body: parseBody(body),
-            bodyUsed: false,
-            headers: new syncFetch3.Headers(init.headers),
-            status: init.status,
-            statusText: init.statusText
-          };
-        }
-        get headers() {
-          return this[INTERNALS].headers;
-        }
-        get ok() {
-          const status = this[INTERNALS].status;
-          return status >= 200 && status < 300;
-        }
-        get redirected() {
-          return this[INTERNALS].redirected;
-        }
-        get status() {
-          return this[INTERNALS].status;
-        }
-        get statusText() {
-          return this[INTERNALS].statusText;
-        }
-        get url() {
-          return this[INTERNALS].url;
-        }
-        clone() {
-          return this.redirect(this[INTERNALS].url, this[INTERNALS].status);
-        }
-        redirect(url, status) {
-          checkBody(this);
-          const response = new _SyncResponse(this[INTERNALS].body, {
-            headers: this[INTERNALS].headers,
-            status: status || this[INTERNALS].status,
-            statusText: HTTP_STATUS[status] || this[INTERNALS].statusText
-          });
-          response[INTERNALS].url = url || this[INTERNALS].url;
-          response[INTERNALS].redirected = this[INTERNALS].redirected;
-          return response;
-        }
-      };
-      var Body = class _Body {
-        constructor(body) {
-          this[INTERNALS] = {
-            body: parseBody(body),
-            bodyUsed: false
-          };
-        }
-        get bodyUsed() {
-          return this[INTERNALS].bodyUsed;
-        }
-        static mixin(prototype) {
-          for (const name of Object.getOwnPropertyNames(_Body.prototype)) {
-            if (name === "constructor") {
-              continue;
-            }
-            const desc = Object.getOwnPropertyDescriptor(_Body.prototype, name);
-            Object.defineProperty(prototype, name, { ...desc, enumerable: true });
-          }
-        }
-        arrayBuffer() {
-          const buffer = consumeBody(this);
-          return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
-        }
-        blob() {
-          const type3 = this.headers && this.headers.get("content-type");
-          return new Blob([consumeBody(this)], type3 && { type: type3 });
-        }
-        text() {
-          return textDecoder.decode(consumeBody(this));
-        }
-        json() {
-          try {
-            return JSON.parse(this.text());
-          } catch (err) {
-            throw new TypeError(`invalid json response body at ${this.url} reason: ${err.message}`, "invalid-json");
-          }
-        }
-      };
-      function checkBody(body) {
-        if (body.bodyUsed) {
-          throw new TypeError(`body used already for: ${body.url}`);
-        }
-      }
-      function consumeBody(body) {
-        checkBody(body);
-        body[INTERNALS].bodyUsed = true;
-        return body[INTERNALS].body || new Uint8Array();
-      }
-      function parseBody(body) {
-        if (typeof body === "string") {
-          return textEncoder.encode(body);
-        } else if (body) {
-          return body;
-        } else {
-          return null;
-        }
-      }
-      Body.mixin(SyncRequest.prototype);
-      Body.mixin(SyncResponse.prototype);
-      var Headers3 = class {
-        constructor(headers) {
-          if (headers instanceof syncFetch3.Headers) {
-            this[INTERNALS] = { ...headers[INTERNALS] };
-          } else {
-            this[INTERNALS] = {};
-            if (Array.isArray(headers)) {
-              for (const [name, value] of headers) {
-                this.append(name, value);
-              }
-            } else if (typeof headers === "object") {
-              for (const name in headers) {
-                this.set(name, headers[name]);
-              }
-            }
-          }
-        }
-        // modification
-        append(name, value) {
-          name = name.toLowerCase();
-          if (!this[INTERNALS][name]) {
-            this[INTERNALS][name] = [];
-          }
-          this[INTERNALS][name].push(value);
-        }
-        delete(name) {
-          delete this[INTERNALS][name.toLowerCase()];
-        }
-        set(name, value) {
-          this[INTERNALS][name.toLowerCase()] = [value];
-        }
-        // access
-        entries() {
-          const pairs = [];
-          for (const name in this[INTERNALS]) {
-            for (const value of this[INTERNALS][name]) {
-              pairs.push([name, value]);
-            }
-          }
-          return pairs;
-        }
-        get(name) {
-          name = name.toLowerCase();
-          return name in this[INTERNALS] ? this[INTERNALS][name].join(", ") : null;
-        }
-        keys() {
-          return Object.keys(this[INTERNALS]);
-        }
-        has(name) {
-          return name.toLowerCase() in this[INTERNALS];
-        }
-        values() {
-          const values = [];
-          for (const name in this[INTERNALS]) {
-            for (const value of this[INTERNALS][name]) {
-              values.push(value);
-            }
-          }
-          return values;
-        }
-        *[Symbol.iterator]() {
-          for (const name in this[INTERNALS]) {
-            for (const value of this[INTERNALS][name]) {
-              yield [name, value];
-            }
-          }
-        }
-      };
-      syncFetch3.Headers = Headers3;
-      syncFetch3.Request = SyncRequest;
-      syncFetch3.Response = SyncResponse;
-      module.exports = syncFetch3;
-    }
-  });
-
   // node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/input.js
-  var require_input2 = __commonJS({
+  var require_input = __commonJS({
     "node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/input.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", {
@@ -580,7 +73,7 @@
         if (Array.isArray(arr)) return arr;
       }
       var punctutationMatcher = (string) => string.replace(/$|( )|(?!^)(?=[A-Z])/g, "\\.?$1");
-      var getListMatcher = (list11) => `(?:${list11.join("|")})\\b`;
+      var getListMatcher = (list6) => `(?:${list6.join("|")})\\b`;
       var getSplittingRegex = (matcher, flags) => new RegExp(`(?:^| )(${matcher}$)`, flags);
       var titles = ["mr", "mrs", "ms", "miss", "dr", "herr", "monsieur", "hr", "frau", "a v m", "admiraal", "admiral", "air cdre", "air commodore", "air marshal", "air vice marshal", "alderman", "alhaji", "ambassador", "baron", "barones", "brig", "brig gen", "brig general", "brigadier", "brigadier general", "brother", "canon", "capt", "captain", "cardinal", "cdr", "chief", "cik", "cmdr", "coach", "col", "col dr", "colonel", "commandant", "commander", "commissioner", "commodore", "comte", "comtessa", "congressman", "conseiller", "consul", "conte", "contessa", "corporal", "councillor", "count", "countess", "crown prince", "crown princess", "dame", "datin", "dato", "datuk", "datuk seri", "deacon", "deaconess", "dean", "dhr", "dipl ing", "doctor", "dott", "dott sa", "dr", "dr ing", "dra", "drs", "embajador", "embajadora", "en", "encik", "eng", "eur ing", "exma sra", "exmo sr", "f o", "father", "first lieutient", "first officer", "flt lieut", "flying officer", "fr", "frau", "fraulein", "fru", "gen", "generaal", "general", "governor", "graaf", "gravin", "group captain", "grp capt", "h e dr", "h h", "h m", "h r h", "hajah", "haji", "hajim", "her highness", "her majesty", "herr", "high chief", "his highness", "his holiness", "his majesty", "hon", "hr", "hra", "ing", "ir", "jonkheer", "judge", "justice", "khun ying", "kolonel", "lady", "lcda", "lic", "lieut", "lieut cdr", "lieut col", "lieut gen", "lord", "m", "m l", "m r", "madame", "mademoiselle", "maj gen", "major", "master", "mevrouw", "miss", "mlle", "mme", "monsieur", "monsignor", "mr", "mrs", "ms", "mstr", "nti", "pastor", "president", "prince", "princess", "princesse", "prinses", "prof", "prof dr", "prof sir", "professor", "puan", "puan sri", "rabbi", "rear admiral", "rev", "rev canon", "rev dr", "rev mother", "reverend", "rva", "senator", "sergeant", "sheikh", "sheikha", "sig", "sig na", "sig ra", "sir", "sister", "sqn ldr", "sr", "sr d", "sra", "srta", "sultan", "tan sri", "tan sri dato", "tengku", "teuku", "than puying", "the hon dr", "the hon justice", "the hon miss", "the hon mr", "the hon mrs", "the hon ms", "the hon sir", "the very rev", "toh puan", "tun", "vice admiral", "viscount", "viscountess", "wg cdr"];
       var suffixes = ["I", "II", "III", "IV", "V", "Senior", "Junior", "Jr", "Sr", "PhD", "Ph\\.D", "APR", "RPh", "PE", "MD", "MA", "DMD", "CME", "BVM", "CFRE", "CLU", "CPA", "CSC", "CSJ", "DC", "DD", "DDS", "DO", "DVM", "EdD", "Esq", "JD", "LLD", "OD", "OSB", "PC", "Ret", "RGS", "RN", "RNC", "SHCJ", "SJ", "SNJM", "SSMO", "USA", "USAF", "USAFR", "USAR", "USCG", "USMC", "USMCR", "USN", "USNR"];
@@ -592,7 +85,7 @@
       var suffixSplitter = getSplittingRegex(`(?:${suffixMatcher}, )*(?:${suffixMatcher})`, "i");
       var particleSplitter = getSplittingRegex(`${/(?:[A-Z\xC0-\xD6\xD8-\xDE\u0100\u0102\u0104\u0106\u0108\u010A\u010C\u010E\u0110\u0112\u0114\u0116\u0118\u011A\u011C\u011E\u0120\u0122\u0124\u0126\u0128\u012A\u012C\u012E\u0130\u0132\u0134\u0136\u0139\u013B\u013D\u013F\u0141\u0143\u0145\u0147\u014A\u014C\u014E\u0150\u0152\u0154\u0156\u0158\u015A\u015C\u015E\u0160\u0162\u0164\u0166\u0168\u016A\u016C\u016E\u0170\u0172\u0174\u0176\u0178\u0179\u017B\u017D\u0181\u0182\u0184\u0186\u0187\u0189-\u018B\u018E-\u0191\u0193\u0194\u0196-\u0198\u019C\u019D\u019F\u01A0\u01A2\u01A4\u01A6\u01A7\u01A9\u01AC\u01AE\u01AF\u01B1-\u01B3\u01B5\u01B7\u01B8\u01BC\u01C4\u01C7\u01CA\u01CD\u01CF\u01D1\u01D3\u01D5\u01D7\u01D9\u01DB\u01DE\u01E0\u01E2\u01E4\u01E6\u01E8\u01EA\u01EC\u01EE\u01F1\u01F4\u01F6-\u01F8\u01FA\u01FC\u01FE\u0200\u0202\u0204\u0206\u0208\u020A\u020C\u020E\u0210\u0212\u0214\u0216\u0218\u021A\u021C\u021E\u0220\u0222\u0224\u0226\u0228\u022A\u022C\u022E\u0230\u0232\u023A\u023B\u023D\u023E\u0241\u0243-\u0246\u0248\u024A\u024C\u024E\u0370\u0372\u0376\u037F\u0386\u0388-\u038A\u038C\u038E\u038F\u0391-\u03A1\u03A3-\u03AB\u03CF\u03D2-\u03D4\u03D8\u03DA\u03DC\u03DE\u03E0\u03E2\u03E4\u03E6\u03E8\u03EA\u03EC\u03EE\u03F4\u03F7\u03F9\u03FA\u03FD-\u042F\u0460\u0462\u0464\u0466\u0468\u046A\u046C\u046E\u0470\u0472\u0474\u0476\u0478\u047A\u047C\u047E\u0480\u048A\u048C\u048E\u0490\u0492\u0494\u0496\u0498\u049A\u049C\u049E\u04A0\u04A2\u04A4\u04A6\u04A8\u04AA\u04AC\u04AE\u04B0\u04B2\u04B4\u04B6\u04B8\u04BA\u04BC\u04BE\u04C0\u04C1\u04C3\u04C5\u04C7\u04C9\u04CB\u04CD\u04D0\u04D2\u04D4\u04D6\u04D8\u04DA\u04DC\u04DE\u04E0\u04E2\u04E4\u04E6\u04E8\u04EA\u04EC\u04EE\u04F0\u04F2\u04F4\u04F6\u04F8\u04FA\u04FC\u04FE\u0500\u0502\u0504\u0506\u0508\u050A\u050C\u050E\u0510\u0512\u0514\u0516\u0518\u051A\u051C\u051E\u0520\u0522\u0524\u0526\u0528\u052A\u052C\u052E\u0531-\u0556\u10A0-\u10C5\u10C7\u10CD\u13A0-\u13F5\u1C90-\u1CBA\u1CBD-\u1CBF\u1E00\u1E02\u1E04\u1E06\u1E08\u1E0A\u1E0C\u1E0E\u1E10\u1E12\u1E14\u1E16\u1E18\u1E1A\u1E1C\u1E1E\u1E20\u1E22\u1E24\u1E26\u1E28\u1E2A\u1E2C\u1E2E\u1E30\u1E32\u1E34\u1E36\u1E38\u1E3A\u1E3C\u1E3E\u1E40\u1E42\u1E44\u1E46\u1E48\u1E4A\u1E4C\u1E4E\u1E50\u1E52\u1E54\u1E56\u1E58\u1E5A\u1E5C\u1E5E\u1E60\u1E62\u1E64\u1E66\u1E68\u1E6A\u1E6C\u1E6E\u1E70\u1E72\u1E74\u1E76\u1E78\u1E7A\u1E7C\u1E7E\u1E80\u1E82\u1E84\u1E86\u1E88\u1E8A\u1E8C\u1E8E\u1E90\u1E92\u1E94\u1E9E\u1EA0\u1EA2\u1EA4\u1EA6\u1EA8\u1EAA\u1EAC\u1EAE\u1EB0\u1EB2\u1EB4\u1EB6\u1EB8\u1EBA\u1EBC\u1EBE\u1EC0\u1EC2\u1EC4\u1EC6\u1EC8\u1ECA\u1ECC\u1ECE\u1ED0\u1ED2\u1ED4\u1ED6\u1ED8\u1EDA\u1EDC\u1EDE\u1EE0\u1EE2\u1EE4\u1EE6\u1EE8\u1EEA\u1EEC\u1EEE\u1EF0\u1EF2\u1EF4\u1EF6\u1EF8\u1EFA\u1EFC\u1EFE\u1F08-\u1F0F\u1F18-\u1F1D\u1F28-\u1F2F\u1F38-\u1F3F\u1F48-\u1F4D\u1F59\u1F5B\u1F5D\u1F5F\u1F68-\u1F6F\u1FB8-\u1FBB\u1FC8-\u1FCB\u1FD8-\u1FDB\u1FE8-\u1FEC\u1FF8-\u1FFB\u2102\u2107\u210B-\u210D\u2110-\u2112\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u2130-\u2133\u213E\u213F\u2145\u2160-\u216F\u2183\u24B6-\u24CF\u2C00-\u2C2E\u2C60\u2C62-\u2C64\u2C67\u2C69\u2C6B\u2C6D-\u2C70\u2C72\u2C75\u2C7E-\u2C80\u2C82\u2C84\u2C86\u2C88\u2C8A\u2C8C\u2C8E\u2C90\u2C92\u2C94\u2C96\u2C98\u2C9A\u2C9C\u2C9E\u2CA0\u2CA2\u2CA4\u2CA6\u2CA8\u2CAA\u2CAC\u2CAE\u2CB0\u2CB2\u2CB4\u2CB6\u2CB8\u2CBA\u2CBC\u2CBE\u2CC0\u2CC2\u2CC4\u2CC6\u2CC8\u2CCA\u2CCC\u2CCE\u2CD0\u2CD2\u2CD4\u2CD6\u2CD8\u2CDA\u2CDC\u2CDE\u2CE0\u2CE2\u2CEB\u2CED\u2CF2\uA640\uA642\uA644\uA646\uA648\uA64A\uA64C\uA64E\uA650\uA652\uA654\uA656\uA658\uA65A\uA65C\uA65E\uA660\uA662\uA664\uA666\uA668\uA66A\uA66C\uA680\uA682\uA684\uA686\uA688\uA68A\uA68C\uA68E\uA690\uA692\uA694\uA696\uA698\uA69A\uA722\uA724\uA726\uA728\uA72A\uA72C\uA72E\uA732\uA734\uA736\uA738\uA73A\uA73C\uA73E\uA740\uA742\uA744\uA746\uA748\uA74A\uA74C\uA74E\uA750\uA752\uA754\uA756\uA758\uA75A\uA75C\uA75E\uA760\uA762\uA764\uA766\uA768\uA76A\uA76C\uA76E\uA779\uA77B\uA77D\uA77E\uA780\uA782\uA784\uA786\uA78B\uA78D\uA790\uA792\uA796\uA798\uA79A\uA79C\uA79E\uA7A0\uA7A2\uA7A4\uA7A6\uA7A8\uA7AA-\uA7AE\uA7B0-\uA7B4\uA7B6\uA7B8\uFF21-\uFF3A]|\uD801[\uDC00-\uDC27\uDCB0-\uDCD3]|\uD803[\uDC80-\uDCB2]|\uD806[\uDCA0-\uDCBF]|\uD81B[\uDE40-\uDE5F]|\uD835[\uDC00-\uDC19\uDC34-\uDC4D\uDC68-\uDC81\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB5\uDCD0-\uDCE9\uDD04\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD38\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD6C-\uDD85\uDDA0-\uDDB9\uDDD4-\uDDED\uDE08-\uDE21\uDE3C-\uDE55\uDE70-\uDE89\uDEA8-\uDEC0\uDEE2-\uDEFA\uDF1C-\uDF34\uDF56-\uDF6E\uDF90-\uDFA8\uDFCA]|\uD83A[\uDD00-\uDD21]|\uD83C[\uDD30-\uDD49\uDD50-\uDD69\uDD70-\uDD89])/.source}.*`);
       var endSplitter = getSplittingRegex(`(?:${/(?:[a-z\xAA\xB5\xBA\xDF-\xF6\xF8-\xFF\u0101\u0103\u0105\u0107\u0109\u010B\u010D\u010F\u0111\u0113\u0115\u0117\u0119\u011B\u011D\u011F\u0121\u0123\u0125\u0127\u0129\u012B\u012D\u012F\u0131\u0133\u0135\u0137\u0138\u013A\u013C\u013E\u0140\u0142\u0144\u0146\u0148\u0149\u014B\u014D\u014F\u0151\u0153\u0155\u0157\u0159\u015B\u015D\u015F\u0161\u0163\u0165\u0167\u0169\u016B\u016D\u016F\u0171\u0173\u0175\u0177\u017A\u017C\u017E-\u0180\u0183\u0185\u0188\u018C\u018D\u0192\u0195\u0199-\u019B\u019E\u01A1\u01A3\u01A5\u01A8\u01AA\u01AB\u01AD\u01B0\u01B4\u01B6\u01B9\u01BA\u01BD-\u01BF\u01C6\u01C9\u01CC\u01CE\u01D0\u01D2\u01D4\u01D6\u01D8\u01DA\u01DC\u01DD\u01DF\u01E1\u01E3\u01E5\u01E7\u01E9\u01EB\u01ED\u01EF\u01F0\u01F3\u01F5\u01F9\u01FB\u01FD\u01FF\u0201\u0203\u0205\u0207\u0209\u020B\u020D\u020F\u0211\u0213\u0215\u0217\u0219\u021B\u021D\u021F\u0221\u0223\u0225\u0227\u0229\u022B\u022D\u022F\u0231\u0233-\u0239\u023C\u023F\u0240\u0242\u0247\u0249\u024B\u024D\u024F-\u0293\u0295-\u02B8\u02C0\u02C1\u02E0-\u02E4\u0345\u0371\u0373\u0377\u037A-\u037D\u0390\u03AC-\u03CE\u03D0\u03D1\u03D5-\u03D7\u03D9\u03DB\u03DD\u03DF\u03E1\u03E3\u03E5\u03E7\u03E9\u03EB\u03ED\u03EF-\u03F3\u03F5\u03F8\u03FB\u03FC\u0430-\u045F\u0461\u0463\u0465\u0467\u0469\u046B\u046D\u046F\u0471\u0473\u0475\u0477\u0479\u047B\u047D\u047F\u0481\u048B\u048D\u048F\u0491\u0493\u0495\u0497\u0499\u049B\u049D\u049F\u04A1\u04A3\u04A5\u04A7\u04A9\u04AB\u04AD\u04AF\u04B1\u04B3\u04B5\u04B7\u04B9\u04BB\u04BD\u04BF\u04C2\u04C4\u04C6\u04C8\u04CA\u04CC\u04CE\u04CF\u04D1\u04D3\u04D5\u04D7\u04D9\u04DB\u04DD\u04DF\u04E1\u04E3\u04E5\u04E7\u04E9\u04EB\u04ED\u04EF\u04F1\u04F3\u04F5\u04F7\u04F9\u04FB\u04FD\u04FF\u0501\u0503\u0505\u0507\u0509\u050B\u050D\u050F\u0511\u0513\u0515\u0517\u0519\u051B\u051D\u051F\u0521\u0523\u0525\u0527\u0529\u052B\u052D\u052F\u0560-\u0588\u10D0-\u10FA\u10FD-\u10FF\u13F8-\u13FD\u1C80-\u1C88\u1D00-\u1DBF\u1E01\u1E03\u1E05\u1E07\u1E09\u1E0B\u1E0D\u1E0F\u1E11\u1E13\u1E15\u1E17\u1E19\u1E1B\u1E1D\u1E1F\u1E21\u1E23\u1E25\u1E27\u1E29\u1E2B\u1E2D\u1E2F\u1E31\u1E33\u1E35\u1E37\u1E39\u1E3B\u1E3D\u1E3F\u1E41\u1E43\u1E45\u1E47\u1E49\u1E4B\u1E4D\u1E4F\u1E51\u1E53\u1E55\u1E57\u1E59\u1E5B\u1E5D\u1E5F\u1E61\u1E63\u1E65\u1E67\u1E69\u1E6B\u1E6D\u1E6F\u1E71\u1E73\u1E75\u1E77\u1E79\u1E7B\u1E7D\u1E7F\u1E81\u1E83\u1E85\u1E87\u1E89\u1E8B\u1E8D\u1E8F\u1E91\u1E93\u1E95-\u1E9D\u1E9F\u1EA1\u1EA3\u1EA5\u1EA7\u1EA9\u1EAB\u1EAD\u1EAF\u1EB1\u1EB3\u1EB5\u1EB7\u1EB9\u1EBB\u1EBD\u1EBF\u1EC1\u1EC3\u1EC5\u1EC7\u1EC9\u1ECB\u1ECD\u1ECF\u1ED1\u1ED3\u1ED5\u1ED7\u1ED9\u1EDB\u1EDD\u1EDF\u1EE1\u1EE3\u1EE5\u1EE7\u1EE9\u1EEB\u1EED\u1EEF\u1EF1\u1EF3\u1EF5\u1EF7\u1EF9\u1EFB\u1EFD\u1EFF-\u1F07\u1F10-\u1F15\u1F20-\u1F27\u1F30-\u1F37\u1F40-\u1F45\u1F50-\u1F57\u1F60-\u1F67\u1F70-\u1F7D\u1F80-\u1F87\u1F90-\u1F97\u1FA0-\u1FA7\u1FB0-\u1FB4\u1FB6\u1FB7\u1FBE\u1FC2-\u1FC4\u1FC6\u1FC7\u1FD0-\u1FD3\u1FD6\u1FD7\u1FE0-\u1FE7\u1FF2-\u1FF4\u1FF6\u1FF7\u2071\u207F\u2090-\u209C\u210A\u210E\u210F\u2113\u212F\u2134\u2139\u213C\u213D\u2146-\u2149\u214E\u2170-\u217F\u2184\u24D0-\u24E9\u2C30-\u2C5E\u2C61\u2C65\u2C66\u2C68\u2C6A\u2C6C\u2C71\u2C73\u2C74\u2C76-\u2C7D\u2C81\u2C83\u2C85\u2C87\u2C89\u2C8B\u2C8D\u2C8F\u2C91\u2C93\u2C95\u2C97\u2C99\u2C9B\u2C9D\u2C9F\u2CA1\u2CA3\u2CA5\u2CA7\u2CA9\u2CAB\u2CAD\u2CAF\u2CB1\u2CB3\u2CB5\u2CB7\u2CB9\u2CBB\u2CBD\u2CBF\u2CC1\u2CC3\u2CC5\u2CC7\u2CC9\u2CCB\u2CCD\u2CCF\u2CD1\u2CD3\u2CD5\u2CD7\u2CD9\u2CDB\u2CDD\u2CDF\u2CE1\u2CE3\u2CE4\u2CEC\u2CEE\u2CF3\u2D00-\u2D25\u2D27\u2D2D\uA641\uA643\uA645\uA647\uA649\uA64B\uA64D\uA64F\uA651\uA653\uA655\uA657\uA659\uA65B\uA65D\uA65F\uA661\uA663\uA665\uA667\uA669\uA66B\uA66D\uA681\uA683\uA685\uA687\uA689\uA68B\uA68D\uA68F\uA691\uA693\uA695\uA697\uA699\uA69B-\uA69D\uA723\uA725\uA727\uA729\uA72B\uA72D\uA72F-\uA731\uA733\uA735\uA737\uA739\uA73B\uA73D\uA73F\uA741\uA743\uA745\uA747\uA749\uA74B\uA74D\uA74F\uA751\uA753\uA755\uA757\uA759\uA75B\uA75D\uA75F\uA761\uA763\uA765\uA767\uA769\uA76B\uA76D\uA76F-\uA778\uA77A\uA77C\uA77F\uA781\uA783\uA785\uA787\uA78C\uA78E\uA791\uA793-\uA795\uA797\uA799\uA79B\uA79D\uA79F\uA7A1\uA7A3\uA7A5\uA7A7\uA7A9\uA7AF\uA7B5\uA7B7\uA7B9\uA7F8-\uA7FA\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABBF\uFB00-\uFB06\uFB13-\uFB17\uFF41-\uFF5A]|\uD801[\uDC28-\uDC4F\uDCD8-\uDCFB]|\uD803[\uDCC0-\uDCF2]|\uD806[\uDCC0-\uDCDF]|\uD81B[\uDE60-\uDE7F]|\uD835[\uDC1A-\uDC33\uDC4E-\uDC54\uDC56-\uDC67\uDC82-\uDC9B\uDCB6-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDCCF\uDCEA-\uDD03\uDD1E-\uDD37\uDD52-\uDD6B\uDD86-\uDD9F\uDDBA-\uDDD3\uDDEE-\uDE07\uDE22-\uDE3B\uDE56-\uDE6F\uDE8A-\uDEA5\uDEC2-\uDEDA\uDEDC-\uDEE1\uDEFC-\uDF14\uDF16-\uDF1B\uDF36-\uDF4E\uDF50-\uDF55\uDF70-\uDF88\uDF8A-\uDF8F\uDFAA-\uDFC2\uDFC4-\uDFC9\uDFCB]|\uD83A[\uDD22-\uDD43])/.source}.*|${particleMatcher}.*|\\S*)`);
-      var parseName3 = function parseName4(name = "") {
+      var parseName2 = function parseName3(name = "") {
         if (typeof name !== "string") {
           name = name + "";
         }
@@ -641,16 +134,16 @@
           };
         }
       };
-      exports.default = exports.parse = parseName3;
+      exports.default = exports.parse = parseName2;
       var scope = "@name";
       exports.scope = scope;
-      var types5 = "@name";
-      exports.types = types5;
+      var types3 = "@name";
+      exports.types = types3;
     }
   });
 
   // node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/output.js
-  var require_output2 = __commonJS({
+  var require_output = __commonJS({
     "node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/output.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", {
@@ -660,25 +153,25 @@
       var startParts = ["dropping-particle", "given"];
       var suffixParts = ["suffix"];
       var endParts = ["non-dropping-particle", "family"];
-      var getName3 = function getName4(name, reversed = false) {
-        const get9 = (parts) => parts.map((entry) => name[entry] || "").filter(Boolean).join(" ");
+      var getName2 = function getName3(name, reversed = false) {
+        const get5 = (parts) => parts.map((entry) => name[entry] || "").filter(Boolean).join(" ");
         if (name.literal) {
           return name.literal;
         } else if (reversed) {
-          const suffixPart = get9(suffixParts) ? `, ${get9(suffixParts)}` : "";
-          const startPart = get9(startParts) ? `, ${get9(startParts)}` : "";
-          return get9(endParts) + suffixPart + startPart;
+          const suffixPart = get5(suffixParts) ? `, ${get5(suffixParts)}` : "";
+          const startPart = get5(startParts) ? `, ${get5(startParts)}` : "";
+          return get5(endParts) + suffixPart + startPart;
         } else {
-          return `${get9([...startParts, ...suffixParts, ...endParts])}`;
+          return `${get5([...startParts, ...suffixParts, ...endParts])}`;
         }
       };
-      var _default = getName3;
+      var _default = getName2;
       exports.default = _default;
     }
   });
 
   // node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/index.js
-  var require_lib2 = __commonJS({
+  var require_lib = __commonJS({
     "node_modules/.pnpm/@citation-js+name@0.4.2/node_modules/@citation-js/name/lib/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", {
@@ -686,18 +179,18 @@
       });
       Object.defineProperty(exports, "parse", {
         enumerable: true,
-        get: function get9() {
+        get: function get5() {
           return _input.default;
         }
       });
       Object.defineProperty(exports, "format", {
         enumerable: true,
-        get: function get9() {
+        get: function get5() {
           return _output.default;
         }
       });
-      var _input = _interopRequireDefault(require_input2());
-      var _output = _interopRequireDefault(require_output2());
+      var _input = _interopRequireDefault(require_input());
+      var _output = _interopRequireDefault(require_output());
       function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
       }
@@ -705,12 +198,12 @@
   });
 
   // node_modules/.pnpm/sync-fetch@0.6.0/node_modules/sync-fetch/browser.js
-  var require_browser2 = __commonJS({
+  var require_browser = __commonJS({
     "node_modules/.pnpm/sync-fetch@0.6.0/node_modules/sync-fetch/browser.js"(exports, module) {
       var textEncoder = new TextEncoder();
       var textDecoder = new TextDecoder();
-      function syncFetch3(...args) {
-        const request = new syncFetch3.Request(...args);
+      function syncFetch2(...args) {
+        const request = new syncFetch2.Request(...args);
         const xhr = new XMLHttpRequest();
         xhr.withCredentials = request.credentials === "include";
         xhr.timeout = request[INTERNALS].timeout;
@@ -736,7 +229,7 @@
           }
           body = buffer;
         }
-        const response = new syncFetch3.Response(body, {
+        const response = new syncFetch2.Response(body, {
           headers,
           status: xhr.status,
           statusText: xhr.statusText
@@ -802,7 +295,7 @@
           }
           this[INTERNALS] = {
             method: init.method || "GET",
-            headers: new syncFetch3.Headers(init.headers),
+            headers: new syncFetch2.Headers(init.headers),
             body: parseBody(init.body),
             credentials: init.credentials || "omit",
             // Non-spec
@@ -874,7 +367,7 @@
           this[INTERNALS] = {
             body: parseBody(body),
             bodyUsed: false,
-            headers: new syncFetch3.Headers(init.headers),
+            headers: new syncFetch2.Headers(init.headers),
             status: init.status,
             statusText: init.statusText
           };
@@ -937,8 +430,8 @@
           return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
         }
         blob() {
-          const type3 = this.headers && this.headers.get("content-type");
-          return new Blob([consumeBody(this)], type3 && { type: type3 });
+          const type2 = this.headers && this.headers.get("content-type");
+          return new Blob([consumeBody(this)], type2 && { type: type2 });
         }
         text() {
           return textDecoder.decode(consumeBody(this));
@@ -974,7 +467,7 @@
       Body.mixin(SyncResponse.prototype);
       var Headers3 = class {
         constructor(headers) {
-          if (headers instanceof syncFetch3.Headers) {
+          if (headers instanceof syncFetch2.Headers) {
             this[INTERNALS] = { ...headers[INTERNALS] };
           } else {
             this[INTERNALS] = {};
@@ -1040,10 +533,10 @@
           }
         }
       };
-      syncFetch3.Headers = Headers3;
-      syncFetch3.Request = SyncRequest;
-      syncFetch3.Response = SyncResponse;
-      module.exports = syncFetch3;
+      syncFetch2.Headers = Headers3;
+      syncFetch2.Request = SyncRequest;
+      syncFetch2.Response = SyncResponse;
+      module.exports = syncFetch2;
     }
   });
 
@@ -4764,22 +4257,22 @@
         }
       };
       CSL2.substituteOne = function(template) {
-        return function(state, list11) {
-          if (!list11) {
+        return function(state, list6) {
+          if (!list6) {
             return "";
           } else {
-            return template.replace("%%STRING%%", list11);
+            return template.replace("%%STRING%%", list6);
           }
         };
       };
       CSL2.substituteTwo = function(template) {
         return function(param) {
           var template2 = template.replace("%%PARAM%%", param);
-          return function(state, list11) {
-            if (!list11) {
+          return function(state, list6) {
+            if (!list6) {
               return "";
             } else {
-              return template2.replace("%%STRING%%", list11);
+              return template2.replace("%%STRING%%", list6);
             }
           };
         };
@@ -7250,11 +6743,11 @@
           var lastID = false;
           var lst = [];
           for (var i = 0, ilen = inputList.length; i < ilen; i += 1) {
-            var type3 = inputList[i][0].type;
+            var type2 = inputList[i][0].type;
             var title = inputList[i][0].title;
             var position = inputList[i][1].position;
             var id = inputList[i][0].id;
-            if (title && type3 === "legal_case" && id !== lastID && position) {
+            if (title && type2 === "legal_case" && id !== lastID && position) {
               if (title !== lastTitle || parasets.length === 0) {
                 lst = [];
                 parasets.push(lst);
@@ -8317,9 +7810,9 @@
         nodes = myxml.getNodesByName(locale, "type");
         for (i = 0, ilen = myxml.numberofnodes(nodes); i < ilen; i += 1) {
           var typenode = nodes[i];
-          var type3 = myxml.getAttributeValue(typenode, "name");
+          var type2 = myxml.getAttributeValue(typenode, "name");
           var gender = myxml.getAttributeValue(typenode, "gender");
-          this.opt.gender[type3] = gender;
+          this.opt.gender[type2] = gender;
         }
         var hasCslOrdinals101 = myxml.getNodesByName(locale, "term", "ordinal").length;
         if (hasCslOrdinals101) {
@@ -11146,34 +10639,34 @@
           }
         }
       };
-      CSL2.NameOutput.prototype._setEtAlParameter = function(type3, v, j) {
+      CSL2.NameOutput.prototype._setEtAlParameter = function(type2, v, j) {
         var lst, count;
-        if (type3 === "persons") {
+        if (type2 === "persons") {
           lst = this.persons[v][j];
           count = this.persons_count[v][j];
         } else {
-          lst = this[type3][v];
-          count = this[type3 + "_count"][v];
+          lst = this[type2][v];
+          count = this[type2 + "_count"][v];
         }
         if (lst.length < count && !this.state.tmp.sort_key_flag) {
           if (this.etal_use_last) {
-            if (type3 === "persons") {
+            if (type2 === "persons") {
               this.etal_spec[v].persons[j] = 2;
             } else {
-              this.etal_spec[v][type3] = 2;
+              this.etal_spec[v][type2] = 2;
             }
           } else {
-            if (type3 === "persons") {
+            if (type2 === "persons") {
               this.etal_spec[v].persons[j] = 1;
             } else {
-              this.etal_spec[v][type3] = 1;
+              this.etal_spec[v][type2] = 1;
             }
           }
         } else {
-          if (type3 === "persons") {
+          if (type2 === "persons") {
             this.etal_spec[v].persons[j] = 0;
           } else {
-            this.etal_spec[v][type3] = 0;
+            this.etal_spec[v][type2] = 0;
           }
         }
       };
@@ -13234,7 +12727,7 @@
           this.tests = [];
         }
         ;
-        var types5 = arg.split(/\s+/);
+        var types3 = arg.split(/\s+/);
         var maketest = function(mytype) {
           return function(Item) {
             var ret = Item.type === mytype;
@@ -13246,8 +12739,8 @@
           };
         };
         var tests = [];
-        for (var i = 0, ilen = types5.length; i < ilen; i += 1) {
-          tests.push(maketest(types5[i]));
+        for (var i = 0, ilen = types3.length; i < ilen; i += 1) {
+          tests.push(maketest(types3[i]));
         }
         this.tests.push(state.fun.match.any(this, state, tests));
       };
@@ -19181,20 +18674,20 @@
           this.lists = this.lists.slice(1);
         }
       };
-      CSL2.Disambiguation.prototype.scanItems = function(list11) {
+      CSL2.Disambiguation.prototype.scanItems = function(list6) {
         var pos, len, otherItem;
         if (this.debug) {
           this.state.sys.print("[2] === scanItems() ===");
         }
-        this.Item = list11[1][0];
+        this.Item = list6[1][0];
         this.ItemCite = CSL2.getAmbiguousCite.call(this.state, this.Item, this.base, true);
-        this.scanlist = list11[1];
+        this.scanlist = list6[1];
         this.partners = [];
         this.partners.push(this.Item);
         this.nonpartners = [];
         var clashes = 0;
-        for (var pos = 1, len = list11[1].length; pos < len; pos += 1) {
-          otherItem = list11[1][pos];
+        for (var pos = 1, len = list6[1].length; pos < len; pos += 1) {
+          otherItem = list6[1][pos];
           var otherItemCite = CSL2.getAmbiguousCite.call(this.state, otherItem, this.base, true);
           if (this.debug) {
             if (pos > 1) {
@@ -20011,7 +19504,7 @@
     }
   });
 
-  // node_modules/@citation-js/core/lib-mjs/Cite/log.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/log.js
   var log_exports = {};
   __export(log_exports, {
     currentVersion: () => currentVersion,
@@ -20027,8 +19520,8 @@
     if (versnum <= 0 || versnum > this.currentVersion()) {
       return null;
     } else {
-      const [data3, options3] = this.log[versnum - 1];
-      const image = new this.constructor(JSON.parse(data3), JSON.parse(options3));
+      const [data2, options2] = this.log[versnum - 1];
+      const image = new this.constructor(JSON.parse(data2), JSON.parse(options2));
       image.log = this.log.slice(0, versnum);
       return image;
     }
@@ -20044,34 +19537,34 @@
     return this;
   }
 
-  // node_modules/@citation-js/core/lib-mjs/Cite/options.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/options.js
   var options_exports = {};
   __export(options_exports, {
     defaultOptions: () => defaultOptions,
     options: () => options
   });
 
-  // node_modules/@citation-js/core/lib-mjs/Cite/validate.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/validate.js
   var formats = ["real", "string"];
   var types = ["json", "html", "string", "rtf"];
   var styles = ["csl", "bibtex", "bibtxt", "citation-*", "ris", "ndjson"];
   var wrapperTypes = ["string", "function"];
-  function validateOutputOptions(options3) {
-    if (typeof options3 !== "object") {
+  function validateOutputOptions(options2) {
+    if (typeof options2 !== "object") {
       throw new TypeError("Options not an object!");
     }
     const {
-      format: format5,
-      type: type3,
+      format: format3,
+      type: type2,
       style,
       lang,
       append,
       prepend
-    } = options3;
-    if (format5 && !formats.includes(format5)) {
-      throw new TypeError(`Option format ("${format5}") should be one of: ${formats}`);
-    } else if (type3 && !types.includes(type3)) {
-      throw new TypeError(`Option type ("${type3}") should be one of: ${types}`);
+    } = options2;
+    if (format3 && !formats.includes(format3)) {
+      throw new TypeError(`Option format ("${format3}") should be one of: ${formats}`);
+    } else if (type2 && !types.includes(type2)) {
+      throw new TypeError(`Option type ("${type2}") should be one of: ${types}`);
     } else if (style && !styles.includes(style) && !/^citation/.test(style)) {
       throw new TypeError(`Option style ("${style}") should be one of: ${styles}`);
     } else if (lang && typeof lang !== "string") {
@@ -20081,48 +19574,48 @@
     } else if (append && !wrapperTypes.includes(typeof append)) {
       throw new TypeError(`Option append should be a string or a function, but is a ${typeof append}`);
     }
-    if (/^citation/.test(style) && type3 === "json") {
-      throw new Error(`Combination type/style of json/citation-* is not valid: ${type3}/${style}`);
+    if (/^citation/.test(style) && type2 === "json") {
+      throw new Error(`Combination type/style of json/citation-* is not valid: ${type2}/${style}`);
     }
     return true;
   }
-  function validateOptions(options3) {
-    if (typeof options3 !== "object") {
+  function validateOptions(options2) {
+    if (typeof options2 !== "object") {
       throw new TypeError("Options should be an object");
     }
-    if (options3.output) {
-      validateOutputOptions(options3.output);
-    } else if (options3.maxChainLength && typeof options3.maxChainLength !== "number") {
+    if (options2.output) {
+      validateOutputOptions(options2.output);
+    } else if (options2.maxChainLength && typeof options2.maxChainLength !== "number") {
       throw new TypeError("Option maxChainLength should be a number");
-    } else if (options3.forceType && typeof options3.forceType !== "string") {
+    } else if (options2.forceType && typeof options2.forceType !== "string") {
       throw new TypeError("Option forceType should be a string");
-    } else if (options3.generateGraph != null && typeof options3.generateGraph !== "boolean") {
+    } else if (options2.generateGraph != null && typeof options2.generateGraph !== "boolean") {
       throw new TypeError("Option generateGraph should be a boolean");
-    } else if (options3.strict != null && typeof options3.strict !== "boolean") {
+    } else if (options2.strict != null && typeof options2.strict !== "boolean") {
       throw new TypeError("Option strict should be a boolean");
-    } else if (options3.target != null && typeof options3.target !== "string") {
+    } else if (options2.target != null && typeof options2.target !== "string") {
       throw new TypeError("Option target should be a boolean");
     }
     return true;
   }
 
-  // node_modules/@citation-js/core/lib-mjs/Cite/options.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/options.js
   var defaultOptions = {
     format: "real",
     type: "json",
     style: "csl",
     lang: "en-US"
   };
-  function options(options3, log) {
-    validateOutputOptions(options3);
+  function options(options2, log) {
+    validateOutputOptions(options2);
     if (log) {
       this.save();
     }
-    Object.assign(this._options, options3);
+    Object.assign(this._options, options2);
     return this;
   }
 
-  // node_modules/@citation-js/core/lib-mjs/Cite/set.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/set.js
   var set_exports = {};
   __export(set_exports, {
     add: () => add2,
@@ -20132,7 +19625,7 @@
     setAsync: () => setAsync
   });
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
   var input_exports = {};
   __export(input_exports, {
     add: () => add,
@@ -20160,7 +19653,7 @@
     util: () => util
   });
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/dataType.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/dataType.js
   var dataType_exports = {};
   __export(dataType_exports, {
     dataTypeOf: () => dataTypeOf,
@@ -20193,7 +19686,7 @@
     }
   }
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/graph.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/graph.js
   var graph_exports = {};
   __export(graph_exports, {
     applyGraph: () => applyGraph,
@@ -20202,8 +19695,8 @@
   function applyGraph(entry, graph) {
     if (entry._graph) {
       const index = graph.findIndex(({
-        type: type3
-      }) => type3 === "@else/list+object");
+        type: type2
+      }) => type2 === "@else/list+object");
       if (index !== -1) {
         graph.splice(index + 1, 0, ...entry._graph.slice(0, -1));
       }
@@ -20216,7 +19709,7 @@
     return entry;
   }
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
   var parser_exports = {};
   __export(parser_exports, {
     DataParser: () => DataParser,
@@ -20224,7 +19717,7 @@
     TypeParser: () => TypeParser
   });
 
-  // node_modules/@citation-js/core/lib-mjs/logger.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/logger.js
   var logger = {
     _output(level, scope, msg) {
       this._log.push(scope, msg);
@@ -20248,7 +19741,7 @@
   }
   var logger_default = logger;
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/type.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/type.js
   var types2 = {};
   var dataTypes = {};
   var unregExts = {};
@@ -20267,10 +19760,10 @@
         return "@invalid";
     }
   }
-  function matchType(typeList = [], data3) {
-    for (const type3 of typeList) {
-      if (types2[type3].predicate(data3)) {
-        return matchType(types2[type3].extensions, data3) || type3;
+  function matchType(typeList = [], data2) {
+    for (const type2 of typeList) {
+      if (types2[type2].predicate(data2)) {
+        return matchType(types2[type2].extensions, data2) || type2;
       }
     }
   }
@@ -20282,46 +19775,46 @@
     const match = matchType(dataTypes[dataType], input);
     return match || parseNativeTypes(input, dataType);
   }
-  function addTypeParser(format5, {
+  function addTypeParser(format3, {
     dataType,
     predicate,
     extends: extend
   }) {
     let extensions = [];
-    if (format5 in unregExts) {
-      extensions = unregExts[format5];
-      delete unregExts[format5];
-      logger_default.debug("[core]", `Subclasses "${extensions}" finally registered to parent type "${format5}"`);
+    if (format3 in unregExts) {
+      extensions = unregExts[format3];
+      delete unregExts[format3];
+      logger_default.debug("[core]", `Subclasses "${extensions}" finally registered to parent type "${format3}"`);
     }
     const object = {
       predicate,
       extensions
     };
-    types2[format5] = object;
+    types2[format3] = object;
     if (extend) {
       const parentTypeParser = types2[extend];
       if (parentTypeParser) {
-        parentTypeParser.extensions.push(format5);
+        parentTypeParser.extensions.push(format3);
       } else {
         if (!unregExts[extend]) {
           unregExts[extend] = [];
         }
-        unregExts[extend].push(format5);
-        logger_default.debug("[core]", `Subclass "${format5}" is waiting on parent type "${extend}"`);
+        unregExts[extend].push(format3);
+        logger_default.debug("[core]", `Subclass "${format3}" is waiting on parent type "${extend}"`);
       }
     } else {
       const typeList = dataTypes[dataType] || (dataTypes[dataType] = []);
-      typeList.push(format5);
+      typeList.push(format3);
     }
   }
-  function hasTypeParser(type3) {
-    return Object.prototype.hasOwnProperty.call(types2, type3);
+  function hasTypeParser(type2) {
+    return Object.prototype.hasOwnProperty.call(types2, type2);
   }
-  function removeTypeParser(type3) {
-    delete types2[type3];
-    const typeLists = [...Object.keys(dataTypes).map((key) => dataTypes[key]), ...Object.keys(types2).map((type4) => types2[type4].extensions).filter((list11) => list11.length > 0)];
+  function removeTypeParser(type2) {
+    delete types2[type2];
+    const typeLists = [...Object.keys(dataTypes).map((key) => dataTypes[key]), ...Object.keys(types2).map((type3) => types2[type3].extensions).filter((list6) => list6.length > 0)];
     typeLists.forEach((typeList) => {
-      const index = typeList.indexOf(type3);
+      const index = typeList.indexOf(type2);
       if (index > -1) {
         typeList.splice(index, 1);
       }
@@ -20345,7 +19838,7 @@
   }
   var typeMatcher = /^(?:@(.+?))(?:\/(?:(.+?)\+)?(?:(.+)))?$/;
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
   function _defineProperty(e, r, t) {
     return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
   }
@@ -20364,9 +19857,9 @@
     return ("string" === r ? String : Number)(t);
   }
   var TypeParser = class {
-    constructor(data3) {
+    constructor(data2) {
       _defineProperty(this, "validDataTypes", ["String", "Array", "SimpleObject", "ComplexObject", "Primitive"]);
-      this.data = data3;
+      this.data = data2;
     }
     validateDataType() {
       const dataType = this.data.dataType;
@@ -20503,10 +19996,10 @@
   };
   var DataParser = class {
     constructor(parser, {
-      async: async3
+      async: async2
     } = {}) {
       this.parser = parser;
-      this.async = async3;
+      this.async = async2;
     }
     validate() {
       const parser = this.parser;
@@ -20516,26 +20009,26 @@
     }
   };
   var FormatParser = class {
-    constructor(format5, parsers3 = {}) {
-      this.format = format5;
-      if (parsers3.parseType) {
-        this.typeParser = new TypeParser(parsers3.parseType);
+    constructor(format3, parsers2 = {}) {
+      this.format = format3;
+      if (parsers2.parseType) {
+        this.typeParser = new TypeParser(parsers2.parseType);
       }
-      if (parsers3.parse) {
-        this.dataParser = new DataParser(parsers3.parse, {
+      if (parsers2.parse) {
+        this.dataParser = new DataParser(parsers2.parse, {
           async: false
         });
       }
-      if (parsers3.parseAsync) {
-        this.asyncDataParser = new DataParser(parsers3.parseAsync, {
+      if (parsers2.parseAsync) {
+        this.asyncDataParser = new DataParser(parsers2.parseAsync, {
           async: true
         });
       }
     }
     validateFormat() {
-      const format5 = this.format;
-      if (!typeMatcher.test(format5)) {
-        throw new TypeError(`format name was "${format5}"; didn't match expected pattern`);
+      const format3 = this.format;
+      if (!typeMatcher.test(format3)) {
+        throw new TypeError(`format name was "${format3}"; didn't match expected pattern`);
       }
     }
     validate() {
@@ -20552,7 +20045,7 @@
     }
   };
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/csl.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/csl.js
   var csl_exports = {};
   __export(csl_exports, {
     clean: () => parseCsl
@@ -20813,16 +20306,16 @@
       return date;
     }
   }
-  function correctType(type3, bestGuessConversions) {
-    type3 = correctField("language", type3, bestGuessConversions);
-    if (entryTypes[type3] === true) {
-      return type3;
+  function correctType(type2, bestGuessConversions) {
+    type2 = correctField("language", type2, bestGuessConversions);
+    if (entryTypes[type2] === true) {
+      return type2;
     }
     if (bestGuessConversions) {
-      if (type3 in entryTypes) {
-        return entryTypes[type3];
-      } else if (typeof type3 === "string" && type3.toLowerCase() !== type3) {
-        return correctType(type3.toLowerCase(), bestGuessConversions);
+      if (type2 in entryTypes) {
+        return entryTypes[type2];
+      } else if (typeof type2 === "string" && type2.toLowerCase() !== type2) {
+        return correctType(type2.toLowerCase(), bestGuessConversions);
       }
     }
     return void 0;
@@ -20852,8 +20345,8 @@
       return value;
     }
   }
-  function parseCsl(data3, bestGuessConversions = true) {
-    return data3.map(function(entry) {
+  function parseCsl(data2, bestGuessConversions = true) {
+    return data2.map(function(entry) {
       const clean2 = {};
       for (const field in entry) {
         const correction = correctField(field, entry[field], bestGuessConversions);
@@ -20865,15 +20358,15 @@
     });
   }
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/data.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/data.js
   var parsers = {};
   var asyncParsers = {};
   var nativeParsers = {
     "@csl/object": (input) => [input],
     "@csl/list+object": (input) => input,
     "@else/list+object": (input) => input.map((item) => {
-      const type3 = type(item);
-      return data(item, type3);
+      const type2 = type(item);
+      return data(item, type2);
     }).flat(),
     "@invalid": () => {
       throw new Error("This format is not supported or recognized");
@@ -20881,99 +20374,115 @@
   };
   var nativeAsyncParsers = {
     "@else/list+object": (input) => Promise.all(input.map((item) => {
-      const type3 = type(item);
-      return dataAsync(item, type3);
+      const type2 = type(item);
+      return dataAsync(item, type2);
     })).then((input2) => input2.flat())
   };
-  function data(input, type3) {
-    if (typeof parsers[type3] === "function") {
-      return parsers[type3](input);
-    } else if (typeof nativeParsers[type3] === "function") {
-      return nativeParsers[type3](input);
+  function data(input, type2) {
+    if (typeof parsers[type2] === "function") {
+      return parsers[type2](input);
+    } else if (typeof nativeParsers[type2] === "function") {
+      return nativeParsers[type2](input);
     } else {
-      throw new TypeError(`No synchronous parser found for ${type3}`);
+      throw new TypeError(`No synchronous parser found for ${type2}`);
     }
   }
-  async function dataAsync(input, type3) {
-    if (typeof asyncParsers[type3] === "function") {
-      return asyncParsers[type3](input);
-    } else if (typeof nativeAsyncParsers[type3] === "function") {
-      return nativeAsyncParsers[type3](input);
-    } else if (hasDataParser(type3, false)) {
-      return data(input, type3);
+  async function dataAsync(input, type2) {
+    if (typeof asyncParsers[type2] === "function") {
+      return asyncParsers[type2](input);
+    } else if (typeof nativeAsyncParsers[type2] === "function") {
+      return nativeAsyncParsers[type2](input);
+    } else if (hasDataParser(type2, false)) {
+      return data(input, type2);
     } else {
-      throw new TypeError(`No parser found for ${type3}`);
+      throw new TypeError(`No parser found for ${type2}`);
     }
   }
-  function addDataParser(format5, {
+  function addDataParser(format3, {
     parser,
-    async: async3
+    async: async2
   }) {
-    if (async3) {
-      asyncParsers[format5] = parser;
+    if (async2) {
+      asyncParsers[format3] = parser;
     } else {
-      parsers[format5] = parser;
+      parsers[format3] = parser;
     }
   }
-  function hasDataParser(type3, async3) {
-    return async3 ? asyncParsers[type3] || nativeAsyncParsers[type3] : parsers[type3] || nativeParsers[type3];
+  function hasDataParser(type2, async2) {
+    return async2 ? asyncParsers[type2] || nativeAsyncParsers[type2] : parsers[type2] || nativeParsers[type2];
   }
-  function removeDataParser(type3, async3) {
-    delete (async3 ? asyncParsers : parsers)[type3];
+  function removeDataParser(type2, async2) {
+    delete (async2 ? asyncParsers : parsers)[type2];
   }
-  function listDataParser(async3) {
-    return Object.keys(async3 ? asyncParsers : parsers);
+  function listDataParser(async2) {
+    return Object.keys(async2 ? asyncParsers : parsers);
   }
 
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/register.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/register.js
   var formats2 = {};
-  function add(format5, parsers3) {
-    const formatParser = new FormatParser(format5, parsers3);
+  function add(format3, parsers2) {
+    const formatParser = new FormatParser(format3, parsers2);
     formatParser.validate();
-    const index = formats2[format5] || (formats2[format5] = {});
+    const index = formats2[format3] || (formats2[format3] = {});
     if (formatParser.typeParser) {
-      addTypeParser(format5, formatParser.typeParser);
+      addTypeParser(format3, formatParser.typeParser);
       index.type = true;
     }
     if (formatParser.dataParser) {
-      addDataParser(format5, formatParser.dataParser);
+      addDataParser(format3, formatParser.dataParser);
       index.data = true;
     }
     if (formatParser.asyncDataParser) {
-      addDataParser(format5, formatParser.asyncDataParser);
+      addDataParser(format3, formatParser.asyncDataParser);
       index.asyncData = true;
     }
-    if (parsers3.outputs) {
-      index.outputs = parsers3.outputs;
+    if (parsers2.outputs) {
+      index.outputs = parsers2.outputs;
     }
   }
-  function get(format5) {
-    return formats2[format5];
+  function get(format3) {
+    return formats2[format3];
   }
-  function remove(format5) {
-    const index = formats2[format5];
+  function remove(format3) {
+    const index = formats2[format3];
     if (!index) {
       return;
     }
     if (index.type) {
-      removeTypeParser(format5);
+      removeTypeParser(format3);
     }
     if (index.data) {
-      removeDataParser(format5);
+      removeDataParser(format3);
     }
     if (index.asyncData) {
-      removeDataParser(format5, true);
+      removeDataParser(format3, true);
     }
-    delete formats2[format5];
+    delete formats2[format3];
   }
-  function has(format5) {
-    return format5 in formats2;
+  function has(format3) {
+    return format3 in formats2;
   }
   function list() {
     return Object.keys(formats2);
   }
 
-  // node_modules/@citation-js/core/lib-mjs/util/csl.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/index.js
+  var util_exports = {};
+  __export(util_exports, {
+    Grammar: () => Grammar,
+    Register: () => register_default,
+    TokenStack: () => stack_default,
+    Translator: () => Translator,
+    deepCopy: () => deepCopy_default,
+    downgradeCsl: () => downgradeCsl,
+    fetchFile: () => fetchFile,
+    fetchFileAsync: () => fetchFileAsync,
+    fetchId: () => fetchId_default,
+    setUserAgent: () => setUserAgent,
+    upgradeCsl: () => upgradeCsl
+  });
+
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/csl.js
   function ownKeys2(e, r) {
     var t = Object.keys(e);
     if (Object.getOwnPropertySymbols) {
@@ -21041,7 +20550,7 @@
     return item;
   }
 
-  // node_modules/@citation-js/core/lib-mjs/util/deepCopy.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/deepCopy.js
   function deepCopy(value, seen = /* @__PURE__ */ new Set()) {
     if (typeof value !== "object" || value === null || value.constructor !== Object && value.constructor !== Array) {
       return value;
@@ -21065,7 +20574,7 @@
   }
   var deepCopy_default = deepCopy;
 
-  // node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
+  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
   var import_sync_fetch = __toESM(require_browser());
 
   // browser-shim:node-fetch
@@ -21077,1954 +20586,8 @@
   var FormData = globalThis.FormData;
   var Blob2 = globalThis.Blob;
 
-  // node_modules/@citation-js/core/package.json
-  var package_default = {
-    name: "@citation-js/core",
-    version: "0.8.2",
-    description: "Convert different bibliographic metadata sources",
-    keywords: [
-      "citation-js",
-      "citation",
-      "bibliography"
-    ],
-    author: "Lars Willighagen <lars.willighagen@gmail.com>",
-    license: "MIT",
-    main: "lib/index.js",
-    module: "lib-mjs/index.js",
-    directories: {
-      lib: "src",
-      test: "__tests__"
-    },
-    homepage: "https://citation.js.org/",
-    repository: {
-      type: "git",
-      url: "https://github.com/citation-js/citation-js.git",
-      directory: "packages/core"
-    },
-    bugs: {
-      url: "https://github.com/citation-js/citation-js/issues"
-    },
-    engines: {
-      node: ">=20.19.0"
-    },
-    files: [
-      "lib",
-      "lib-mjs"
-    ],
-    scripts: {
-      test: "mocha -c -R dot -r @babel/register test/*.spec.js",
-      "test:live": "TEST_MOCK_HTTP=false npm test",
-      coverage: "NODE_ENV=coverage nyc npm test -- -c && nyc report --reporter=text-lcov > coverage.lcov"
-    },
-    dependencies: {
-      "@citation-js/date": "^0.5.0",
-      "@citation-js/name": "^0.4.2",
-      "node-fetch": "^3.3.2",
-      "sync-fetch": "^0.6.0"
-    },
-    gitHead: "28ce00a6a5dd967baeb7f128f3f6b4a7217e5d46"
-  };
-
-  // node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
-  var userAgent = `Citation.js/${package_default.version}`;
-  if (typeof process !== "undefined" && process && process.release && process.release.name === "node" && process.version) {
-    userAgent += ` Node.js/${process.version}`;
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/util/fetchId.js
-  function fetchId(list11, prefix) {
-    let id;
-    while (id === void 0 || list11.includes(id)) {
-      id = `${prefix}${Math.random().toString().slice(2)}`;
-    }
-    return id;
-  }
-  var fetchId_default = fetchId;
-
-  // node_modules/@citation-js/core/lib-mjs/util/register.js
-  var Register = class {
-    constructor(data3 = {}) {
-      this.data = data3;
-    }
-    set(key, value) {
-      this.data[key] = value;
-      return this;
-    }
-    add(...args) {
-      return this.set(...args);
-    }
-    delete(key) {
-      delete this.data[key];
-      return this;
-    }
-    remove(...args) {
-      return this.delete(...args);
-    }
-    get(key) {
-      return this.data[key];
-    }
-    has(key) {
-      return Object.prototype.hasOwnProperty.call(this.data, key);
-    }
-    list() {
-      return Object.keys(this.data);
-    }
-  };
-  var register_default = Register;
-
-  // node_modules/@citation-js/core/lib-mjs/util/translator.js
-  function createConditionEval(condition) {
-    return function conditionEval(input) {
-      if (typeof condition === "boolean") {
-        return condition;
-      }
-      return Object.keys(condition).every((prop) => {
-        const value = condition[prop];
-        if (value === true) {
-          return prop in input;
-        } else if (value === false) {
-          return !(prop in input);
-        } else if (typeof value === "function") {
-          return value(input[prop]);
-        } else if (Array.isArray(value)) {
-          return value.includes(input[prop]);
-        } else {
-          return input[prop] === value;
-        }
-      });
-    };
-  }
-  function parsePropStatement(prop, toSource) {
-    let inputProp;
-    let outputProp;
-    let convert;
-    let condition;
-    if (typeof prop === "string") {
-      inputProp = outputProp = prop;
-    } else if (prop) {
-      inputProp = toSource ? prop.target : prop.source;
-      outputProp = toSource ? prop.source : prop.target;
-      if (prop.convert) {
-        convert = toSource ? prop.convert.toSource : prop.convert.toTarget;
-      }
-      if (prop.when) {
-        condition = toSource ? prop.when.target : prop.when.source;
-        if (condition != null) {
-          condition = createConditionEval(condition);
-        }
-      }
-    } else {
-      return null;
-    }
-    inputProp = [].concat(inputProp).filter(Boolean);
-    outputProp = [].concat(outputProp).filter(Boolean);
-    return {
-      inputProp,
-      outputProp,
-      convert,
-      condition
-    };
-  }
-  function createConverter(props, toSource) {
-    toSource = toSource === Translator.CONVERT_TO_SOURCE;
-    props = props.map((prop) => parsePropStatement(prop, toSource)).filter(Boolean);
-    return function converter(input) {
-      const output = {};
-      for (const {
-        inputProp,
-        outputProp,
-        convert,
-        condition
-      } of props) {
-        if (outputProp.length === 0) {
-          continue;
-        } else if (condition && !condition(input)) {
-          continue;
-        } else if (inputProp.length !== 0 && inputProp.every((prop) => !(prop in input))) {
-          continue;
-        }
-        let outputData = inputProp.map((prop) => input[prop]);
-        if (convert) {
-          try {
-            const converted = convert.apply(input, outputData);
-            outputData = outputProp.length === 1 ? [converted] : converted;
-          } catch (cause) {
-            throw new Error(`Failed to convert ${inputProp} to ${outputProp}`, {
-              cause
-            });
-          }
-        }
-        outputProp.forEach((prop, index) => {
-          const value = outputData[index];
-          if (value !== void 0) {
-            output[prop] = value;
-          }
-        });
-      }
-      return output;
-    };
-  }
-  var Translator = class _Translator {
-    constructor(props) {
-      this.convertToSource = createConverter(props, _Translator.CONVERT_TO_SOURCE);
-      this.convertToTarget = createConverter(props, _Translator.CONVERT_TO_TARGET);
-    }
-  };
-  Translator.CONVERT_TO_SOURCE = /* @__PURE__ */ Symbol("convert to source");
-  Translator.CONVERT_TO_TARGET = /* @__PURE__ */ Symbol("convert to target");
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/chain.js
-  function prepareParseGraph(graph) {
-    return graph.reduce((array, next) => {
-      const last = array[array.length - 1];
-      if (last && last.type === next.type) {
-        last.count = last.count + 1 || 2;
-      } else {
-        array.push(next);
-      }
-      return array;
-    }, []).map((element) => (element.count > 1 ? element.count + "x " : "") + element.type).join(" -> ");
-  }
-  var ChainParser = class {
-    constructor(input, options3 = {}) {
-      this.options = Object.assign({
-        generateGraph: true,
-        forceType: type(input),
-        maxChainLength: 10,
-        strict: true,
-        target: "@csl/list+object"
-      }, options3);
-      this.type = this.options.forceType;
-      this.data = typeof input === "object" ? deepCopy_default(input) : input;
-      this.graph = [{
-        type: this.type,
-        data: input
-      }];
-      this.iteration = 0;
-    }
-    iterate() {
-      if (this.iteration !== 0) {
-        const typeInfo = get(this.type);
-        if (typeInfo && typeInfo.outputs) {
-          this.type = typeInfo.outputs;
-        } else {
-          this.type = type(this.data);
-        }
-        this.graph.push({
-          type: this.type
-        });
-      }
-      if (this.error || this.type === this.options.target) {
-        return false;
-      } else if (this.iteration >= this.options.maxChainLength) {
-        this.error = new RangeError(`Max. number of parsing iterations reached (${prepareParseGraph(this.graph)})`);
-        return false;
-      } else {
-        this.iteration++;
-        return true;
-      }
-    }
-    end() {
-      if (this.error) {
-        logger_default.error("[core]", this.error.message);
-        if (this.options.strict !== false) {
-          throw this.error;
-        } else {
-          return [];
-        }
-      } else if (this.options.target === "@csl/list+object") {
-        return upgradeCsl(this.data).map(this.options.generateGraph ? (entry) => applyGraph(entry, this.graph) : removeGraph);
-      } else {
-        return this.data;
-      }
-    }
-  };
-  var chain = (...args) => {
-    const chain3 = new ChainParser(...args);
-    while (chain3.iterate()) {
-      try {
-        chain3.data = data(chain3.data, chain3.type);
-      } catch (e) {
-        chain3.error = e;
-      }
-    }
-    return chain3.end();
-  };
-  var chainLink = (input) => {
-    const type3 = type(input);
-    const output = type3.match(/array|object/) ? deepCopy_default(input) : input;
-    return data(output, type3);
-  };
-  var chainAsync = async (...args) => {
-    const chain3 = new ChainParser(...args);
-    while (chain3.iterate()) {
-      chain3.data = await dataAsync(chain3.data, chain3.type).catch((e) => {
-        chain3.error = e;
-      });
-    }
-    return chain3.end();
-  };
-  var chainLinkAsync = async (input) => {
-    const type3 = type(input);
-    const output = type3.match(/array|object/) ? deepCopy_default(input) : input;
-    return dataAsync(output, type3);
-  };
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
-  var util = Object.assign({}, dataType_exports, graph_exports, parser_exports, csl_exports);
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/set.js
-  function add2(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
-      this.save();
-    }
-    this.data.push(...chain(data3, options3));
-    this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
-      entry.id = fetchId_default(this.getIds(), "temp_id_");
-    });
-    return this;
-  }
-  async function addAsync(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
-      this.save();
-    }
-    this.data.push(...await chainAsync(data3, options3));
-    this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
-      entry.id = fetchId_default(this.getIds(), "temp_id_");
-    });
-    return this;
-  }
-  function set(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
-      this.save();
-    }
-    this.data = [];
-    return typeof options3 !== "boolean" ? this.add(data3, options3) : this.add(data3);
-  }
-  async function setAsync(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
-      this.save();
-    }
-    this.data = [];
-    return typeof options3 !== "boolean" ? this.addAsync(data3, options3) : this.addAsync(data3);
-  }
-  function reset(log) {
-    if (log) {
-      this.save();
-    }
-    this.data = [];
-    this._options = {};
-    return this;
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/sort.js
-  var sort_exports = {};
-  __export(sort_exports, {
-    sort: () => sort
-  });
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/output/label.js
-  function getLabel(entry) {
-    if ("citation-label" in entry) {
-      return entry["citation-label"];
-    }
-    let res = "";
-    if (entry.author) {
-      res += entry.author[0].family || entry.author[0].literal;
-    }
-    if (entry.issued && entry.issued["date-parts"] && entry.issued["date-parts"][0]) {
-      res += entry.issued["date-parts"][0][0];
-    }
-    if (entry["year-suffix"]) {
-      res += entry["year-suffix"];
-    } else if (entry.title) {
-      res += entry.title.replace(/<\/?.*?>/g, "").match(/^(?:(?:the|a|an)\s+)?(\S+)/i)[1];
-    }
-    return res;
-  }
-  var label_default = {
-    label(data3) {
-      return data3.reduce((object, entry) => {
-        object[entry.id] = getLabel(entry);
-        return object;
-      }, {});
-    }
-  };
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/sort.js
-  var import_name2 = __toESM(require_lib());
-  function getComparisonValue(obj, prop, label = prop === "label") {
-    let value = label ? getLabel(obj) : obj[prop];
-    switch (prop) {
-      case "author":
-      case "editor":
-        return value.map((name) => name.literal || name.family || (0, import_name2.format)(name));
-      case "accessed":
-      case "issued":
-        return value["date-parts"][0];
-      case "page":
-        return value.split("-").map((num) => parseInt(num));
-      case "edition":
-      case "issue":
-      case "volume":
-        value = parseInt(value);
-        return !isNaN(value) ? value : -Infinity;
-      default:
-        return value || -Infinity;
-    }
-  }
-  function compareProp(entryA, entryB, prop, flip2 = /^!/.test(prop)) {
-    prop = prop.replace(/^!/, "");
-    const a = getComparisonValue(entryA, prop);
-    const b = getComparisonValue(entryB, prop);
-    return (flip2 ? -1 : 1) * (a > b ? 1 : a < b ? -1 : 0);
-  }
-  function getSortCallback(...props) {
-    return (a, b) => {
-      const keys = props.slice();
-      let output = 0;
-      while (!output && keys.length) {
-        output = compareProp(a, b, keys.shift());
-      }
-      return output;
-    };
-  }
-  function sort(method = [], log) {
-    if (log) {
-      this.save();
-    }
-    this.data.sort(typeof method === "function" ? method : getSortCallback(...method, "label"));
-    return this;
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/get.js
-  var get_exports = {};
-  __export(get_exports, {
-    format: () => format2,
-    get: () => get2,
-    getIds: () => getIds
-  });
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/output.js
-  var output_exports = {};
-  __export(output_exports, {
-    add: () => add3,
-    format: () => format,
-    has: () => has2,
-    list: () => list2,
-    register: () => register,
-    remove: () => remove2
-  });
-  function validate(name, formatter) {
-    if (typeof name !== "string") {
-      throw new TypeError(`Invalid output format name, expected string, got ${typeof name}`);
-    } else if (typeof formatter !== "function") {
-      throw new TypeError(`Invalid formatter, expected function, got ${typeof formatter}`);
-    }
-  }
-  var register = new register_default();
-  function add3(name, formatter) {
-    validate(name, formatter);
-    register.set(name, formatter);
-  }
-  function remove2(name) {
-    register.remove(name);
-  }
-  function has2(name) {
-    return register.has(name);
-  }
-  function list2() {
-    return register.list();
-  }
-  function format(name, data3, ...options3) {
-    if (!register.has(name)) {
-      throw new Error(`Output format "${name}" unavailable`);
-    }
-    return register.get(name)(data3, ...options3);
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/get.js
-  function getIds() {
-    return this.data.map((entry) => entry.id);
-  }
-  function format2(format5, ...options3) {
-    return format(format5, parseCsl(this.data), ...options3);
-  }
-  function get2(options3 = {}) {
-    validateOutputOptions(options3);
-    const parsedOptions = Object.assign({}, this.defaultOptions, this._options.output, options3);
-    const {
-      type: type3,
-      style
-    } = parsedOptions;
-    const [styleType, styleFormat] = style.split("-");
-    const newStyle = styleType === "citation" ? "bibliography" : styleType === "csl" ? "data" : styleType;
-    const newType = type3 === "string" ? "text" : type3 === "json" ? "object" : type3;
-    let formatOptions;
-    switch (newStyle) {
-      case "bibliography": {
-        const {
-          lang,
-          append,
-          prepend
-        } = parsedOptions;
-        formatOptions = {
-          template: styleFormat,
-          lang,
-          format: newType,
-          append,
-          prepend
-        };
-        break;
-      }
-      case "data":
-      case "bibtex":
-      case "bibtxt":
-      case "ndjson":
-      case "ris":
-        formatOptions = {
-          type: newType
-        };
-        break;
-      default:
-        throw new Error(`Invalid style "${newStyle}"`);
-    }
-    const result = this.format(newStyle, Object.assign(formatOptions, options3._newOptions));
-    const {
-      format: format5
-    } = parsedOptions;
-    if (format5 === "real" && newType === "html" && typeof document !== "undefined" && typeof document.createElement === "function") {
-      const tmp = document.createElement("div");
-      tmp.innerHTML = result;
-      return tmp.firstChild;
-    } else if (format5 === "string" && typeof result === "object") {
-      return JSON.stringify(result);
-    } else {
-      return result;
-    }
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/static.js
-  var static_exports = {};
-  __export(static_exports, {
-    async: () => async_default,
-    validateOptions: () => validateOptions,
-    validateOutputOptions: () => validateOutputOptions
-  });
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/async.js
-  function async(data3, options3, callback) {
-    if (typeof options3 === "function" && !callback) {
-      callback = options3;
-      options3 = void 0;
-    }
-    const promise = new this().setAsync(data3, options3);
-    if (typeof callback === "function") {
-      promise.then(callback);
-      return void 0;
-    } else {
-      return promise;
-    }
-  }
-  var async_default = async;
-
-  // node_modules/@citation-js/core/lib-mjs/Cite/index.js
-  function Cite(data3, options3 = {}) {
-    if (!(this instanceof Cite)) {
-      return new Cite(data3, options3);
-    }
-    this._options = options3;
-    this.log = [];
-    this.data = [];
-    this.set(data3, options3);
-    this.options(options3);
-    return this;
-  }
-  Object.assign(Cite.prototype, log_exports, options_exports, set_exports, sort_exports, get_exports);
-  Cite.prototype[Symbol.iterator] = function* () {
-    yield* this.data;
-  };
-  Object.assign(Cite, static_exports);
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/index.js
-  var plugins_exports = {};
-  __export(plugins_exports, {
-    add: () => add6,
-    config: () => config_exports,
-    dict: () => dict_exports,
-    has: () => has5,
-    input: () => input_exports,
-    list: () => list5,
-    output: () => output_exports,
-    remove: () => remove5
-  });
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/dict.js
-  var dict_exports = {};
-  __export(dict_exports, {
-    add: () => add4,
-    get: () => get3,
-    has: () => has3,
-    list: () => list3,
-    register: () => register2,
-    remove: () => remove3
-  });
-  function validate2(name, dict) {
-    if (typeof name !== "string") {
-      throw new TypeError(`Invalid dict name, expected string, got ${typeof name}`);
-    } else if (typeof dict !== "object") {
-      throw new TypeError(`Invalid dict, expected object, got ${typeof dict}`);
-    }
-    for (const entryName in dict) {
-      const entry = dict[entryName];
-      if (!Array.isArray(entry) || entry.some((part) => typeof part !== "string")) {
-        throw new TypeError(`Invalid dict entry "${entryName}", expected array of strings`);
-      }
-    }
-  }
-  var register2 = new register_default({
-    html: {
-      bibliographyContainer: ['<div class="csl-bib-body">', "</div>"],
-      entry: ['<div class="csl-entry">', "</div>"],
-      list: ['<ul style="list-style-type:none">', "</ul>"],
-      listItem: ["<li>", "</li>"]
-    },
-    text: {
-      bibliographyContainer: ["", "\n"],
-      entry: ["", "\n"],
-      list: ["\n", ""],
-      listItem: ["	", "\n"]
-    }
-  });
-  function add4(name, dict) {
-    validate2(name, dict);
-    register2.set(name, dict);
-  }
-  function remove3(name) {
-    register2.remove(name);
-  }
-  function has3(name) {
-    return register2.has(name);
-  }
-  function list3() {
-    return register2.list();
-  }
-  function get3(name) {
-    if (!register2.has(name)) {
-      throw new Error(`Dict "${name}" unavailable`);
-    }
-    return register2.get(name);
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/config.js
-  var config_exports = {};
-  __export(config_exports, {
-    add: () => add5,
-    get: () => get4,
-    has: () => has4,
-    list: () => list4,
-    remove: () => remove4
-  });
-  var configs = {};
-  function add5(ref3, config) {
-    configs[ref3] = config;
-  }
-  function get4(ref3) {
-    return configs[ref3];
-  }
-  function has4(ref3) {
-    return Object.prototype.hasOwnProperty.call(configs, ref3);
-  }
-  function remove4(ref3) {
-    delete configs[ref3];
-  }
-  function list4() {
-    return Object.keys(configs);
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugins/index.js
-  var registers = {
-    input: input_exports,
-    output: output_exports,
-    dict: dict_exports,
-    config: config_exports
-  };
-  var indices = {};
-  function add6(ref3, plugins = {}) {
-    const mainIndex = indices[ref3] = {};
-    for (const type3 in plugins) {
-      if (type3 === "config") {
-        mainIndex.config = {
-          [ref3]: plugins.config
-        };
-        registers.config.add(ref3, plugins.config);
-        continue;
-      }
-      const typeIndex = mainIndex[type3] = {};
-      const typePlugins = plugins[type3];
-      for (const name in typePlugins) {
-        const typePlugin = typePlugins[name];
-        typeIndex[name] = true;
-        registers[type3].add(name, typePlugin);
-      }
-    }
-  }
-  function remove5(ref3) {
-    const mainIndex = indices[ref3];
-    for (const type3 in mainIndex) {
-      const typeIndex = mainIndex[type3];
-      for (const name in typeIndex) {
-        registers[type3].remove(name);
-      }
-    }
-    delete indices[ref3];
-  }
-  function has5(ref3) {
-    return ref3 in indices;
-  }
-  function list5() {
-    return Object.keys(indices);
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/input/empty.js
-  function parse() {
-    return [];
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/input/json.js
-  var substituters = [[/((?:\[|:|,)\s*)'((?:\\'|[^'])*?[^\\])?'(?=\s*(?:\]|}|,))/g, '$1"$2"'], [/((?:(?:"|]|}|\/[gmiuys]|\.|(?:\d|\.|-)*\d)\s*,|{)\s*)(?:"([^":\n]+?)"|'([^":\n]+?)'|([^":\n]+?))(\s*):/g, '$1"$2$3$4"$5:']];
-  function parseJSON(str) {
-    if (typeof str !== "string") {
-      return JSON.parse(str);
-    }
-    try {
-      return JSON.parse(str);
-    } catch (e) {
-      logger_default.debug("[plugin-common]", "Invalid JSON, switching to experimental parser");
-      substituters.forEach(([regex, subst]) => {
-        str = str.replace(regex, subst);
-      });
-      return JSON.parse(str);
-    }
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/input/jquery.js
-  function parse2(input) {
-    return input.val() || input.text() || input.html();
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/input/html.js
-  function parse3(input) {
-    return input.value || input.textContent;
-  }
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/input/index.js
-  var ref = "@else";
-  var formats3 = {
-    "@empty/text": {
-      parse,
-      parseType: {
-        dataType: "String",
-        predicate: (input) => input === ""
-      }
-    },
-    "@empty/whitespace+text": {
-      parse,
-      parseType: {
-        dataType: "String",
-        predicate: /^\s+$/
-      }
-    },
-    "@empty": {
-      parse,
-      parseType: {
-        dataType: "Primitive",
-        predicate: (input) => input == null
-      }
-    },
-    "@else/json": {
-      parse: parseJSON,
-      parseType: {
-        dataType: "String",
-        predicate: /^\s*(\{[\S\s]*\}|\[[\S\s]*\])\s*$/
-      }
-    },
-    "@else/url": {
-      parseType: {
-        dataType: "String",
-        predicate: /^https?:\/\/(([\w-]+\.)*[\w-]+)(:\d+)?(\/[^?/]*)*(\?[^#]*)?(#.*)?$/i
-      }
-    },
-    "@else/jquery": {
-      parse: parse2,
-      parseType: {
-        dataType: "ComplexObject",
-        predicate(input) {
-          return typeof jQuery !== "undefined" && input instanceof jQuery;
-        }
-      }
-    },
-    "@else/html": {
-      parse: parse3,
-      parseType: {
-        dataType: "ComplexObject",
-        predicate(input) {
-          return typeof HTMLElement !== "undefined" && input instanceof HTMLElement;
-        }
-      }
-    }
-  };
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/output/json.js
-  function appendCommas(string, index, array) {
-    return string + (index < array.length - 1 ? "," : "");
-  }
-  function getJsonObject(src, dict) {
-    const isArray = Array.isArray(src);
-    let entries;
-    if (isArray) {
-      entries = src.map((entry) => getJsonValue(entry, dict));
-    } else {
-      entries = Object.keys(src).filter((prop) => JSON.stringify(src[prop])).map((prop) => `"${prop}": ${getJsonValue(src[prop], dict)}`);
-    }
-    entries = entries.map(appendCommas).map((entry) => dict.listItem.join(entry));
-    entries = dict.list.join(entries.join(""));
-    return isArray ? `[${entries}]` : `{${entries}}`;
-  }
-  function getJsonValue(src, dict) {
-    if (typeof src === "object" && src !== null) {
-      if (src.length === 0) {
-        return "[]";
-      } else if (Object.keys(src).length === 0) {
-        return "{}";
-      } else {
-        return getJsonObject(src, dict);
-      }
-    } else {
-      return JSON.stringify(src);
-    }
-  }
-  function getJson(src, dict) {
-    let entries = src.map((entry) => getJsonObject(entry, dict));
-    entries = entries.map(appendCommas).map((entry) => dict.entry.join(entry));
-    entries = entries.join("");
-    return dict.bibliographyContainer.join(`[${entries}]`);
-  }
-  var json_default = {
-    data(data3, {
-      type: type3,
-      format: format5 = type3 || "text",
-      version: version3 = "1.0.2"
-    } = {}) {
-      if (version3 < "1.0.2") {
-        data3 = downgradeCsl(data3);
-      }
-      if (format5 === "object") {
-        return deepCopy_default(data3);
-      } else if (format5 === "text") {
-        return JSON.stringify(data3, null, 2);
-      } else {
-        logger_default.warn("[core]", "This feature (JSON output with special formatting) is unstable. See https://github.com/larsgw/citation.js/issues/144");
-        return getJson(data3, dict_exports.get(format5));
-      }
-    },
-    ndjson(data3, {
-      version: version3 = "1.0.2"
-    } = {}) {
-      if (version3 < "1.0.2") {
-        data3 = downgradeCsl(data3);
-      }
-      return data3.map((entry) => JSON.stringify(entry)).join("\n");
-    }
-  };
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/output/index.js
-  var output_default = Object.assign({}, json_default, label_default);
-
-  // node_modules/@citation-js/core/lib-mjs/plugin-common/index.js
-  add6(ref, {
-    input: formats3,
-    output: output_default
-  });
-
-  // node_modules/@citation-js/core/lib-mjs/index.js
-  var version = package_default.version;
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/log.js
-  var log_exports2 = {};
-  __export(log_exports2, {
-    currentVersion: () => currentVersion2,
-    retrieveLastVersion: () => retrieveLastVersion2,
-    retrieveVersion: () => retrieveVersion2,
-    save: () => save2,
-    undo: () => undo2
-  });
-  function currentVersion2() {
-    return this.log.length;
-  }
-  function retrieveVersion2(versnum = 1) {
-    if (versnum <= 0 || versnum > this.currentVersion()) {
-      return null;
-    } else {
-      const [data3, options3] = this.log[versnum - 1];
-      const image = new this.constructor(JSON.parse(data3), JSON.parse(options3));
-      image.log = this.log.slice(0, versnum);
-      return image;
-    }
-  }
-  function undo2(number = 1) {
-    return this.retrieveVersion(this.currentVersion() - number);
-  }
-  function retrieveLastVersion2() {
-    return this.retrieveVersion(this.currentVersion());
-  }
-  function save2() {
-    this.log.push([JSON.stringify(this.data), JSON.stringify(this._options)]);
-    return this;
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/options.js
-  var options_exports2 = {};
-  __export(options_exports2, {
-    defaultOptions: () => defaultOptions2,
-    options: () => options2
-  });
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/validate.js
-  var formats4 = ["real", "string"];
-  var types3 = ["json", "html", "string", "rtf"];
-  var styles2 = ["csl", "bibtex", "bibtxt", "citation-*", "ris", "ndjson"];
-  var wrapperTypes2 = ["string", "function"];
-  function validateOutputOptions2(options3) {
-    if (typeof options3 !== "object") {
-      throw new TypeError("Options not an object!");
-    }
-    const {
-      format: format5,
-      type: type3,
-      style,
-      lang,
-      append,
-      prepend
-    } = options3;
-    if (format5 && !formats4.includes(format5)) {
-      throw new TypeError(`Option format ("${format5}") should be one of: ${formats4}`);
-    } else if (type3 && !types3.includes(type3)) {
-      throw new TypeError(`Option type ("${type3}") should be one of: ${types3}`);
-    } else if (style && !styles2.includes(style) && !/^citation/.test(style)) {
-      throw new TypeError(`Option style ("${style}") should be one of: ${styles2}`);
-    } else if (lang && typeof lang !== "string") {
-      throw new TypeError(`Option lang should be a string, but is a ${typeof lang}`);
-    } else if (prepend && !wrapperTypes2.includes(typeof prepend)) {
-      throw new TypeError(`Option prepend should be a string or a function, but is a ${typeof prepend}`);
-    } else if (append && !wrapperTypes2.includes(typeof append)) {
-      throw new TypeError(`Option append should be a string or a function, but is a ${typeof append}`);
-    }
-    if (/^citation/.test(style) && type3 === "json") {
-      throw new Error(`Combination type/style of json/citation-* is not valid: ${type3}/${style}`);
-    }
-    return true;
-  }
-  function validateOptions2(options3) {
-    if (typeof options3 !== "object") {
-      throw new TypeError("Options should be an object");
-    }
-    if (options3.output) {
-      validateOutputOptions2(options3.output);
-    } else if (options3.maxChainLength && typeof options3.maxChainLength !== "number") {
-      throw new TypeError("Option maxChainLength should be a number");
-    } else if (options3.forceType && typeof options3.forceType !== "string") {
-      throw new TypeError("Option forceType should be a string");
-    } else if (options3.generateGraph != null && typeof options3.generateGraph !== "boolean") {
-      throw new TypeError("Option generateGraph should be a boolean");
-    } else if (options3.strict != null && typeof options3.strict !== "boolean") {
-      throw new TypeError("Option strict should be a boolean");
-    } else if (options3.target != null && typeof options3.target !== "string") {
-      throw new TypeError("Option target should be a boolean");
-    }
-    return true;
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/options.js
-  var defaultOptions2 = {
-    format: "real",
-    type: "json",
-    style: "csl",
-    lang: "en-US"
-  };
-  function options2(options3, log) {
-    validateOutputOptions2(options3);
-    if (log) {
-      this.save();
-    }
-    Object.assign(this._options, options3);
-    return this;
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/set.js
-  var set_exports2 = {};
-  __export(set_exports2, {
-    add: () => add8,
-    addAsync: () => addAsync2,
-    reset: () => reset2,
-    set: () => set2,
-    setAsync: () => setAsync2
-  });
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
-  var input_exports2 = {};
-  __export(input_exports2, {
-    add: () => add7,
-    addDataParser: () => addDataParser2,
-    addTypeParser: () => addTypeParser2,
-    chain: () => chain2,
-    chainAsync: () => chainAsync2,
-    chainLink: () => chainLink2,
-    chainLinkAsync: () => chainLinkAsync2,
-    data: () => data2,
-    dataAsync: () => dataAsync2,
-    get: () => get5,
-    has: () => has6,
-    hasDataParser: () => hasDataParser2,
-    hasTypeParser: () => hasTypeParser2,
-    list: () => list6,
-    listDataParser: () => listDataParser2,
-    listTypeParser: () => listTypeParser2,
-    remove: () => remove6,
-    removeDataParser: () => removeDataParser2,
-    removeTypeParser: () => removeTypeParser2,
-    treeTypeParser: () => treeTypeParser2,
-    type: () => type2,
-    typeMatcher: () => typeMatcher2,
-    util: () => util2
-  });
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/dataType.js
-  var dataType_exports2 = {};
-  __export(dataType_exports2, {
-    dataTypeOf: () => dataTypeOf2,
-    typeOf: () => typeOf2
-  });
-  function typeOf2(thing) {
-    switch (thing) {
-      case void 0:
-        return "Undefined";
-      case null:
-        return "Null";
-      default:
-        return thing.constructor.name;
-    }
-  }
-  function dataTypeOf2(thing) {
-    switch (typeof thing) {
-      case "string":
-        return "String";
-      case "object":
-        if (Array.isArray(thing)) {
-          return "Array";
-        } else if (typeOf2(thing) === "Object") {
-          return "SimpleObject";
-        } else if (typeOf2(thing) !== "Null") {
-          return "ComplexObject";
-        }
-      default:
-        return "Primitive";
-    }
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/graph.js
-  var graph_exports2 = {};
-  __export(graph_exports2, {
-    applyGraph: () => applyGraph2,
-    removeGraph: () => removeGraph2
-  });
-  function applyGraph2(entry, graph) {
-    if (entry._graph) {
-      const index = graph.findIndex(({
-        type: type3
-      }) => type3 === "@else/list+object");
-      if (index !== -1) {
-        graph.splice(index + 1, 0, ...entry._graph.slice(0, -1));
-      }
-    }
-    entry._graph = graph;
-    return entry;
-  }
-  function removeGraph2(entry) {
-    delete entry._graph;
-    return entry;
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
-  var parser_exports2 = {};
-  __export(parser_exports2, {
-    DataParser: () => DataParser2,
-    FormatParser: () => FormatParser2,
-    TypeParser: () => TypeParser2
-  });
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/logger.js
-  var logger2 = {
-    _output(level, scope, msg) {
-      this._log.push(scope, msg);
-      if (this._levels.indexOf(level) < this._levels.indexOf(this.level)) {
-        return;
-      }
-      this._console.log(scope, ...msg);
-    },
-    _console: null,
-    _log: [],
-    _levels: ["http", "debug", "unmapped", "info", "warn", "error", "silent"],
-    level: "silent"
-  };
-  for (const level of logger2._levels) {
-    logger2[level] = (scope, ...msg) => logger2._output(level, scope, msg);
-  }
-  if (typeof console.Console === "function") {
-    logger2._console = new console.Console(process.stderr);
-  } else {
-    logger2._console = console;
-  }
-  var logger_default2 = logger2;
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/type.js
-  var types4 = {};
-  var dataTypes2 = {};
-  var unregExts2 = {};
-  function parseNativeTypes2(input, dataType) {
-    switch (dataType) {
-      case "Array":
-        if (input.length === 0 || input.every((entry) => type2(entry) === "@csl/object")) {
-          return "@csl/list+object";
-        } else {
-          return "@else/list+object";
-        }
-      case "SimpleObject":
-      case "ComplexObject":
-        return "@csl/object";
-      default:
-        return "@invalid";
-    }
-  }
-  function matchType2(typeList = [], data3) {
-    for (const type3 of typeList) {
-      if (types4[type3].predicate(data3)) {
-        return matchType2(types4[type3].extensions, data3) || type3;
-      }
-    }
-  }
-  function type2(input) {
-    const dataType = dataTypeOf2(input);
-    if (dataType === "Array" && input.length === 0) {
-      return parseNativeTypes2(input, dataType);
-    }
-    const match = matchType2(dataTypes2[dataType], input);
-    return match || parseNativeTypes2(input, dataType);
-  }
-  function addTypeParser2(format5, {
-    dataType,
-    predicate,
-    extends: extend
-  }) {
-    let extensions = [];
-    if (format5 in unregExts2) {
-      extensions = unregExts2[format5];
-      delete unregExts2[format5];
-      logger_default2.debug("[core]", `Subclasses "${extensions}" finally registered to parent type "${format5}"`);
-    }
-    const object = {
-      predicate,
-      extensions
-    };
-    types4[format5] = object;
-    if (extend) {
-      const parentTypeParser = types4[extend];
-      if (parentTypeParser) {
-        parentTypeParser.extensions.push(format5);
-      } else {
-        if (!unregExts2[extend]) {
-          unregExts2[extend] = [];
-        }
-        unregExts2[extend].push(format5);
-        logger_default2.debug("[core]", `Subclass "${format5}" is waiting on parent type "${extend}"`);
-      }
-    } else {
-      const typeList = dataTypes2[dataType] || (dataTypes2[dataType] = []);
-      typeList.push(format5);
-    }
-  }
-  function hasTypeParser2(type3) {
-    return Object.prototype.hasOwnProperty.call(types4, type3);
-  }
-  function removeTypeParser2(type3) {
-    delete types4[type3];
-    const typeLists = [...Object.keys(dataTypes2).map((key) => dataTypes2[key]), ...Object.keys(types4).map((type4) => types4[type4].extensions).filter((list11) => list11.length > 0)];
-    typeLists.forEach((typeList) => {
-      const index = typeList.indexOf(type3);
-      if (index > -1) {
-        typeList.splice(index, 1);
-      }
-    });
-  }
-  function listTypeParser2() {
-    return Object.keys(types4);
-  }
-  function treeTypeParser2() {
-    const attachNode = (name) => ({
-      name,
-      children: types4[name].extensions.map(attachNode)
-    });
-    return {
-      name: "Type tree",
-      children: Object.keys(dataTypes2).map((name) => ({
-        name,
-        children: dataTypes2[name].map(attachNode)
-      }))
-    };
-  }
-  var typeMatcher2 = /^(?:@(.+?))(?:\/(?:(.+?)\+)?(?:(.+)))?$/;
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/parser.js
-  function _defineProperty4(e, r, t) {
-    return (r = _toPropertyKey4(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
-  }
-  function _toPropertyKey4(t) {
-    var i = _toPrimitive4(t, "string");
-    return "symbol" == typeof i ? i : i + "";
-  }
-  function _toPrimitive4(t, r) {
-    if ("object" != typeof t || !t) return t;
-    var e = t[Symbol.toPrimitive];
-    if (void 0 !== e) {
-      var i = e.call(t, r || "default");
-      if ("object" != typeof i) return i;
-      throw new TypeError("@@toPrimitive must return a primitive value.");
-    }
-    return ("string" === r ? String : Number)(t);
-  }
-  var TypeParser2 = class {
-    constructor(data3) {
-      _defineProperty4(this, "validDataTypes", ["String", "Array", "SimpleObject", "ComplexObject", "Primitive"]);
-      this.data = data3;
-    }
-    validateDataType() {
-      const dataType = this.data.dataType;
-      if (dataType && !this.validDataTypes.includes(dataType)) {
-        throw new RangeError(`dataType was ${dataType}; expected one of ${this.validDataTypes}`);
-      }
-    }
-    validateParseType() {
-      const predicate = this.data.predicate;
-      if (predicate && !(predicate instanceof RegExp || typeof predicate === "function")) {
-        throw new TypeError(`predicate was ${typeof predicate}; expected RegExp or function`);
-      }
-    }
-    validateTokenList() {
-      const tokenList = this.data.tokenList;
-      if (tokenList && typeof tokenList !== "object") {
-        throw new TypeError(`tokenList was ${typeof tokenList}; expected object or RegExp`);
-      }
-    }
-    validatePropertyConstraint() {
-      const propertyConstraint = this.data.propertyConstraint;
-      if (propertyConstraint && typeof propertyConstraint !== "object") {
-        throw new TypeError(`propertyConstraint was ${typeof propertyConstraint}; expected array or object`);
-      }
-    }
-    validateElementConstraint() {
-      const elementConstraint = this.data.elementConstraint;
-      if (elementConstraint && typeof elementConstraint !== "string") {
-        throw new TypeError(`elementConstraint was ${typeof elementConstraint}; expected string`);
-      }
-    }
-    validateExtends() {
-      const extend = this.data.extends;
-      if (extend && typeof extend !== "string") {
-        throw new TypeError(`extends was ${typeof extend}; expected string`);
-      }
-    }
-    validate() {
-      if (this.data === null || typeof this.data !== "object") {
-        throw new TypeError(`typeParser was ${typeof this.data}; expected object`);
-      }
-      this.validateDataType();
-      this.validateParseType();
-      this.validateTokenList();
-      this.validatePropertyConstraint();
-      this.validateElementConstraint();
-      this.validateExtends();
-    }
-    parseTokenList() {
-      let tokenList = this.data.tokenList;
-      if (!tokenList) {
-        return [];
-      } else if (tokenList instanceof RegExp) {
-        tokenList = {
-          token: tokenList
-        };
-      }
-      const {
-        token,
-        split = /\s+/,
-        trim = true,
-        every = true
-      } = tokenList;
-      const trimInput = (input) => trim ? input.trim() : input;
-      const testTokens = every ? "every" : "some";
-      const predicate = (input) => trimInput(input).split(split)[testTokens]((part) => token.test(part));
-      return [predicate];
-    }
-    parsePropertyConstraint() {
-      const constraints = [].concat(this.data.propertyConstraint || []);
-      return constraints.map(({
-        props,
-        match,
-        value
-      }) => {
-        props = [].concat(props);
-        switch (match) {
-          case "any":
-          case "some":
-            return (input) => props.some((prop) => prop in input && (!value || value(input[prop])));
-          case "none":
-            return (input) => !props.some((prop) => prop in input && (!value || value(input[prop])));
-          case "every":
-          default:
-            return (input) => props.every((prop) => prop in input && (!value || value(input[prop])));
-        }
-      });
-    }
-    parseElementConstraint() {
-      const constraint = this.data.elementConstraint;
-      return !constraint ? [] : [(input) => input.every((entry) => type2(entry) === constraint)];
-    }
-    parsePredicate() {
-      if (this.data.predicate instanceof RegExp) {
-        return [this.data.predicate.test.bind(this.data.predicate)];
-      } else if (this.data.predicate) {
-        return [this.data.predicate];
-      } else {
-        return [];
-      }
-    }
-    getCombinedPredicate() {
-      const predicates = [...this.parsePredicate(), ...this.parseTokenList(), ...this.parsePropertyConstraint(), ...this.parseElementConstraint()];
-      if (predicates.length === 0) {
-        return () => true;
-      } else if (predicates.length === 1) {
-        return predicates[0];
-      } else {
-        return (input) => predicates.every((predicate) => predicate(input));
-      }
-    }
-    getDataType() {
-      if (this.data.dataType) {
-        return this.data.dataType;
-      } else if (this.data.predicate instanceof RegExp) {
-        return "String";
-      } else if (this.data.tokenList) {
-        return "String";
-      } else if (this.data.elementConstraint) {
-        return "Array";
-      } else {
-        return "Primitive";
-      }
-    }
-    get dataType() {
-      return this.getDataType();
-    }
-    get predicate() {
-      return this.getCombinedPredicate();
-    }
-    get extends() {
-      return this.data.extends;
-    }
-  };
-  var DataParser2 = class {
-    constructor(parser, {
-      async: async3
-    } = {}) {
-      this.parser = parser;
-      this.async = async3;
-    }
-    validate() {
-      const parser = this.parser;
-      if (typeof parser !== "function") {
-        throw new TypeError(`parser was ${typeof parser}; expected function`);
-      }
-    }
-  };
-  var FormatParser2 = class {
-    constructor(format5, parsers3 = {}) {
-      this.format = format5;
-      if (parsers3.parseType) {
-        this.typeParser = new TypeParser2(parsers3.parseType);
-      }
-      if (parsers3.parse) {
-        this.dataParser = new DataParser2(parsers3.parse, {
-          async: false
-        });
-      }
-      if (parsers3.parseAsync) {
-        this.asyncDataParser = new DataParser2(parsers3.parseAsync, {
-          async: true
-        });
-      }
-    }
-    validateFormat() {
-      const format5 = this.format;
-      if (!typeMatcher2.test(format5)) {
-        throw new TypeError(`format name was "${format5}"; didn't match expected pattern`);
-      }
-    }
-    validate() {
-      this.validateFormat();
-      if (this.typeParser) {
-        this.typeParser.validate();
-      }
-      if (this.dataParser) {
-        this.dataParser.validate();
-      }
-      if (this.asyncDataParser) {
-        this.asyncDataParser.validate();
-      }
-    }
-  };
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/csl.js
-  var csl_exports2 = {};
-  __export(csl_exports2, {
-    clean: () => parseCsl2
-  });
-  var import_name3 = __toESM(require_lib2());
-  function ownKeys3(e, r) {
-    var t = Object.keys(e);
-    if (Object.getOwnPropertySymbols) {
-      var o = Object.getOwnPropertySymbols(e);
-      r && (o = o.filter(function(r2) {
-        return Object.getOwnPropertyDescriptor(e, r2).enumerable;
-      })), t.push.apply(t, o);
-    }
-    return t;
-  }
-  function _objectSpread3(e) {
-    for (var r = 1; r < arguments.length; r++) {
-      var t = null != arguments[r] ? arguments[r] : {};
-      r % 2 ? ownKeys3(Object(t), true).forEach(function(r2) {
-        _defineProperty5(e, r2, t[r2]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys3(Object(t)).forEach(function(r2) {
-        Object.defineProperty(e, r2, Object.getOwnPropertyDescriptor(t, r2));
-      });
-    }
-    return e;
-  }
-  function _defineProperty5(e, r, t) {
-    return (r = _toPropertyKey5(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
-  }
-  function _toPropertyKey5(t) {
-    var i = _toPrimitive5(t, "string");
-    return "symbol" == typeof i ? i : i + "";
-  }
-  function _toPrimitive5(t, r) {
-    if ("object" != typeof t || !t) return t;
-    var e = t[Symbol.toPrimitive];
-    if (void 0 !== e) {
-      var i = e.call(t, r || "default");
-      if ("object" != typeof i) return i;
-      throw new TypeError("@@toPrimitive must return a primitive value.");
-    }
-    return ("string" === r ? String : Number)(t);
-  }
-  var NAME2 = 1;
-  var NAME_LIST2 = 2;
-  var DATE2 = 3;
-  var TYPE2 = 4;
-  var entryTypes2 = {
-    article: true,
-    "article-journal": true,
-    "article-magazine": true,
-    "article-newspaper": true,
-    bill: true,
-    book: true,
-    broadcast: true,
-    chapter: true,
-    classic: true,
-    collection: true,
-    dataset: true,
-    document: true,
-    entry: true,
-    "entry-dictionary": true,
-    "entry-encyclopedia": true,
-    event: true,
-    figure: true,
-    graphic: true,
-    hearing: true,
-    interview: true,
-    legal_case: true,
-    legislation: true,
-    manuscript: true,
-    map: true,
-    motion_picture: true,
-    musical_score: true,
-    pamphlet: true,
-    "paper-conference": true,
-    patent: true,
-    performance: true,
-    periodical: true,
-    personal_communication: true,
-    post: true,
-    "post-weblog": true,
-    regulation: true,
-    report: true,
-    review: true,
-    "review-book": true,
-    software: true,
-    song: true,
-    speech: true,
-    standard: true,
-    thesis: true,
-    treaty: true,
-    webpage: true,
-    "journal-article": "article-journal",
-    "book-chapter": "chapter",
-    "posted-content": "manuscript",
-    "proceedings-article": "paper-conference",
-    dissertation: "thesis"
-  };
-  var fieldTypes2 = {
-    author: NAME_LIST2,
-    chair: NAME_LIST2,
-    "collection-editor": NAME_LIST2,
-    compiler: NAME_LIST2,
-    composer: NAME_LIST2,
-    "container-author": NAME_LIST2,
-    contributor: NAME_LIST2,
-    curator: NAME_LIST2,
-    director: NAME_LIST2,
-    editor: NAME_LIST2,
-    "editorial-director": NAME_LIST2,
-    "executive-producer": NAME_LIST2,
-    guest: NAME_LIST2,
-    host: NAME_LIST2,
-    interviewer: NAME_LIST2,
-    illustrator: NAME_LIST2,
-    narrator: NAME_LIST2,
-    organizer: NAME_LIST2,
-    "original-author": NAME_LIST2,
-    performer: NAME_LIST2,
-    producer: NAME_LIST2,
-    "reviewed-author": NAME_LIST2,
-    recipient: NAME_LIST2,
-    "script-writer": NAME_LIST2,
-    "series-creator": NAME_LIST2,
-    translator: NAME_LIST2,
-    accessed: DATE2,
-    "available-date": DATE2,
-    container: DATE2,
-    "event-date": DATE2,
-    issued: DATE2,
-    "original-date": DATE2,
-    submitted: DATE2,
-    type: TYPE2,
-    categories: "object",
-    custom: "object",
-    id: ["string", "number"],
-    language: "string",
-    journalAbbreviation: "string",
-    shortTitle: "string",
-    abstract: "string",
-    annote: "string",
-    archive: "string",
-    archive_collection: "string",
-    archive_location: "string",
-    "archive-place": "string",
-    authority: "string",
-    "call-number": "string",
-    "chapter-number": "string",
-    "citation-number": "string",
-    "citation-key": "string",
-    "citation-label": "string",
-    "collection-number": "string",
-    "collection-title": "string",
-    "container-title": "string",
-    "container-title-short": "string",
-    dimensions: "string",
-    division: "string",
-    DOI: "string",
-    edition: ["string", "number"],
-    event: "string",
-    "event-title": "string",
-    "event-place": "string",
-    "first-reference-note-number": "string",
-    genre: "string",
-    ISBN: "string",
-    ISSN: "string",
-    issue: ["string", "number"],
-    jurisdiction: "string",
-    keyword: "string",
-    locator: "string",
-    medium: "string",
-    note: "string",
-    number: ["string", "number"],
-    "number-of-pages": "string",
-    "number-of-volumes": ["string", "number"],
-    "original-publisher": "string",
-    "original-publisher-place": "string",
-    "original-title": "string",
-    page: "string",
-    "page-first": "string",
-    "part-number": ["string", "number"],
-    "part-title": "string",
-    PMCID: "string",
-    PMID: "string",
-    printing: "string",
-    publisher: "string",
-    "publisher-place": "string",
-    references: "string",
-    "reviewed-title": "string",
-    "reviewed-genre": "string",
-    scale: "string",
-    section: "string",
-    source: "string",
-    status: "string",
-    supplement: ["string", "number"],
-    title: "string",
-    "title-short": "string",
-    URL: "string",
-    version: "string",
-    volume: ["string", "number"],
-    "volume-title": "string",
-    "volume-title-short": "string",
-    "year-suffix": "string"
-  };
-  function correctName2(name, bestGuessConversions) {
-    if (typeof name === "object" && name !== null && (name.literal || name.given || name.family)) {
-      if (name.ORCID || name.orcid || name._ORCID) {
-        name = _objectSpread3({
-          _orcid: name.ORCID || name.orcid || name._ORCID
-        }, name);
-        delete name.ORCID;
-        delete name.orcid;
-        delete name._ORCID;
-      }
-      return name;
-    } else if (!bestGuessConversions) {
-      return void 0;
-    } else if (typeof name === "string") {
-      return (0, import_name3.parse)(name);
-    }
-  }
-  function correctNameList2(nameList, bestGuessConversions) {
-    if (nameList instanceof Array) {
-      const names = nameList.map((name) => correctName2(name, bestGuessConversions)).filter(Boolean);
-      return names.length ? names : void 0;
-    }
-  }
-  function correctDateParts2(dateParts, bestGuessConversions) {
-    if (dateParts.every((part) => typeof part === "number")) {
-      return dateParts;
-    } else if (!bestGuessConversions || dateParts.some((part) => isNaN(parseInt(part)))) {
-      return void 0;
-    } else {
-      return dateParts.map((part) => parseInt(part));
-    }
-  }
-  function correctDate2(date, bestGuessConversions) {
-    const dp = "date-parts";
-    if (typeof date !== "object" || date === null) {
-      return void 0;
-    } else if (date[dp] instanceof Array && date[dp].every((part) => part instanceof Array)) {
-      const range = date[dp].map((dateParts) => correctDateParts2(dateParts, bestGuessConversions)).filter(Boolean);
-      return range.length ? _objectSpread3(_objectSpread3({}, date), {}, {
-        "date-parts": range
-      }) : void 0;
-    } else if (date instanceof Array && date.every((part) => part[dp] instanceof Array)) {
-      const range = date.map((dateParts) => correctDateParts2(dateParts[dp], bestGuessConversions)).filter(Boolean);
-      return range.length ? {
-        "date-parts": range
-      } : void 0;
-    } else if (date[dp] instanceof Array) {
-      const dateParts = correctDateParts2(date[dp], bestGuessConversions);
-      return dateParts && {
-        "date-parts": [dateParts]
-      };
-    } else if ("literal" in date || "raw" in date) {
-      return date;
-    }
-  }
-  function correctType2(type3, bestGuessConversions) {
-    type3 = correctField2("language", type3, bestGuessConversions);
-    if (entryTypes2[type3] === true) {
-      return type3;
-    }
-    if (bestGuessConversions) {
-      if (type3 in entryTypes2) {
-        return entryTypes2[type3];
-      } else if (typeof type3 === "string" && type3.toLowerCase() !== type3) {
-        return correctType2(type3.toLowerCase(), bestGuessConversions);
-      }
-    }
-    return void 0;
-  }
-  function correctField2(fieldName, value, bestGuessConversions) {
-    const fieldType = [].concat(fieldTypes2[fieldName]);
-    switch (fieldTypes2[fieldName]) {
-      case NAME2:
-        return correctName2(value, bestGuessConversions);
-      case NAME_LIST2:
-        return correctNameList2(value, bestGuessConversions);
-      case DATE2:
-        return correctDate2(value, bestGuessConversions);
-      case TYPE2:
-        return correctType2(value, bestGuessConversions);
-    }
-    if (bestGuessConversions) {
-      if (typeof value === "string" && fieldType.includes("number") && !fieldType.includes("string") && !isNaN(+value)) {
-        return parseFloat(value);
-      } else if (typeof value === "number" && fieldType.includes("string") && !fieldType.includes("number")) {
-        return value.toString();
-      } else if (Array.isArray(value) && value.length) {
-        return correctField2(fieldName, value[0], bestGuessConversions);
-      }
-    }
-    if (fieldType.includes(typeof value)) {
-      return value;
-    }
-  }
-  function parseCsl2(data3, bestGuessConversions = true) {
-    return data3.map(function(entry) {
-      const clean2 = {};
-      for (const field in entry) {
-        const correction = correctField2(field, entry[field], bestGuessConversions);
-        if (correction !== void 0) {
-          clean2[field] = correction;
-        }
-      }
-      return clean2;
-    });
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/data.js
-  var parsers2 = {};
-  var asyncParsers2 = {};
-  var nativeParsers2 = {
-    "@csl/object": (input) => [input],
-    "@csl/list+object": (input) => input,
-    "@else/list+object": (input) => input.map((item) => {
-      const type3 = type2(item);
-      return data2(item, type3);
-    }).flat(),
-    "@invalid": () => {
-      throw new Error("This format is not supported or recognized");
-    }
-  };
-  var nativeAsyncParsers2 = {
-    "@else/list+object": (input) => Promise.all(input.map((item) => {
-      const type3 = type2(item);
-      return dataAsync2(item, type3);
-    })).then((input2) => input2.flat())
-  };
-  function data2(input, type3) {
-    if (typeof parsers2[type3] === "function") {
-      return parsers2[type3](input);
-    } else if (typeof nativeParsers2[type3] === "function") {
-      return nativeParsers2[type3](input);
-    } else {
-      throw new TypeError(`No synchronous parser found for ${type3}`);
-    }
-  }
-  async function dataAsync2(input, type3) {
-    if (typeof asyncParsers2[type3] === "function") {
-      return asyncParsers2[type3](input);
-    } else if (typeof nativeAsyncParsers2[type3] === "function") {
-      return nativeAsyncParsers2[type3](input);
-    } else if (hasDataParser2(type3, false)) {
-      return data2(input, type3);
-    } else {
-      throw new TypeError(`No parser found for ${type3}`);
-    }
-  }
-  function addDataParser2(format5, {
-    parser,
-    async: async3
-  }) {
-    if (async3) {
-      asyncParsers2[format5] = parser;
-    } else {
-      parsers2[format5] = parser;
-    }
-  }
-  function hasDataParser2(type3, async3) {
-    return async3 ? asyncParsers2[type3] || nativeAsyncParsers2[type3] : parsers2[type3] || nativeParsers2[type3];
-  }
-  function removeDataParser2(type3, async3) {
-    delete (async3 ? asyncParsers2 : parsers2)[type3];
-  }
-  function listDataParser2(async3) {
-    return Object.keys(async3 ? asyncParsers2 : parsers2);
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/register.js
-  var formats5 = {};
-  function add7(format5, parsers3) {
-    const formatParser = new FormatParser2(format5, parsers3);
-    formatParser.validate();
-    const index = formats5[format5] || (formats5[format5] = {});
-    if (formatParser.typeParser) {
-      addTypeParser2(format5, formatParser.typeParser);
-      index.type = true;
-    }
-    if (formatParser.dataParser) {
-      addDataParser2(format5, formatParser.dataParser);
-      index.data = true;
-    }
-    if (formatParser.asyncDataParser) {
-      addDataParser2(format5, formatParser.asyncDataParser);
-      index.asyncData = true;
-    }
-    if (parsers3.outputs) {
-      index.outputs = parsers3.outputs;
-    }
-  }
-  function get5(format5) {
-    return formats5[format5];
-  }
-  function remove6(format5) {
-    const index = formats5[format5];
-    if (!index) {
-      return;
-    }
-    if (index.type) {
-      removeTypeParser2(format5);
-    }
-    if (index.data) {
-      removeDataParser2(format5);
-    }
-    if (index.asyncData) {
-      removeDataParser2(format5, true);
-    }
-    delete formats5[format5];
-  }
-  function has6(format5) {
-    return format5 in formats5;
-  }
-  function list6() {
-    return Object.keys(formats5);
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/index.js
-  var util_exports2 = {};
-  __export(util_exports2, {
-    Grammar: () => Grammar2,
-    Register: () => register_default2,
-    TokenStack: () => stack_default2,
-    Translator: () => Translator2,
-    deepCopy: () => deepCopy_default2,
-    downgradeCsl: () => downgradeCsl2,
-    fetchFile: () => fetchFile2,
-    fetchFileAsync: () => fetchFileAsync2,
-    fetchId: () => fetchId_default2,
-    setUserAgent: () => setUserAgent2,
-    upgradeCsl: () => upgradeCsl2
-  });
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/csl.js
-  function ownKeys4(e, r) {
-    var t = Object.keys(e);
-    if (Object.getOwnPropertySymbols) {
-      var o = Object.getOwnPropertySymbols(e);
-      r && (o = o.filter(function(r2) {
-        return Object.getOwnPropertyDescriptor(e, r2).enumerable;
-      })), t.push.apply(t, o);
-    }
-    return t;
-  }
-  function _objectSpread4(e) {
-    for (var r = 1; r < arguments.length; r++) {
-      var t = null != arguments[r] ? arguments[r] : {};
-      r % 2 ? ownKeys4(Object(t), true).forEach(function(r2) {
-        _defineProperty6(e, r2, t[r2]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys4(Object(t)).forEach(function(r2) {
-        Object.defineProperty(e, r2, Object.getOwnPropertyDescriptor(t, r2));
-      });
-    }
-    return e;
-  }
-  function _defineProperty6(e, r, t) {
-    return (r = _toPropertyKey6(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
-  }
-  function _toPropertyKey6(t) {
-    var i = _toPrimitive6(t, "string");
-    return "symbol" == typeof i ? i : i + "";
-  }
-  function _toPrimitive6(t, r) {
-    if ("object" != typeof t || !t) return t;
-    var e = t[Symbol.toPrimitive];
-    if (void 0 !== e) {
-      var i = e.call(t, r || "default");
-      if ("object" != typeof i) return i;
-      throw new TypeError("@@toPrimitive must return a primitive value.");
-    }
-    return ("string" === r ? String : Number)(t);
-  }
-  function upgradeCsl2(item) {
-    if (Array.isArray(item)) {
-      return item.map(upgradeCsl2);
-    }
-    item = _objectSpread4({}, item);
-    if ("event" in item) {
-      item["event-title"] = item.event;
-      delete item.event;
-    }
-    if (item.type === "book" && "version" in item) {
-      item.type = "software";
-    }
-    return item;
-  }
-  function downgradeCsl2(item) {
-    if (Array.isArray(item)) {
-      return item.map(downgradeCsl2);
-    }
-    item = _objectSpread4({}, item);
-    if ("event-title" in item) {
-      item.event = item["event-title"];
-      delete item["event-title"];
-    }
-    if (item.type === "software") {
-      item.type = "book";
-    }
-    return item;
-  }
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/deepCopy.js
-  function deepCopy2(value, seen = /* @__PURE__ */ new Set()) {
-    if (typeof value !== "object" || value === null || value.constructor !== Object && value.constructor !== Array) {
-      return value;
-    }
-    if (seen.has(value)) {
-      throw new TypeError("Recursively copying circular structure");
-    }
-    seen.add(value);
-    let copy;
-    if (value.constructor === Array) {
-      copy = value.map((value2) => deepCopy2(value2, seen));
-    } else {
-      const object = {};
-      for (const key in value) {
-        object[key] = deepCopy2(value[key], seen);
-      }
-      copy = object;
-    }
-    seen.delete(value);
-    return copy;
-  }
-  var deepCopy_default2 = deepCopy2;
-
-  // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/fetchFile.js
-  var import_sync_fetch2 = __toESM(require_browser2());
-
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/package.json
-  var package_default2 = {
+  var package_default = {
     name: "@citation-js/core",
     version: "0.8.2",
     description: "Convert different bibliographic metadata sources",
@@ -23075,13 +20638,13 @@
   var isBrowser = typeof location !== "undefined" && typeof navigator !== "undefined";
   var asyncFetch = isBrowser ? fetch : node_fetch_default;
   var asyncHeaders = isBrowser ? Headers : Headers2;
-  var userAgent2 = `Citation.js/${package_default2.version}`;
+  var userAgent = `Citation.js/${package_default.version}`;
   if (typeof process !== "undefined" && process && process.release && process.release.name === "node" && process.version) {
-    userAgent2 += ` Node.js/${process.version}`;
+    userAgent += ` Node.js/${process.version}`;
   }
   function normaliseHeaders(headers) {
     const result = {};
-    const entries = headers instanceof asyncHeaders || headers instanceof import_sync_fetch2.default.Headers ? Array.from(headers) : Object.entries(headers);
+    const entries = headers instanceof asyncHeaders || headers instanceof import_sync_fetch.default.Headers ? Array.from(headers) : Object.entries(headers);
     for (const [name, header] of entries) {
       result[name.toLowerCase()] = header.toString();
     }
@@ -23095,8 +20658,8 @@
       method: "GET",
       checkContentType: opts.checkContentType
     };
-    if (userAgent2 && !isBrowser) {
-      reqOpts.headers["user-agent"] = userAgent2;
+    if (userAgent && !isBrowser) {
+      reqOpts.headers["user-agent"] = userAgent;
     }
     if (opts.body) {
       reqOpts.method = "POST";
@@ -23114,7 +20677,7 @@
       return true;
     }
     const [a, b] = response["content-type"].split(";")[0].trim().split("/");
-    return request.accept.split(",").map((type3) => type3.split(";")[0].trim().split("/")).some(([c, d]) => (c === a || c === "*") && (d === b || d === "*"));
+    return request.accept.split(",").map((type2) => type2.split(";")[0].trim().split("/")).some(([c, d]) => (c === a || c === "*") && (d === b || d === "*"));
   }
   function checkResponse(response, opts) {
     const {
@@ -23135,30 +20698,30 @@
     }
     return response;
   }
-  function fetchFile2(url, opts) {
+  function fetchFile(url, opts) {
     const reqOpts = parseOpts(opts);
-    logger_default2.http("[core]", reqOpts.method, url, reqOpts);
-    const response = checkResponse((0, import_sync_fetch2.default)(url, reqOpts), reqOpts);
+    logger_default.http("[core]", reqOpts.method, url, reqOpts);
+    const response = checkResponse((0, import_sync_fetch.default)(url, reqOpts), reqOpts);
     return response.text();
   }
-  async function fetchFileAsync2(url, opts) {
+  async function fetchFileAsync(url, opts) {
     const reqOpts = parseOpts(opts);
-    logger_default2.http("[core]", reqOpts.method, url, reqOpts);
+    logger_default.http("[core]", reqOpts.method, url, reqOpts);
     return asyncFetch(url, reqOpts).then((response) => checkResponse(response, reqOpts)).then((response) => response.text());
   }
-  function setUserAgent2(newUserAgent) {
-    userAgent2 = newUserAgent;
+  function setUserAgent(newUserAgent) {
+    userAgent = newUserAgent;
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/fetchId.js
-  function fetchId2(list11, prefix) {
+  function fetchId(list6, prefix) {
     let id;
-    while (id === void 0 || list11.includes(id)) {
+    while (id === void 0 || list6.includes(id)) {
       id = `${prefix}${Math.random().toString().slice(2)}`;
     }
     return id;
   }
-  var fetchId_default2 = fetchId2;
+  var fetchId_default = fetchId;
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/stack.js
   var TokenStack = class _TokenStack {
@@ -23262,12 +20825,12 @@
       return consumed.join("");
     }
   };
-  var stack_default2 = TokenStack;
+  var stack_default = TokenStack;
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/register.js
-  var Register2 = class {
-    constructor(data3 = {}) {
-      this.data = data3;
+  var Register = class {
+    constructor(data2 = {}) {
+      this.data = data2;
     }
     set(key, value) {
       this.data[key] = value;
@@ -23293,10 +20856,10 @@
       return Object.keys(this.data);
     }
   };
-  var register_default2 = Register2;
+  var register_default = Register;
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/grammar.js
-  var Grammar2 = class {
+  var Grammar = class {
     constructor(rules, state) {
       this.rules = rules;
       this.defaultState = state;
@@ -23306,26 +20869,26 @@
     parse(iterator, mainRule) {
       this.lexer = iterator;
       this.token = this.lexer.next();
-      this.state = deepCopy2(this.defaultState);
+      this.state = deepCopy(this.defaultState);
       this.log = [];
       return this.consumeRule(mainRule || this.mainRule);
     }
     matchEndOfFile() {
       return !this.token;
     }
-    matchToken(type3) {
-      return this.token && type3 === this.token.type;
+    matchToken(type2) {
+      return this.token && type2 === this.token.type;
     }
-    consumeToken(type3, optional) {
+    consumeToken(type2, optional) {
       const token = this.token;
-      if (!type3 || token && token.type === type3) {
+      if (!type2 || token && token.type === type2) {
         this.token = this.lexer.next();
         return token;
       } else if (optional) {
         return void 0;
       } else {
         const got = token ? `"${token.type}"` : "EOF";
-        const error = new SyntaxError(this.lexer.formatError(token, `expected "${type3}", got ${got}`));
+        const error = new SyntaxError(this.lexer.formatError(token, `expected "${type2}", got ${got}`));
         error.message += ` (${this.log.join("->")})`;
         throw error;
       }
@@ -23339,7 +20902,7 @@
   };
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/util/translator.js
-  function createConditionEval2(condition) {
+  function createConditionEval(condition) {
     return function conditionEval(input) {
       if (typeof condition === "boolean") {
         return condition;
@@ -23360,7 +20923,7 @@
       });
     };
   }
-  function parsePropStatement2(prop, toSource) {
+  function parsePropStatement(prop, toSource) {
     let inputProp;
     let outputProp;
     let convert;
@@ -23376,7 +20939,7 @@
       if (prop.when) {
         condition = toSource ? prop.when.target : prop.when.source;
         if (condition != null) {
-          condition = createConditionEval2(condition);
+          condition = createConditionEval(condition);
         }
       }
     } else {
@@ -23391,9 +20954,9 @@
       condition
     };
   }
-  function createConverter2(props, toSource) {
-    toSource = toSource === Translator2.CONVERT_TO_SOURCE;
-    props = props.map((prop) => parsePropStatement2(prop, toSource)).filter(Boolean);
+  function createConverter(props, toSource) {
+    toSource = toSource === Translator.CONVERT_TO_SOURCE;
+    props = props.map((prop) => parsePropStatement(prop, toSource)).filter(Boolean);
     return function converter(input) {
       const output = {};
       for (const {
@@ -23430,17 +20993,17 @@
       return output;
     };
   }
-  var Translator2 = class _Translator {
+  var Translator = class _Translator {
     constructor(props) {
-      this.convertToSource = createConverter2(props, _Translator.CONVERT_TO_SOURCE);
-      this.convertToTarget = createConverter2(props, _Translator.CONVERT_TO_TARGET);
+      this.convertToSource = createConverter(props, _Translator.CONVERT_TO_SOURCE);
+      this.convertToTarget = createConverter(props, _Translator.CONVERT_TO_TARGET);
     }
   };
-  Translator2.CONVERT_TO_SOURCE = /* @__PURE__ */ Symbol("convert to source");
-  Translator2.CONVERT_TO_TARGET = /* @__PURE__ */ Symbol("convert to target");
+  Translator.CONVERT_TO_SOURCE = /* @__PURE__ */ Symbol("convert to source");
+  Translator.CONVERT_TO_TARGET = /* @__PURE__ */ Symbol("convert to target");
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/chain.js
-  function prepareParseGraph2(graph) {
+  function prepareParseGraph(graph) {
     return graph.reduce((array, next) => {
       const last = array[array.length - 1];
       if (last && last.type === next.type) {
@@ -23451,17 +21014,17 @@
       return array;
     }, []).map((element) => (element.count > 1 ? element.count + "x " : "") + element.type).join(" -> ");
   }
-  var ChainParser2 = class {
-    constructor(input, options3 = {}) {
+  var ChainParser = class {
+    constructor(input, options2 = {}) {
       this.options = Object.assign({
         generateGraph: true,
-        forceType: type2(input),
+        forceType: type(input),
         maxChainLength: 10,
         strict: true,
         target: "@csl/list+object"
-      }, options3);
+      }, options2);
       this.type = this.options.forceType;
-      this.data = typeof input === "object" ? deepCopy_default2(input) : input;
+      this.data = typeof input === "object" ? deepCopy_default(input) : input;
       this.graph = [{
         type: this.type,
         data: input
@@ -23470,11 +21033,11 @@
     }
     iterate() {
       if (this.iteration !== 0) {
-        const typeInfo = get5(this.type);
+        const typeInfo = get(this.type);
         if (typeInfo && typeInfo.outputs) {
           this.type = typeInfo.outputs;
         } else {
-          this.type = type2(this.data);
+          this.type = type(this.data);
         }
         this.graph.push({
           type: this.type
@@ -23483,7 +21046,7 @@
       if (this.error || this.type === this.options.target) {
         return false;
       } else if (this.iteration >= this.options.maxChainLength) {
-        this.error = new RangeError(`Max. number of parsing iterations reached (${prepareParseGraph2(this.graph)})`);
+        this.error = new RangeError(`Max. number of parsing iterations reached (${prepareParseGraph(this.graph)})`);
         return false;
       } else {
         this.iteration++;
@@ -23492,89 +21055,89 @@
     }
     end() {
       if (this.error) {
-        logger_default2.error("[core]", this.error.message);
+        logger_default.error("[core]", this.error.message);
         if (this.options.strict !== false) {
           throw this.error;
         } else {
           return [];
         }
       } else if (this.options.target === "@csl/list+object") {
-        return upgradeCsl2(this.data).map(this.options.generateGraph ? (entry) => applyGraph2(entry, this.graph) : removeGraph2);
+        return upgradeCsl(this.data).map(this.options.generateGraph ? (entry) => applyGraph(entry, this.graph) : removeGraph);
       } else {
         return this.data;
       }
     }
   };
-  var chain2 = (...args) => {
-    const chain3 = new ChainParser2(...args);
-    while (chain3.iterate()) {
+  var chain = (...args) => {
+    const chain2 = new ChainParser(...args);
+    while (chain2.iterate()) {
       try {
-        chain3.data = data2(chain3.data, chain3.type);
+        chain2.data = data(chain2.data, chain2.type);
       } catch (e) {
-        chain3.error = e;
+        chain2.error = e;
       }
     }
-    return chain3.end();
+    return chain2.end();
   };
-  var chainLink2 = (input) => {
-    const type3 = type2(input);
-    const output = type3.match(/array|object/) ? deepCopy_default2(input) : input;
-    return data2(output, type3);
+  var chainLink = (input) => {
+    const type2 = type(input);
+    const output = type2.match(/array|object/) ? deepCopy_default(input) : input;
+    return data(output, type2);
   };
-  var chainAsync2 = async (...args) => {
-    const chain3 = new ChainParser2(...args);
-    while (chain3.iterate()) {
-      chain3.data = await dataAsync2(chain3.data, chain3.type).catch((e) => {
-        chain3.error = e;
+  var chainAsync = async (...args) => {
+    const chain2 = new ChainParser(...args);
+    while (chain2.iterate()) {
+      chain2.data = await dataAsync(chain2.data, chain2.type).catch((e) => {
+        chain2.error = e;
       });
     }
-    return chain3.end();
+    return chain2.end();
   };
-  var chainLinkAsync2 = async (input) => {
-    const type3 = type2(input);
-    const output = type3.match(/array|object/) ? deepCopy_default2(input) : input;
-    return dataAsync2(output, type3);
+  var chainLinkAsync = async (input) => {
+    const type2 = type(input);
+    const output = type2.match(/array|object/) ? deepCopy_default(input) : input;
+    return dataAsync(output, type2);
   };
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/input/index.js
-  var util2 = Object.assign({}, dataType_exports2, graph_exports2, parser_exports2, csl_exports2);
+  var util = Object.assign({}, dataType_exports, graph_exports, parser_exports, csl_exports);
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/set.js
-  function add8(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
+  function add2(data2, options2 = {}, log = false) {
+    if (options2 === true || log === true) {
       this.save();
     }
-    this.data.push(...chain2(data3, options3));
+    this.data.push(...chain(data2, options2));
     this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
-      entry.id = fetchId_default2(this.getIds(), "temp_id_");
+      entry.id = fetchId_default(this.getIds(), "temp_id_");
     });
     return this;
   }
-  async function addAsync2(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
+  async function addAsync(data2, options2 = {}, log = false) {
+    if (options2 === true || log === true) {
       this.save();
     }
-    this.data.push(...await chainAsync2(data3, options3));
+    this.data.push(...await chainAsync(data2, options2));
     this.data.filter((entry) => !Object.prototype.hasOwnProperty.call(entry, "id")).forEach((entry) => {
-      entry.id = fetchId_default2(this.getIds(), "temp_id_");
+      entry.id = fetchId_default(this.getIds(), "temp_id_");
     });
     return this;
   }
-  function set2(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
+  function set(data2, options2 = {}, log = false) {
+    if (options2 === true || log === true) {
       this.save();
     }
     this.data = [];
-    return typeof options3 !== "boolean" ? this.add(data3, options3) : this.add(data3);
+    return typeof options2 !== "boolean" ? this.add(data2, options2) : this.add(data2);
   }
-  async function setAsync2(data3, options3 = {}, log = false) {
-    if (options3 === true || log === true) {
+  async function setAsync(data2, options2 = {}, log = false) {
+    if (options2 === true || log === true) {
       this.save();
     }
     this.data = [];
-    return typeof options3 !== "boolean" ? this.addAsync(data3, options3) : this.addAsync(data3);
+    return typeof options2 !== "boolean" ? this.addAsync(data2, options2) : this.addAsync(data2);
   }
-  function reset2(log) {
+  function reset(log) {
     if (log) {
       this.save();
     }
@@ -23584,13 +21147,13 @@
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/sort.js
-  var sort_exports2 = {};
-  __export(sort_exports2, {
-    sort: () => sort2
+  var sort_exports = {};
+  __export(sort_exports, {
+    sort: () => sort
   });
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/output/label.js
-  function getLabel2(entry) {
+  function getLabel(entry) {
     if ("citation-label" in entry) {
       return entry["citation-label"];
     }
@@ -23608,23 +21171,23 @@
     }
     return res;
   }
-  var label_default2 = {
-    label(data3) {
-      return data3.reduce((object, entry) => {
-        object[entry.id] = getLabel2(entry);
+  var label_default = {
+    label(data2) {
+      return data2.reduce((object, entry) => {
+        object[entry.id] = getLabel(entry);
         return object;
       }, {});
     }
   };
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/sort.js
-  var import_name4 = __toESM(require_lib2());
-  function getComparisonValue2(obj, prop, label = prop === "label") {
-    let value = label ? getLabel2(obj) : obj[prop];
+  var import_name2 = __toESM(require_lib());
+  function getComparisonValue(obj, prop, label = prop === "label") {
+    let value = label ? getLabel(obj) : obj[prop];
     switch (prop) {
       case "author":
       case "editor":
-        return value.map((name) => name.literal || name.family || (0, import_name4.format)(name));
+        return value.map((name) => name.literal || name.family || (0, import_name2.format)(name));
       case "accessed":
       case "issued":
         return value["date-parts"][0];
@@ -23639,93 +21202,93 @@
         return value || -Infinity;
     }
   }
-  function compareProp2(entryA, entryB, prop, flip2 = /^!/.test(prop)) {
+  function compareProp(entryA, entryB, prop, flip2 = /^!/.test(prop)) {
     prop = prop.replace(/^!/, "");
-    const a = getComparisonValue2(entryA, prop);
-    const b = getComparisonValue2(entryB, prop);
+    const a = getComparisonValue(entryA, prop);
+    const b = getComparisonValue(entryB, prop);
     return (flip2 ? -1 : 1) * (a > b ? 1 : a < b ? -1 : 0);
   }
-  function getSortCallback2(...props) {
+  function getSortCallback(...props) {
     return (a, b) => {
       const keys = props.slice();
       let output = 0;
       while (!output && keys.length) {
-        output = compareProp2(a, b, keys.shift());
+        output = compareProp(a, b, keys.shift());
       }
       return output;
     };
   }
-  function sort2(method = [], log) {
+  function sort(method = [], log) {
     if (log) {
       this.save();
     }
-    this.data.sort(typeof method === "function" ? method : getSortCallback2(...method, "label"));
+    this.data.sort(typeof method === "function" ? method : getSortCallback(...method, "label"));
     return this;
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/get.js
-  var get_exports2 = {};
-  __export(get_exports2, {
-    format: () => format4,
-    get: () => get6,
-    getIds: () => getIds2
+  var get_exports = {};
+  __export(get_exports, {
+    format: () => format2,
+    get: () => get2,
+    getIds: () => getIds
   });
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/output.js
-  var output_exports2 = {};
-  __export(output_exports2, {
-    add: () => add9,
-    format: () => format3,
-    has: () => has7,
-    list: () => list7,
-    register: () => register3,
-    remove: () => remove7
+  var output_exports = {};
+  __export(output_exports, {
+    add: () => add3,
+    format: () => format,
+    has: () => has2,
+    list: () => list2,
+    register: () => register,
+    remove: () => remove2
   });
-  function validate3(name, formatter) {
+  function validate(name, formatter) {
     if (typeof name !== "string") {
       throw new TypeError(`Invalid output format name, expected string, got ${typeof name}`);
     } else if (typeof formatter !== "function") {
       throw new TypeError(`Invalid formatter, expected function, got ${typeof formatter}`);
     }
   }
-  var register3 = new register_default2();
-  function add9(name, formatter) {
-    validate3(name, formatter);
-    register3.set(name, formatter);
+  var register = new register_default();
+  function add3(name, formatter) {
+    validate(name, formatter);
+    register.set(name, formatter);
   }
-  function remove7(name) {
-    register3.remove(name);
+  function remove2(name) {
+    register.remove(name);
   }
-  function has7(name) {
-    return register3.has(name);
+  function has2(name) {
+    return register.has(name);
   }
-  function list7() {
-    return register3.list();
+  function list2() {
+    return register.list();
   }
-  function format3(name, data3, ...options3) {
-    if (!register3.has(name)) {
+  function format(name, data2, ...options2) {
+    if (!register.has(name)) {
       throw new Error(`Output format "${name}" unavailable`);
     }
-    return register3.get(name)(data3, ...options3);
+    return register.get(name)(data2, ...options2);
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/get.js
-  function getIds2() {
+  function getIds() {
     return this.data.map((entry) => entry.id);
   }
-  function format4(format5, ...options3) {
-    return format3(format5, parseCsl2(this.data), ...options3);
+  function format2(format3, ...options2) {
+    return format(format3, parseCsl(this.data), ...options2);
   }
-  function get6(options3 = {}) {
-    validateOutputOptions2(options3);
-    const parsedOptions = Object.assign({}, this.defaultOptions, this._options.output, options3);
+  function get2(options2 = {}) {
+    validateOutputOptions(options2);
+    const parsedOptions = Object.assign({}, this.defaultOptions, this._options.output, options2);
     const {
-      type: type3,
+      type: type2,
       style
     } = parsedOptions;
     const [styleType, styleFormat] = style.split("-");
     const newStyle = styleType === "citation" ? "bibliography" : styleType === "csl" ? "data" : styleType;
-    const newType = type3 === "string" ? "text" : type3 === "json" ? "object" : type3;
+    const newType = type2 === "string" ? "text" : type2 === "json" ? "object" : type2;
     let formatOptions;
     switch (newStyle) {
       case "bibliography": {
@@ -23755,15 +21318,15 @@
       default:
         throw new Error(`Invalid style "${newStyle}"`);
     }
-    const result = this.format(newStyle, Object.assign(formatOptions, options3._newOptions));
+    const result = this.format(newStyle, Object.assign(formatOptions, options2._newOptions));
     const {
-      format: format5
+      format: format3
     } = parsedOptions;
-    if (format5 === "real" && newType === "html" && typeof document !== "undefined" && typeof document.createElement === "function") {
+    if (format3 === "real" && newType === "html" && typeof document !== "undefined" && typeof document.createElement === "function") {
       const tmp = document.createElement("div");
       tmp.innerHTML = result;
       return tmp.firstChild;
-    } else if (format5 === "string" && typeof result === "object") {
+    } else if (format3 === "string" && typeof result === "object") {
       return JSON.stringify(result);
     } else {
       return result;
@@ -23771,20 +21334,20 @@
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/static.js
-  var static_exports2 = {};
-  __export(static_exports2, {
-    async: () => async_default2,
-    validateOptions: () => validateOptions2,
-    validateOutputOptions: () => validateOutputOptions2
+  var static_exports = {};
+  __export(static_exports, {
+    async: () => async_default,
+    validateOptions: () => validateOptions,
+    validateOutputOptions: () => validateOutputOptions
   });
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/async.js
-  function async2(data3, options3, callback) {
-    if (typeof options3 === "function" && !callback) {
-      callback = options3;
-      options3 = void 0;
+  function async(data2, options2, callback) {
+    if (typeof options2 === "function" && !callback) {
+      callback = options2;
+      options2 = void 0;
     }
-    const promise = new this().setAsync(data3, options3);
+    const promise = new this().setAsync(data2, options2);
     if (typeof callback === "function") {
       promise.then(callback);
       return void 0;
@@ -23792,50 +21355,50 @@
       return promise;
     }
   }
-  var async_default2 = async2;
+  var async_default = async;
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/Cite/index.js
-  function Cite2(data3, options3 = {}) {
-    if (!(this instanceof Cite2)) {
-      return new Cite2(data3, options3);
+  function Cite(data2, options2 = {}) {
+    if (!(this instanceof Cite)) {
+      return new Cite(data2, options2);
     }
-    this._options = options3;
+    this._options = options2;
     this.log = [];
     this.data = [];
-    this.set(data3, options3);
-    this.options(options3);
+    this.set(data2, options2);
+    this.options(options2);
     return this;
   }
-  Object.assign(Cite2.prototype, log_exports2, options_exports2, set_exports2, sort_exports2, get_exports2);
-  Cite2.prototype[Symbol.iterator] = function* () {
+  Object.assign(Cite.prototype, log_exports, options_exports, set_exports, sort_exports, get_exports);
+  Cite.prototype[Symbol.iterator] = function* () {
     yield* this.data;
   };
-  Object.assign(Cite2, static_exports2);
+  Object.assign(Cite, static_exports);
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/index.js
-  var plugins_exports2 = {};
-  __export(plugins_exports2, {
-    add: () => add12,
-    config: () => config_exports2,
-    dict: () => dict_exports2,
-    has: () => has10,
-    input: () => input_exports2,
-    list: () => list10,
-    output: () => output_exports2,
-    remove: () => remove10
+  var plugins_exports = {};
+  __export(plugins_exports, {
+    add: () => add6,
+    config: () => config_exports,
+    dict: () => dict_exports,
+    has: () => has5,
+    input: () => input_exports,
+    list: () => list5,
+    output: () => output_exports,
+    remove: () => remove5
   });
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/dict.js
-  var dict_exports2 = {};
-  __export(dict_exports2, {
-    add: () => add10,
-    get: () => get7,
-    has: () => has8,
-    list: () => list8,
-    register: () => register4,
-    remove: () => remove8
+  var dict_exports = {};
+  __export(dict_exports, {
+    add: () => add4,
+    get: () => get3,
+    has: () => has3,
+    list: () => list3,
+    register: () => register2,
+    remove: () => remove3
   });
-  function validate4(name, dict) {
+  function validate2(name, dict) {
     if (typeof name !== "string") {
       throw new TypeError(`Invalid dict name, expected string, got ${typeof name}`);
     } else if (typeof dict !== "object") {
@@ -23848,7 +21411,7 @@
       }
     }
   }
-  var register4 = new register_default2({
+  var register2 = new register_default({
     html: {
       bibliographyContainer: ['<div class="csl-bib-body">', "</div>"],
       entry: ['<div class="csl-entry">', "</div>"],
@@ -23862,112 +21425,112 @@
       listItem: ["	", "\n"]
     }
   });
-  function add10(name, dict) {
-    validate4(name, dict);
-    register4.set(name, dict);
+  function add4(name, dict) {
+    validate2(name, dict);
+    register2.set(name, dict);
   }
-  function remove8(name) {
-    register4.remove(name);
+  function remove3(name) {
+    register2.remove(name);
   }
-  function has8(name) {
-    return register4.has(name);
+  function has3(name) {
+    return register2.has(name);
   }
-  function list8() {
-    return register4.list();
+  function list3() {
+    return register2.list();
   }
-  function get7(name) {
-    if (!register4.has(name)) {
+  function get3(name) {
+    if (!register2.has(name)) {
       throw new Error(`Dict "${name}" unavailable`);
     }
-    return register4.get(name);
+    return register2.get(name);
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/config.js
-  var config_exports2 = {};
-  __export(config_exports2, {
-    add: () => add11,
-    get: () => get8,
-    has: () => has9,
-    list: () => list9,
-    remove: () => remove9
+  var config_exports = {};
+  __export(config_exports, {
+    add: () => add5,
+    get: () => get4,
+    has: () => has4,
+    list: () => list4,
+    remove: () => remove4
   });
-  var configs2 = {};
-  function add11(ref3, config) {
-    configs2[ref3] = config;
+  var configs = {};
+  function add5(ref2, config) {
+    configs[ref2] = config;
   }
-  function get8(ref3) {
-    return configs2[ref3];
+  function get4(ref2) {
+    return configs[ref2];
   }
-  function has9(ref3) {
-    return Object.prototype.hasOwnProperty.call(configs2, ref3);
+  function has4(ref2) {
+    return Object.prototype.hasOwnProperty.call(configs, ref2);
   }
-  function remove9(ref3) {
-    delete configs2[ref3];
+  function remove4(ref2) {
+    delete configs[ref2];
   }
-  function list9() {
-    return Object.keys(configs2);
+  function list4() {
+    return Object.keys(configs);
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugins/index.js
-  var registers2 = {
-    input: input_exports2,
-    output: output_exports2,
-    dict: dict_exports2,
-    config: config_exports2
+  var registers = {
+    input: input_exports,
+    output: output_exports,
+    dict: dict_exports,
+    config: config_exports
   };
-  var indices2 = {};
-  function add12(ref3, plugins = {}) {
-    const mainIndex = indices2[ref3] = {};
-    for (const type3 in plugins) {
-      if (type3 === "config") {
+  var indices = {};
+  function add6(ref2, plugins = {}) {
+    const mainIndex = indices[ref2] = {};
+    for (const type2 in plugins) {
+      if (type2 === "config") {
         mainIndex.config = {
-          [ref3]: plugins.config
+          [ref2]: plugins.config
         };
-        registers2.config.add(ref3, plugins.config);
+        registers.config.add(ref2, plugins.config);
         continue;
       }
-      const typeIndex = mainIndex[type3] = {};
-      const typePlugins = plugins[type3];
+      const typeIndex = mainIndex[type2] = {};
+      const typePlugins = plugins[type2];
       for (const name in typePlugins) {
         const typePlugin = typePlugins[name];
         typeIndex[name] = true;
-        registers2[type3].add(name, typePlugin);
+        registers[type2].add(name, typePlugin);
       }
     }
   }
-  function remove10(ref3) {
-    const mainIndex = indices2[ref3];
-    for (const type3 in mainIndex) {
-      const typeIndex = mainIndex[type3];
+  function remove5(ref2) {
+    const mainIndex = indices[ref2];
+    for (const type2 in mainIndex) {
+      const typeIndex = mainIndex[type2];
       for (const name in typeIndex) {
-        registers2[type3].remove(name);
+        registers[type2].remove(name);
       }
     }
-    delete indices2[ref3];
+    delete indices[ref2];
   }
-  function has10(ref3) {
-    return ref3 in indices2;
+  function has5(ref2) {
+    return ref2 in indices;
   }
-  function list10() {
-    return Object.keys(indices2);
+  function list5() {
+    return Object.keys(indices);
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/empty.js
-  function parse4() {
+  function parse() {
     return [];
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/json.js
-  var substituters2 = [[/((?:\[|:|,)\s*)'((?:\\'|[^'])*?[^\\])?'(?=\s*(?:\]|}|,))/g, '$1"$2"'], [/((?:(?:"|]|}|\/[gmiuys]|\.|(?:\d|\.|-)*\d)\s*,|{)\s*)(?:"([^":\n]+?)"|'([^":\n]+?)'|([^":\n]+?))(\s*):/g, '$1"$2$3$4"$5:']];
-  function parseJSON2(str) {
+  var substituters = [[/((?:\[|:|,)\s*)'((?:\\'|[^'])*?[^\\])?'(?=\s*(?:\]|}|,))/g, '$1"$2"'], [/((?:(?:"|]|}|\/[gmiuys]|\.|(?:\d|\.|-)*\d)\s*,|{)\s*)(?:"([^":\n]+?)"|'([^":\n]+?)'|([^":\n]+?))(\s*):/g, '$1"$2$3$4"$5:']];
+  function parseJSON(str) {
     if (typeof str !== "string") {
       return JSON.parse(str);
     }
     try {
       return JSON.parse(str);
     } catch (e) {
-      logger_default2.debug("[plugin-common]", "Invalid JSON, switching to experimental parser");
-      substituters2.forEach(([regex, subst]) => {
+      logger_default.debug("[plugin-common]", "Invalid JSON, switching to experimental parser");
+      substituters.forEach(([regex, subst]) => {
         str = str.replace(regex, subst);
       });
       return JSON.parse(str);
@@ -23975,41 +21538,41 @@
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/jquery.js
-  function parse5(input) {
+  function parse2(input) {
     return input.val() || input.text() || input.html();
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/html.js
-  function parse6(input) {
+  function parse3(input) {
     return input.value || input.textContent;
   }
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/input/index.js
-  var ref2 = "@else";
-  var formats6 = {
+  var ref = "@else";
+  var formats3 = {
     "@empty/text": {
-      parse: parse4,
+      parse,
       parseType: {
         dataType: "String",
         predicate: (input) => input === ""
       }
     },
     "@empty/whitespace+text": {
-      parse: parse4,
+      parse,
       parseType: {
         dataType: "String",
         predicate: /^\s+$/
       }
     },
     "@empty": {
-      parse: parse4,
+      parse,
       parseType: {
         dataType: "Primitive",
         predicate: (input) => input == null
       }
     },
     "@else/json": {
-      parse: parseJSON2,
+      parse: parseJSON,
       parseType: {
         dataType: "String",
         predicate: /^\s*(\{[\S\s]*\}|\[[\S\s]*\])\s*$/
@@ -24022,7 +21585,7 @@
       }
     },
     "@else/jquery": {
-      parse: parse5,
+      parse: parse2,
       parseType: {
         dataType: "ComplexObject",
         predicate(input) {
@@ -24031,7 +21594,7 @@
       }
     },
     "@else/html": {
-      parse: parse6,
+      parse: parse3,
       parseType: {
         dataType: "ComplexObject",
         predicate(input) {
@@ -24042,79 +21605,79 @@
   };
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/output/json.js
-  function appendCommas2(string, index, array) {
+  function appendCommas(string, index, array) {
     return string + (index < array.length - 1 ? "," : "");
   }
-  function getJsonObject2(src, dict) {
+  function getJsonObject(src, dict) {
     const isArray = Array.isArray(src);
     let entries;
     if (isArray) {
-      entries = src.map((entry) => getJsonValue2(entry, dict));
+      entries = src.map((entry) => getJsonValue(entry, dict));
     } else {
-      entries = Object.keys(src).filter((prop) => JSON.stringify(src[prop])).map((prop) => `"${prop}": ${getJsonValue2(src[prop], dict)}`);
+      entries = Object.keys(src).filter((prop) => JSON.stringify(src[prop])).map((prop) => `"${prop}": ${getJsonValue(src[prop], dict)}`);
     }
-    entries = entries.map(appendCommas2).map((entry) => dict.listItem.join(entry));
+    entries = entries.map(appendCommas).map((entry) => dict.listItem.join(entry));
     entries = dict.list.join(entries.join(""));
     return isArray ? `[${entries}]` : `{${entries}}`;
   }
-  function getJsonValue2(src, dict) {
+  function getJsonValue(src, dict) {
     if (typeof src === "object" && src !== null) {
       if (src.length === 0) {
         return "[]";
       } else if (Object.keys(src).length === 0) {
         return "{}";
       } else {
-        return getJsonObject2(src, dict);
+        return getJsonObject(src, dict);
       }
     } else {
       return JSON.stringify(src);
     }
   }
-  function getJson2(src, dict) {
-    let entries = src.map((entry) => getJsonObject2(entry, dict));
-    entries = entries.map(appendCommas2).map((entry) => dict.entry.join(entry));
+  function getJson(src, dict) {
+    let entries = src.map((entry) => getJsonObject(entry, dict));
+    entries = entries.map(appendCommas).map((entry) => dict.entry.join(entry));
     entries = entries.join("");
     return dict.bibliographyContainer.join(`[${entries}]`);
   }
-  var json_default2 = {
-    data(data3, {
-      type: type3,
-      format: format5 = type3 || "text",
-      version: version3 = "1.0.2"
+  var json_default = {
+    data(data2, {
+      type: type2,
+      format: format3 = type2 || "text",
+      version: version2 = "1.0.2"
     } = {}) {
-      if (version3 < "1.0.2") {
-        data3 = downgradeCsl2(data3);
+      if (version2 < "1.0.2") {
+        data2 = downgradeCsl(data2);
       }
-      if (format5 === "object") {
-        return deepCopy_default2(data3);
-      } else if (format5 === "text") {
-        return JSON.stringify(data3, null, 2);
+      if (format3 === "object") {
+        return deepCopy_default(data2);
+      } else if (format3 === "text") {
+        return JSON.stringify(data2, null, 2);
       } else {
-        logger_default2.warn("[core]", "This feature (JSON output with special formatting) is unstable. See https://github.com/larsgw/citation.js/issues/144");
-        return getJson2(data3, dict_exports2.get(format5));
+        logger_default.warn("[core]", "This feature (JSON output with special formatting) is unstable. See https://github.com/larsgw/citation.js/issues/144");
+        return getJson(data2, dict_exports.get(format3));
       }
     },
-    ndjson(data3, {
-      version: version3 = "1.0.2"
+    ndjson(data2, {
+      version: version2 = "1.0.2"
     } = {}) {
-      if (version3 < "1.0.2") {
-        data3 = downgradeCsl2(data3);
+      if (version2 < "1.0.2") {
+        data2 = downgradeCsl(data2);
       }
-      return data3.map((entry) => JSON.stringify(entry)).join("\n");
+      return data2.map((entry) => JSON.stringify(entry)).join("\n");
     }
   };
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/output/index.js
-  var output_default2 = Object.assign({}, json_default2, label_default2);
+  var output_default = Object.assign({}, json_default, label_default);
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/plugin-common/index.js
-  add12(ref2, {
-    input: formats6,
-    output: output_default2
+  add6(ref, {
+    input: formats3,
+    output: output_default
   });
 
   // node_modules/.pnpm/@citation-js+core@0.8.2/node_modules/@citation-js/core/lib-mjs/index.js
-  var version2 = package_default2.version;
+  var version = package_default.version;
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/locales.json
   var locales_default = {
@@ -24227,7 +21790,7 @@
   };
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/locales.js
-  var locales = new util_exports2.Register(locales_default);
+  var locales = new util_exports.Register(locales_default);
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/styles.json
   var styles_default = {
@@ -24240,7 +21803,7 @@
   };
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/styles.js
-  var styles3 = new util_exports2.Register(styles_default);
+  var styles2 = new util_exports.Register(styles_default);
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/engines.js
   var import_citeproc = __toESM(require_citeproc_commonjs());
@@ -24256,12 +21819,12 @@
     proxy[proxied] = true;
     return proxy;
   };
-  for (const format5 in import_citeproc.default.Output.Formats) {
-    const original = import_citeproc.default.Output.Formats[format5]["@bibliography/entry"];
+  for (const format3 in import_citeproc.default.Output.Formats) {
+    const original = import_citeproc.default.Output.Formats[format3]["@bibliography/entry"];
     if (!original || original[proxied]) {
       continue;
     }
-    import_citeproc.default.Output.Formats[format5]["@bibliography/entry"] = getWrapperProxy(original);
+    import_citeproc.default.Output.Formats[format3]["@bibliography/entry"] = getWrapperProxy(original);
   }
   function retrieveLocale(locale) {
     if (locales.has(locale)) {
@@ -24290,14 +21853,14 @@
     }
     return engine;
   };
-  var prepareEngine = function(data3, styleName, locale, format5) {
-    if (!import_citeproc.default.Output.Formats[format5] || !import_citeproc.default.Output.Formats[format5]["@bibliography/entry"]) {
-      throw new TypeError(`Cannot find format '${format5}'`);
+  var prepareEngine = function(data2, styleName, locale, format3) {
+    if (!import_citeproc.default.Output.Formats[format3] || !import_citeproc.default.Output.Formats[format3]["@bibliography/entry"]) {
+      throw new TypeError(`Cannot find format '${format3}'`);
     }
-    if (!styles3.has(styleName)) {
+    if (!styles2.has(styleName)) {
       throw new TypeError(`Cannot find style '${styleName}'`);
     }
-    const items = data3.reduce((store, entry) => {
+    const items = data2.reduce((store, entry) => {
       store[entry.id] = entry;
       return store;
     }, {});
@@ -24309,8 +21872,8 @@
         throw new Error(`Cannot find entry with id '${key}'`);
       }
     };
-    const engine = fetchEngine(styleName, locale, styles3.get(styleName), callback, retrieveLocale);
-    engine.setOutputFormat(format5);
+    const engine = fetchEngine(styleName, locale, styles2.get(styleName), callback, retrieveLocale);
+    engine.setOutputFormat(format3);
     engine.opt.development_extensions.wrap_url_and_doi = false;
     return engine;
   };
@@ -24322,32 +21885,32 @@
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/bibliography.js
   var getAffix = (source, affix) => typeof affix === "function" ? affix(source) : affix || "";
-  function bibliography(data3, options3 = {}) {
-    const style = options3.style || options3.template || "apa";
+  function bibliography(data2, options2 = {}) {
+    const style = options2.style || options2.template || "apa";
     const {
       lang,
-      format: format5 = "text",
+      format: format3 = "text",
       nosort = false
-    } = options3;
-    const ids = options3.entry ? [].concat(options3.entry) : data3.map(({
+    } = options2;
+    const ids = options2.entry ? [].concat(options2.entry) : data2.map(({
       id
     }) => id);
-    if (options3.downgradeCsl) {
-      data3 = util_exports2.downgradeCsl(data3);
+    if (options2.downgradeCsl) {
+      data2 = util_exports.downgradeCsl(data2);
     }
-    const citeproc = engines_default(data3, style, lang, format5);
+    const citeproc = engines_default(data2, style, lang, format3);
     const sortedIds = citeproc.updateItems(ids, nosort);
-    if (options3.append || options3.prepend) {
-      const items = data3.reduce((items2, entry) => {
+    if (options2.append || options2.prepend) {
+      const items = data2.reduce((items2, entry) => {
         items2[entry.id] = entry;
         return items2;
       }, {});
       citeproc.sys.wrapBibliographyEntry = function(id) {
         const entry = items[id];
-        return [getAffix(entry, options3.prepend), getAffix(entry, options3.append)];
+        return [getAffix(entry, options2.prepend), getAffix(entry, options2.append)];
       };
     }
-    if (options3.hyperlinks) {
+    if (options2.hyperlinks) {
       citeproc.opt.development_extensions.wrap_url_and_doi = true;
     }
     const bibliography2 = citeproc.makeBibliography();
@@ -24356,7 +21919,7 @@
       bibend
     }, bibBody] = bibliography2;
     const entries = bibBody.map((element, index) => getPrefixedEntry(element, sortedIds[index]));
-    if (options3.asEntryArray) {
+    if (options2.asEntryArray) {
       return entries.map((element, index) => [sortedIds[index], element]);
     }
     return bibstart + entries.join("") + bibend;
@@ -24385,29 +21948,29 @@
     }
     return context.map(prepareCitation);
   }
-  function citation(data3, options3 = {}) {
-    const style = options3.style || options3.template || "apa";
+  function citation(data2, options2 = {}) {
+    const style = options2.style || options2.template || "apa";
     const {
       lang,
-      format: format5 = "text"
-    } = options3;
-    const ids = data3.map(({
+      format: format3 = "text"
+    } = options2;
+    const ids = data2.map(({
       id
     }) => id);
-    const entries = options3.entry ? options3.entry : ids;
-    if (options3.downgradeCsl) {
-      data3 = util_exports2.downgradeCsl(data3);
+    const entries = options2.entry ? options2.entry : ids;
+    if (options2.downgradeCsl) {
+      data2 = util_exports.downgradeCsl(data2);
     }
-    const citeproc = engines_default(data3, style, lang, format5);
-    const before = prepareCitations(options3.citationsPre);
+    const citeproc = engines_default(data2, style, lang, format3);
+    const before = prepareCitations(options2.citationsPre);
     const citation2 = prepareCitation(entries);
-    const after = prepareCitations(options3.citationsPost);
-    const output = citeproc.rebuildProcessorState([...before, citation2, ...after], format5, []);
+    const after = prepareCitations(options2.citationsPost);
+    const output = citeproc.rebuildProcessorState([...before, citation2, ...after], format3, []);
     return output[before.length][2];
   }
 
   // node_modules/.pnpm/@citation-js+plugin-csl@0.8.2_@citation-js+core@0.8.2/node_modules/@citation-js/plugin-csl/lib-mjs/index.js
-  plugins_exports2.add("@csl", {
+  plugins_exports.add("@csl", {
     output: {
       bibliography,
       citation
@@ -24415,7 +21978,7 @@
     config: {
       engine: engines_default,
       locales,
-      styles: styles3
+      styles: styles2
     }
   });
 
@@ -25611,7 +23174,7 @@
   };
   function arrow(_ref) {
     var _state$modifiersData$;
-    var state = _ref.state, name = _ref.name, options3 = _ref.options;
+    var state = _ref.state, name = _ref.name, options2 = _ref.options;
     var arrowElement = state.elements.arrow;
     var popperOffsets2 = state.modifiersData.popperOffsets;
     var basePlacement = getBasePlacement(state.placement);
@@ -25621,7 +23184,7 @@
     if (!arrowElement || !popperOffsets2) {
       return;
     }
-    var paddingObject = toPaddingObject(options3.padding, state);
+    var paddingObject = toPaddingObject(options2.padding, state);
     var arrowRect = getLayoutRect(arrowElement);
     var minProp = axis === "y" ? top : left;
     var maxProp = axis === "y" ? bottom : right;
@@ -25638,8 +23201,8 @@
     state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
   }
   function effect2(_ref2) {
-    var state = _ref2.state, options3 = _ref2.options;
-    var _options$element = options3.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
+    var state = _ref2.state, options2 = _ref2.options;
+    var _options$element = options2.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
     if (arrowElement == null) {
       return;
     }
@@ -25752,8 +23315,8 @@
     return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : "", _Object$assign2[sideX] = hasX ? x + "px" : "", _Object$assign2.transform = "", _Object$assign2));
   }
   function computeStyles(_ref5) {
-    var state = _ref5.state, options3 = _ref5.options;
-    var _options$gpuAccelerat = options3.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options3.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options3.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
+    var state = _ref5.state, options2 = _ref5.options;
+    var _options$gpuAccelerat = options2.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options2.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options2.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
     var commonStyles = {
       placement: getBasePlacement(state.placement),
       variation: getVariation(state.placement),
@@ -25795,8 +23358,8 @@
     passive: true
   };
   function effect3(_ref) {
-    var state = _ref.state, instance = _ref.instance, options3 = _ref.options;
-    var _options$scroll = options3.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options3.resize, resize = _options$resize === void 0 ? true : _options$resize;
+    var state = _ref.state, instance = _ref.instance, options2 = _ref.options;
+    var _options$scroll = options2.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options2.resize, resize = _options$resize === void 0 ? true : _options$resize;
     var window2 = getWindow(state.elements.popper);
     var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
     if (scroll) {
@@ -25933,16 +23496,16 @@
   }
 
   // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/dom-utils/listScrollParents.js
-  function listScrollParents(element, list11) {
+  function listScrollParents(element, list6) {
     var _element$ownerDocumen;
-    if (list11 === void 0) {
-      list11 = [];
+    if (list6 === void 0) {
+      list6 = [];
     }
     var scrollParent = getScrollParent(element);
     var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
     var win = getWindow(scrollParent);
     var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
-    var updatedList = list11.concat(target);
+    var updatedList = list6.concat(target);
     return isBody ? updatedList : (
       // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
       updatedList.concat(listScrollParents(getParentNode(target)))
@@ -26061,11 +23624,11 @@
   }
 
   // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/detectOverflow.js
-  function detectOverflow(state, options3) {
-    if (options3 === void 0) {
-      options3 = {};
+  function detectOverflow(state, options2) {
+    if (options2 === void 0) {
+      options2 = {};
     }
-    var _options = options3, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
+    var _options = options2, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding = _options$padding === void 0 ? 0 : _options$padding;
     var paddingObject = mergePaddingObject(typeof padding !== "number" ? padding : expandToHashMap(padding, basePlacements));
     var altContext = elementContext === popper ? reference : popper;
     var popperRect = state.rects.popper;
@@ -26099,11 +23662,11 @@
   }
 
   // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/utils/computeAutoPlacement.js
-  function computeAutoPlacement(state, options3) {
-    if (options3 === void 0) {
-      options3 = {};
+  function computeAutoPlacement(state, options2) {
+    if (options2 === void 0) {
+      options2 = {};
     }
-    var _options = options3, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
+    var _options = options2, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
     var variation = getVariation(placement);
     var placements2 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function(placement2) {
       return getVariation(placement2) === variation;
@@ -26137,11 +23700,11 @@
     return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
   }
   function flip(_ref) {
-    var state = _ref.state, options3 = _ref.options, name = _ref.name;
+    var state = _ref.state, options2 = _ref.options, name = _ref.name;
     if (state.modifiersData[name]._skip) {
       return;
     }
-    var _options$mainAxis = options3.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options3.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options3.fallbackPlacements, padding = options3.padding, boundary = options3.boundary, rootBoundary = options3.rootBoundary, altBoundary = options3.altBoundary, _options$flipVariatio = options3.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options3.allowedAutoPlacements;
+    var _options$mainAxis = options2.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options2.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options2.fallbackPlacements, padding = options2.padding, boundary = options2.boundary, rootBoundary = options2.rootBoundary, altBoundary = options2.altBoundary, _options$flipVariatio = options2.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options2.allowedAutoPlacements;
     var preferredPlacement = state.options.placement;
     var basePlacement = getBasePlacement(preferredPlacement);
     var isBasePlacement = basePlacement === preferredPlacement;
@@ -26305,18 +23868,18 @@
     };
   }
   function offset(_ref2) {
-    var state = _ref2.state, options3 = _ref2.options, name = _ref2.name;
-    var _options$offset = options3.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
-    var data3 = placements.reduce(function(acc, placement) {
+    var state = _ref2.state, options2 = _ref2.options, name = _ref2.name;
+    var _options$offset = options2.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
+    var data2 = placements.reduce(function(acc, placement) {
       acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
       return acc;
     }, {});
-    var _data$state$placement = data3[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
+    var _data$state$placement = data2[state.placement], x = _data$state$placement.x, y = _data$state$placement.y;
     if (state.modifiersData.popperOffsets != null) {
       state.modifiersData.popperOffsets.x += x;
       state.modifiersData.popperOffsets.y += y;
     }
-    state.modifiersData[name] = data3;
+    state.modifiersData[name] = data2;
   }
   var offset_default = {
     name: "offset",
@@ -26351,8 +23914,8 @@
 
   // node_modules/.pnpm/@popperjs+core@2.11.8/node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
   function preventOverflow(_ref) {
-    var state = _ref.state, options3 = _ref.options, name = _ref.name;
-    var _options$mainAxis = options3.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options3.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options3.boundary, rootBoundary = options3.rootBoundary, altBoundary = options3.altBoundary, padding = options3.padding, _options$tether = options3.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options3.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+    var state = _ref.state, options2 = _ref.options, name = _ref.name;
+    var _options$mainAxis = options2.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options2.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options2.boundary, rootBoundary = options2.rootBoundary, altBoundary = options2.altBoundary, padding = options2.padding, _options$tether = options2.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options2.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
     var overflow = detectOverflow(state, {
       boundary,
       rootBoundary,
@@ -26378,7 +23941,7 @@
       altAxis: 0
     }, tetherOffsetValue);
     var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
-    var data3 = {
+    var data2 = {
       x: 0,
       y: 0
     };
@@ -26414,7 +23977,7 @@
       var tetherMax = offset2 + maxOffset - offsetModifierValue;
       var preventedOffset = within(tether ? min(min2, tetherMin) : min2, offset2, tether ? max(max2, tetherMax) : max2);
       popperOffsets2[mainAxis] = preventedOffset;
-      data3[mainAxis] = preventedOffset - offset2;
+      data2[mainAxis] = preventedOffset - offset2;
     }
     if (checkAltAxis) {
       var _offsetModifierState$2;
@@ -26430,9 +23993,9 @@
       var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
       var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
       popperOffsets2[altAxis] = _preventedOffset;
-      data3[altAxis] = _preventedOffset - _offset;
+      data2[altAxis] = _preventedOffset - _offset;
     }
-    state.modifiersData[name] = data3;
+    state.modifiersData[name] = data2;
   }
   var preventOverflow_default = {
     name: "preventOverflow",
@@ -26511,14 +24074,14 @@
     modifiers.forEach(function(modifier) {
       map.set(modifier.name, modifier);
     });
-    function sort3(modifier) {
+    function sort2(modifier) {
       visited.add(modifier.name);
       var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
       requires.forEach(function(dep) {
         if (!visited.has(dep)) {
           var depModifier = map.get(dep);
           if (depModifier) {
-            sort3(depModifier);
+            sort2(depModifier);
           }
         }
       });
@@ -26526,7 +24089,7 @@
     }
     modifiers.forEach(function(modifier) {
       if (!visited.has(modifier.name)) {
-        sort3(modifier);
+        sort2(modifier);
       }
     });
     return result;
@@ -26589,15 +24152,15 @@
     if (generatorOptions === void 0) {
       generatorOptions = {};
     }
-    var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions3 = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
-    return function createPopper2(reference2, popper2, options3) {
-      if (options3 === void 0) {
-        options3 = defaultOptions3;
+    var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions2 = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+    return function createPopper2(reference2, popper2, options2) {
+      if (options2 === void 0) {
+        options2 = defaultOptions2;
       }
       var state = {
         placement: "bottom",
         orderedModifiers: [],
-        options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions3),
+        options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions2),
         modifiersData: {},
         elements: {
           reference: reference2,
@@ -26611,9 +24174,9 @@
       var instance = {
         state,
         setOptions: function setOptions(setOptionsAction) {
-          var options4 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
+          var options3 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
           cleanupModifierEffects();
-          state.options = Object.assign({}, defaultOptions3, state.options, options4);
+          state.options = Object.assign({}, defaultOptions2, state.options, options3);
           state.scrollParents = {
             reference: isElement(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
             popper: listScrollParents(popper2)
@@ -26680,20 +24243,20 @@
       if (!areValidElements(reference2, popper2)) {
         return instance;
       }
-      instance.setOptions(options3).then(function(state2) {
-        if (!isDestroyed && options3.onFirstUpdate) {
-          options3.onFirstUpdate(state2);
+      instance.setOptions(options2).then(function(state2) {
+        if (!isDestroyed && options2.onFirstUpdate) {
+          options2.onFirstUpdate(state2);
         }
       });
       function runModifierEffects() {
         state.orderedModifiers.forEach(function(_ref) {
-          var name = _ref.name, _ref$options = _ref.options, options4 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
+          var name = _ref.name, _ref$options = _ref.options, options3 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
           if (typeof effect5 === "function") {
             var cleanupFn = effect5({
               state,
               name,
               instance,
-              options: options4
+              options: options3
             });
             var noopFn = function noopFn2() {
             };
@@ -26740,9 +24303,9 @@
     }
     return value;
   }
-  function isType(value, type3) {
+  function isType(value, type2) {
     var str = {}.toString.call(value);
-    return str.indexOf("[object") === 0 && str.indexOf(type3 + "]") > -1;
+    return str.indexOf("[object") === 0 && str.indexOf(type2 + "]") > -1;
   }
   function invokeWithArgsOrReturn(value, args) {
     return typeof value === "function" ? value.apply(void 0, args) : value;
@@ -26800,8 +24363,8 @@
     return document.createElement("div");
   }
   function isElement2(value) {
-    return ["Element", "Fragment"].some(function(type3) {
-      return isType(value, type3);
+    return ["Element", "Fragment"].some(function(type2) {
+      return isType(value, type2);
     });
   }
   function isNodeList(value) {
@@ -27471,18 +25034,18 @@
       updateTransitionEndListener(box, "add", listener);
       currentTransitionEndListener = listener;
     }
-    function on(eventType, handler, options3) {
-      if (options3 === void 0) {
-        options3 = false;
+    function on(eventType, handler, options2) {
+      if (options2 === void 0) {
+        options2 = false;
       }
       var nodes = normalizeToArray(instance.props.triggerTarget || reference2);
       nodes.forEach(function(node) {
-        node.addEventListener(eventType, handler, options3);
+        node.addEventListener(eventType, handler, options2);
         listeners.push({
           node,
           eventType,
           handler,
-          options: options3
+          options: options2
         });
       });
     }
@@ -27515,8 +25078,8 @@
     }
     function removeListeners() {
       listeners.forEach(function(_ref) {
-        var node = _ref.node, eventType = _ref.eventType, handler = _ref.handler, options3 = _ref.options;
-        node.removeEventListener(eventType, handler, options3);
+        var node = _ref.node, eventType = _ref.eventType, handler = _ref.handler, options2 = _ref.options;
+        node.removeEventListener(eventType, handler, options2);
       });
       listeners = [];
     }
@@ -28161,7 +25724,7 @@
       const {
         projectID,
         lastUpdatedAt,
-        format: format5,
+        format: format3,
         displayLocation,
         backmatterPageID,
         backmatterReferenceList,
@@ -28182,7 +25745,7 @@
         new Set(referenceItems.map((item) => item.citationKey))
       );
       footnotesCollected = true;
-      const config = await resolveFormatConfig(format5, style);
+      const config = await resolveFormatConfig(format3, style);
       loadCslStyle(config.cslStyle);
       const cslData = referenceItems.map(toCslJson);
       const engine = buildCiteprocEngine(cslData, config.cslStyle);
@@ -28256,9 +25819,9 @@
       headers: { "x-deki-token": token, "x-requested-with": "XMLHttpRequest" }
     });
     if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
-    const data3 = await response.json();
-    if (!data3?.["@id"]) throw new Error("Deki pages response missing @id");
-    return String(data3["@id"]);
+    const data2 = await response.json();
+    if (!data2?.["@id"]) throw new Error("Deki pages response missing @id");
+    return String(data2["@id"]);
   }
   async function fetchJSON(url) {
     const response = await fetch(url);
@@ -28288,12 +25851,12 @@
     if (isCacheValid(cached, lastUpdatedAt)) {
       return { referenceItems: cached.referenceItems, toc: cached.toc };
     }
-    const data3 = await fetchJSON(`${API_BASE}/projects/${projectID}`);
+    const data2 = await fetchJSON(`${API_BASE}/projects/${projectID}`);
     setCachedReferences(projectID, lastUpdatedAt, {
-      referenceItems: data3.referenceItems,
-      toc: data3.toc
+      referenceItems: data2.referenceItems,
+      toc: data2.toc
     });
-    return { referenceItems: data3.referenceItems, toc: data3.toc };
+    return { referenceItems: data2.referenceItems, toc: data2.toc };
   }
   function loadCslStyle(styleName) {
     if (loadedCslStyles.has(styleName)) return;
@@ -28306,8 +25869,8 @@
     plugins_exports.config.get("@csl").styles.add(styleName, xml);
     loadedCslStyles.add(styleName);
   }
-  async function resolveFormatConfig(format5, style) {
-    if (!style || style.builtin) return getFormatConfig(format5);
+  async function resolveFormatConfig(format3, style) {
+    if (!style || style.builtin) return getFormatConfig(format3);
     try {
       const cslStyle = await loadCustomStyle(style);
       return {
@@ -28319,7 +25882,7 @@
       };
     } catch (err) {
       console.warn(`Could not load citation style "${style.id}":`, err);
-      return getFormatConfig(format5);
+      return getFormatConfig(format3);
     }
   }
   var customStyleName = (id) => `custom-${id}`;
@@ -28334,14 +25897,14 @@
     }
     let xml = cached?.updatedAt === style.updatedAt ? cached?.cslXml : void 0;
     if (!xml) {
-      const data3 = await fetchJSON(
+      const data2 = await fetchJSON(
         `${API_BASE}/styles/${encodeURIComponent(style.id)}`
       );
-      xml = data3.cslXml;
+      xml = data2.cslXml;
       try {
         localStorage.setItem(
           cacheKey,
-          JSON.stringify({ updatedAt: data3.updatedAt ?? null, cslXml: xml })
+          JSON.stringify({ updatedAt: data2.updatedAt ?? null, cslXml: xml })
         );
       } catch {
       }
@@ -28463,7 +26026,7 @@
     const refs = /* @__PURE__ */ new Set();
     (function visit(node) {
       if (members.has(String(node.id))) {
-        for (const ref3 of node.refs ?? []) refs.add(ref3);
+        for (const ref2 of node.refs ?? []) refs.add(ref2);
       }
       for (const child of node.children ?? []) visit(child);
     })(toc);
@@ -28482,7 +26045,7 @@
     const queue = [root];
     while (queue.length > 0) {
       const node = queue.shift();
-      for (const ref3 of node.refs ?? []) refs.add(ref3);
+      for (const ref2 of node.refs ?? []) refs.add(ref2);
       for (const child of node.children ?? []) queue.push(child);
     }
     return [...refs];
@@ -28730,7 +26293,7 @@
     section.className = "librecite-footnotes";
     section.id = id;
     section.setAttribute("aria-label", "Footnotes");
-    const list11 = document.createElement("ol");
+    const list6 = document.createElement("ol");
     notes.forEach((note, i) => {
       const n = i + 1;
       const li = document.createElement("li");
@@ -28744,9 +26307,9 @@
       back.setAttribute("aria-label", `Back to footnote ${n} in the text`);
       back.textContent = "\u21A9";
       li.appendChild(back);
-      list11.appendChild(li);
+      list6.appendChild(li);
     });
-    section.appendChild(list11);
+    section.appendChild(list6);
     const footer = document.querySelector("footer.mt-content-footer");
     if (footer) {
       footer.prepend(section);
@@ -28806,8 +26369,8 @@
     const heading = document.createElement("h2");
     heading.textContent = config.heading;
     container.appendChild(heading);
-    const list11 = document.createElement(config.listType);
-    list11.className = "references-list";
+    const list6 = document.createElement(config.listType);
+    list6.className = "references-list";
     bibEntries.forEach((entryHtml, i) => {
       const key = entryIds[i]?.[0];
       const li = document.createElement("li");
@@ -28849,9 +26412,9 @@
           });
         }
       }
-      list11.appendChild(li);
+      list6.appendChild(li);
     });
-    container.appendChild(list11);
+    container.appendChild(list6);
   }
   function toCslJson(item) {
     return {
@@ -28893,8 +26456,8 @@
     const parts = hostname.split(".");
     return parts[0]?.toLowerCase() ?? "dev";
   }
-  function getFormatConfig(format5) {
-    return { noteStyle: false, ...FORMAT_CONFIG[format5] ?? FORMAT_CONFIG.IEEE };
+  function getFormatConfig(format3) {
+    return { noteStyle: false, ...FORMAT_CONFIG[format3] ?? FORMAT_CONFIG.IEEE };
   }
   function termAnchorId(term) {
     return "gt-anchor-" + String(term).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
