@@ -1,6 +1,6 @@
 (() => {
   // src/config.js
-  var API_BASE = `${"https://commons.libretexts.org"}/api/v1/reference`;
+  var API_BASE = `${"https://knitcanvas.fun"}/api/v1/reference`;
   var CACHE_PREFIX = "libretexts-references:";
   var DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
   var FALLBACK_SCRIPT_URL = "https://cdn.jsdelivr.net/gh/yghaemi/biblizer@master/dist/script.min.js";
