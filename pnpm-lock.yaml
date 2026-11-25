@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@citation-js/core':
+        specifier: ^0.8.2
+        version: 0.8.2
       '@citation-js/plugin-csl':
         specifier: ^0.8.2
         version: 0.8.2(@citation-js/core@0.8.2)

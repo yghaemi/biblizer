@@ -50,7 +50,7 @@ describe(`pageID resolution (page ${PAGE_ID}, library ${LIBRARY})`, () => {
 
     await runMain()
 
-    expect(console.error).toHaveBeenCalledWith('pageID not found:', expect.any(Error))
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('no pageID available'))
     expect(fetchedUrls()).toEqual([DEKI_TOKEN_URL])
   })
 })
