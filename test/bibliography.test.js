@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEKI_TOKEN_URL, jsonResponse, runMain } from './helpers.js'
 
@@ -56,6 +57,10 @@ function stubApi(pageID, pageInfo) {
       })
     }
     if (url.includes('/projects/')) return jsonResponse({ err: false, data: { referenceItems, toc } })
+    if (url.includes('/src/csl/')) {
+      const xml = readFileSync(`src/csl/${url.split('/src/csl/')[1]}`, 'utf8')
+      return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve(xml) })
+    }
     return jsonResponse({}, false)
   }))
 }
