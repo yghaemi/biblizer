@@ -2,12 +2,12 @@ import { readFileSync } from 'fs'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  // Mirror esbuild's `.csl: 'text'` loader: import CSL XML as a plain string.
+  // Mirror esbuild's `.xml: 'text'` loader: import the CSL locale XML as a plain string.
   plugins: [{
-    name: 'csl-text',
+    name: 'xml-text',
     enforce: 'pre',
     load(id) {
-      if (id.endsWith('.csl')) {
+      if (id.endsWith('.xml')) {
         return `export default ${JSON.stringify(readFileSync(id, 'utf8'))}`
       }
     },

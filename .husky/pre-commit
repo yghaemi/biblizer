@@ -1,2 +1,2 @@
 npm run build
-git add dist/script.js dist/script.min.js
+git add dist/script.js dist/script.min.js dist/engine.js dist/engine.min.js

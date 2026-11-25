@@ -19,82 +19,50 @@ function loadEnvDefines(path = '.env') {
 
 const envDefines = loadEnvDefines()
 
-// citation-js supports both Node and browser. When targeting the browser we
-// swap out node-fetch (and its transitive Node built-ins) for native fetch.
-const browserStubsPlugin = {
-  name: 'browser-stubs',
-  setup(build) {
-    // Intercept node-fetch before esbuild scans its Node-specific deps.
-    build.onResolve({ filter: /^node-fetch$/ }, () => ({
-      path: 'node-fetch',
-      namespace: 'browser-shim',
-    }))
-
-    // Intercept fetch-blob (dep of node-fetch) in case it slips through.
-    build.onResolve({ filter: /^fetch-blob/ }, () => ({
-      path: 'fetch-blob',
-      namespace: 'browser-shim',
-    }))
-
-    // Stub node: protocol built-ins as empty (unused code paths in @citation-js/core).
-    build.onResolve({ filter: /^node:/ }, (args) => ({
-      path: args.path,
-      namespace: 'node-empty',
-    }))
-
-    build.onLoad({ filter: /.*/, namespace: 'browser-shim' }, ({ path }) => {
-      if (path === 'node-fetch') {
-        return {
-          loader: 'js',
-          contents: `
-const f = (typeof globalThis.fetch === 'function')
-  ? globalThis.fetch.bind(globalThis)
-  : () => Promise.reject(new Error('fetch is not available'));
-export default f;
-export const Headers = globalThis.Headers;
-export const Request = globalThis.Request;
-export const Response = globalThis.Response;
-export const FormData = globalThis.FormData;
-export const Blob = globalThis.Blob;
-`,
-        }
-      }
-      // fetch-blob → pass through the Blob constructor
-      return {
-        loader: 'js',
-        contents: `export default globalThis.Blob; export const Blob = globalThis.Blob;`,
-      }
-    })
-
-    build.onLoad({ filter: /.*/, namespace: 'node-empty' }, () => ({
-      loader: 'js',
-      contents: '',
-    }))
-  },
-}
-
-const buildOptions = {
-  entryPoints: ['src/script.js'],
+const common = {
   bundle: true,
-  outfile: 'dist/script.js',
-  format: 'iife',
   target: 'es2020',
   platform: 'browser',
-  minify: false,
   sourcemap: process.argv.includes('--dev'),
-  loader: { '.csl': 'text', '.css': 'text' },  // import as plain strings, injected at runtime
+  loader: { '.xml': 'text', '.css': 'text' },  // import as plain strings, injected at runtime
   define: envDefines,
-  plugins: [browserStubsPlugin],
 }
 
+// The loader must not bundle the engine: swap src/engineLoader.js for a
+// runtime import() of the engine file that sits next to the loader bundle.
+/** @param {string} engineFile  e.g. 'engine.min.js' */
+const engineImportPlugin = (engineFile) => ({
+  name: 'engine-import',
+  setup(build) {
+    build.onLoad({ filter: /[\\/]src[\\/]engineLoader\.js$/ }, () => ({
+      loader: 'js',
+      contents: `export const loadEngine = (scriptUrl) => import(new URL(${JSON.stringify(engineFile)}, scriptUrl).href);`,
+    }))
+  },
+})
+
+// [loader outfile, engine outfile, minify] — script.js ↔ engine.js, script.min.js ↔ engine.min.js
+const variants = [
+  ['dist/script.js', 'dist/engine.js', false],
+  ['dist/script.min.js', 'dist/engine.min.js', true],
+]
+
+const configs = variants.flatMap(([loaderOut, engineOut, minify]) => [
+  {
+    ...common,
+    entryPoints: ['src/script.js'],
+    outfile: loaderOut,
+    format: 'iife',
+    minify,
+    plugins: [engineImportPlugin(engineOut.split('/').pop())],
+  },
+  { ...common, entryPoints: ['src/engine.js'], outfile: engineOut, format: 'esm', minify },
+])
+
 if (watch) {
-  const ctx = await esbuild.context(buildOptions)
-  await ctx.watch()
+  for (const options of configs) await (await esbuild.context(options)).watch()
   console.log('Watching for changes...')
 } else {
-  await Promise.all([
-    esbuild.build(buildOptions),
-    esbuild.build({ ...buildOptions, outfile: 'dist/script.min.js', minify: true }),
-  ])
-  console.log('Built → dist/script.js, dist/script.min.js')
+  await Promise.all(configs.map((options) => esbuild.build(options)))
+  console.log('Built → dist/script.js, dist/script.min.js, dist/engine.js, dist/engine.min.js')
 }

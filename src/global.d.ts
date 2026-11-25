@@ -3,10 +3,13 @@
 
 // ─── Asset imports (handled by esbuild loader: 'text') ───────────────────────
 
-declare module "*.csl" {
+declare module "*.xml" {
   const content: string;
   export default content;
 }
+
+// citeproc-js ships no type declarations.
+declare module "citeproc";
 
 declare module "*.css" {
   const content: string;

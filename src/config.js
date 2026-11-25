@@ -10,9 +10,9 @@ export const CACHE_PREFIX = "libretexts-references:";
 
 export const DEKI_TOKEN_URL = "https://cdn.libretexts.net/authenBrowser.json";
 
-// Stand-in script URL for resolving ../src/csl/ when document.currentScript is
-// unavailable (tests, inlined/evaluated bundles).
-export const CSL_FALLBACK_SCRIPT_URL =
+// Stand-in loader URL for resolving engine.js and ../src/csl/ when
+// document.currentScript is unavailable (tests, inlined/evaluated bundles).
+export const FALLBACK_SCRIPT_URL =
   "https://cdn.jsdelivr.net/gh/yghaemi/biblizer@master/dist/script.min.js";
 
 /** LibreTexts library keys, used to recover the library from native or proxied hosts. */

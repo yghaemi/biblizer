@@ -9,9 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@citation-js/core": "^0.8.2",
-    "@citation-js/plugin-csl": "^0.8.2",
-    "citation-js": "^0.8.2",
+    "citeproc": "2.4.63",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {

@@ -1,3 +1,2 @@
 allowBuilds:
-  citation-js: false
   esbuild: true

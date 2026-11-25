@@ -5,22 +5,19 @@
  * @typedef {import('./types').CiteprocEngine}   CiteprocEngine
  */
 
-import { plugins } from "@citation-js/core";
-import "@citation-js/plugin-csl";
-import { CSL_FALLBACK_SCRIPT_URL } from "./config.js";
+import CSL from "citeproc";
+import enUsLocale from "./locales/locales-en-US.xml";
 
 // ─── CSL / Citeproc ──────────────────────────────────────────────────────────
 
-// URL this bundle was loaded from.  Must be read now, while the <script> is
-// executing — document.currentScript is null once DOMContentLoaded fires.
-const SCRIPT_URL =
-  /** @type {HTMLScriptElement|null} */ (document.currentScript)?.src ||
-  CSL_FALLBACK_SCRIPT_URL;
-
 // CSL files in src/csl/ — keyed by the style name used in FORMAT_CONFIG.
-// Fetched on demand from ../src/csl/ relative to the bundle, so a bundle on
-// jsDelivr at …/biblizer@<hash>/dist/ gets styles from the same commit.
+// Fetched on demand from ../src/csl/ relative to the loader bundle, so a
+// bundle on jsDelivr at …/biblizer@<hash>/dist/ gets styles from the same
+// commit.
 export const CSL_STYLE_FILES = {
+  apa: "apa.csl",
+  vancouver: "vancouver.csl",
+  harvard1: "harvard1.csl",
   ieee: "ieee.csl",
   "american-medical-association": "american-medical-association.csl",
   "modern-language-association": "modern-language-association.csl",
@@ -28,11 +25,15 @@ export const CSL_STYLE_FILES = {
   "american-chemical-society": "american-chemical-society-template.csl",
 };
 
-// Styles shipped inside @citation-js/plugin-csl — already registered
-export const loadedCslStyles = new Set(["apa", "vancouver", "harvard1"]);
+// Style name → CSL XML, filled by loadCslStyle()
+/** @type {Map<string, string>} */
+export const loadedCslStyles = new Map();
 
-/** @param {string} styleName */
-export async function loadCslStyle(styleName) {
+/**
+ * @param {string} styleName
+ * @param {string} scriptUrl  URL of the loader bundle (dist/script*.js)
+ */
+export async function loadCslStyle(styleName, scriptUrl) {
   if (loadedCslStyles.has(styleName)) return;
 
   const file = CSL_STYLE_FILES[styleName];
@@ -41,17 +42,43 @@ export async function loadCslStyle(styleName) {
       `CSL style "${styleName}" is unknown. Add it to src/csl/ and CSL_STYLE_FILES.`,
     );
   }
-  const url = new URL(`../src/csl/${file}`, SCRIPT_URL).href;
+  const url = new URL(`../src/csl/${file}`, scriptUrl).href;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
   const xml = await response.text();
 
-  plugins.config.get("@csl").styles.add(styleName, xml);
-  loadedCslStyles.add(styleName);
+  loadedCslStyles.set(styleName, xml);
 }
 
+/**
+ * Create a citeproc engine over `cslData` for a style already loaded with
+ * loadCslStyle().  Only the en-US locale is bundled; other locales resolve
+ * to an empty object and citeproc falls back to en-US.
+ * @param {Array<{ id: string }>} cslData  CSL-JSON items (see toCslJson)
+ * @param {string} styleName
+ * @returns {CiteprocEngine}
+ */
 export function buildCiteprocEngine(cslData, styleName) {
-  return plugins.config.get("@csl").engine(cslData, styleName, "en-US", "html");
+  const xml = loadedCslStyles.get(styleName);
+  if (!xml) throw new Error(`CSL style "${styleName}" has not been loaded`);
+
+  const items = new Map(cslData.map((item) => [String(item.id), item]));
+  const engine = new CSL.Engine(
+    {
+      retrieveItem(id) {
+        const item = items.get(String(id));
+        if (!item) throw new Error(`Cannot find entry with id '${id}'`);
+        return item;
+      },
+      retrieveLocale: (lang) => (lang === "en-US" || lang === "en_US" ? enUsLocale : {}),
+    },
+    xml,
+    "en-US",
+    true,
+  );
+  engine.setOutputFormat("html");
+  engine.opt.development_extensions.wrap_url_and_doi = false;
+  return engine;
 }
 
 // Process all citation instances through citeproc in document order.
