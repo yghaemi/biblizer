@@ -176,14 +176,21 @@ const ENTRY_TYPE_MAP = {
 // ─── Main ────────────────────────────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Resolve the page actually in the address bar via the Deki API, so the id
-  // is right even when this page has been transcluded into another.
-  /** @type {string} */
-  let pageID;
-  try {
-    pageID = await fetchCurrentPageId(LIBRARY);
-  } catch (err) {
-    console.error("pageID not found:", err);
+  // Prefer the page id MindTouch embeds in #mt-global-settings; fall back to
+  // resolving the address-bar path through the Deki API.  Either way the id
+  // is the page actually being viewed, even when content is transcluded.
+  const settingsPageId = getGlobalSettingsPageId();
+  const pageIdPromise = settingsPageId
+    ? Promise.resolve(settingsPageId)
+    : fetchCurrentPageId(LIBRARY).catch((err) => {
+        console.warn("Deki pageID lookup failed:", err);
+        return null;
+      });
+  const pageID = await pageIdPromise;
+  if (!pageID) {
+    console.error(
+      "no pageID available (#mt-global-settings and Deki lookup both failed); skipping render",
+    );
     return;
   }
 
@@ -282,6 +289,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // ─── API ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Read the current page's id from MindTouch's #mt-global-settings JSON blob.
+ * @returns {string | null}
+ */
+function getGlobalSettingsPageId() {
+  const el = document.getElementById("mt-global-settings");
+  if (!el?.textContent) return null;
+  try {
+    const settings = JSON.parse(el.textContent);
+    return settings.pageId != null && settings.pageId !== ""
+      ? String(settings.pageId)
+      : null;
+  } catch (err) {
+    console.warn("failed to parse #mt-global-settings:", err);
+    return null;
+  }
+}
 
 /**
  * Look up the current page's id through MindTouch's Deki API, keyed off
